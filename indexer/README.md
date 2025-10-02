@@ -1,291 +1,211 @@
-# Chronos Indexer Network
+# Eon Protocol Indexer
 
-Decentralized indexer network for auto-challenging invalid temporal ownership claims.
+**Temporal Reputation & Credit Scoring Engine**
 
-## Architecture
+## What It Does
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Indexer Network                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │   Indexer 1  │  │   Indexer 2  │  │   Indexer N  │      │
-│  │              │  │              │  │              │      │
-│  │ ┌──────────┐ │  │ ┌──────────┐ │  │ ┌──────────┐ │      │
-│  │ │ Scanner  │ │  │ │ Scanner  │ │  │ │ Scanner  │ │      │
-│  │ └──────────┘ │  │ └──────────┘ │  │ └──────────┘ │      │
-│  │ ┌──────────┐ │  │ ┌──────────┐ │  │ ┌──────────┐ │      │
-│  │ │Validator │ │  │ │Validator │ │  │ │Validator │ │      │
-│  │ └──────────┘ │  │ └──────────┘ │  │ └──────────┘ │      │
-│  │ ┌──────────┐ │  │ ┌──────────┐ │  │ ┌──────────┐ │      │
-│  │ │Challenger│ │  │ │Challenger│ │  │ │Challenger│ │      │
-│  │ └──────────┘ │  │ └──────────┘ │  │ └──────────┘ │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
-│         │                 │                 │               │
-│         └─────────────────┴─────────────────┘               │
-│                          │                                  │
-│                  ┌───────▼────────┐                         │
-│                  │  GraphQL API   │                         │
-│                  └───────┬────────┘                         │
-└──────────────────────────┼──────────────────────────────────┘
-                           │
-                    ┌──────▼───────┐
-                    │   Frontend   │
-                    └──────────────┘
-```
+Validates on-chain credit/reputation claims by:
+1. Querying archive nodes for historical balance proofs
+2. Calculating reputation scores (0-1000) based on proven holdings
+3. Determining dynamic LTV (50-90%) for undercollateralized lending
+4. Managing user credit profiles and borrowing power
 
-## Components
-
-### 1. Blockchain Scanner
-- **Purpose**: Monitor ClaimManager contract for new claims
-- **Technology**: ethers.js v6 with WebSocket provider
-- **Features**:
-  - Event listening: `ClaimSubmitted`, `ClaimChallenged`, `ClaimFinalized`
-  - Block reorganization handling
-  - Checkpoint persistence
-
-### 2. Claim Validator
-- **Purpose**: Verify temporal ownership claims against historical data
-- **Technology**: Archive node queries (Alchemy, Infura)
-- **Algorithm**:
-  ```
-  For each claim:
-    1. Parse merkle root and balance requirement
-    2. Query archive node for balance at each sample block
-    3. Verify balance ≥ minBalance for all samples
-    4. Calculate fraud probability
-    5. If fraud detected → trigger challenge
-  ```
-
-### 3. Auto-Challenger
-- **Purpose**: Submit challenges for invalid claims
-- **Technology**: ethers.js Contract interaction
-- **Economic Model**:
-  - Challenge stake: 0.2 ETH
-  - Expected profit: 0.1 ETH (user's stake) - gas costs
-  - Success rate: 99.9% (from economic model)
-
-### 4. GraphQL API
-- **Purpose**: Expose indexed data to frontend
-- **Technology**: Apollo Server + PostgreSQL
-- **Schema**:
-  ```graphql
-  type Claim {
-    id: ID!
-    user: String!
-    minBalance: String!
-    startBlock: Int!
-    endBlock: Int!
-    status: ClaimStatus!
-    challengedBy: String
-    createdAt: Int!
-  }
-
-  type Query {
-    claim(id: ID!): Claim
-    claims(status: ClaimStatus): [Claim!]!
-    userClaims(user: String!): [Claim!]!
-    userReputation(user: String!): Reputation
-  }
-
-  type Reputation {
-    score: Int!
-    ageMonths: Int!
-    isSlashed: Boolean!
-  }
-  ```
-
-## Implementation Plan
-
-### Phase 1: Core Indexer (Week 1-2)
-- [ ] Setup Rust/Go project structure
-- [ ] Implement blockchain scanner with event listeners
-- [ ] Add PostgreSQL database schema
-- [ ] Build claim validator logic
-- [ ] Unit tests for validation algorithm
-
-### Phase 2: Auto-Challenger (Week 3)
-- [ ] Implement challenge submission logic
-- [ ] Add economic profitability checks
-- [ ] Build retry mechanisms for failed transactions
-- [ ] Integration tests with testnet
-
-### Phase 3: GraphQL API (Week 4)
-- [ ] Setup Apollo Server
-- [ ] Implement resolvers for claims and reputation
-- [ ] Add WebSocket subscriptions for real-time updates
-- [ ] API documentation
-
-### Phase 4: Decentralization (Week 5-6)
-- [ ] Multi-indexer consensus mechanism
-- [ ] Staking contract for indexer registration
-- [ ] Slashing for dishonest indexers
-- [ ] P2P network for indexer coordination
-
-### Phase 5: Production (Week 7-8)
-- [ ] Monitoring and alerting (Grafana)
-- [ ] Load testing and optimization
-- [ ] Security audit
-- [ ] Mainnet deployment
-
-## Economic Model
-
-**Indexer Revenue Sources**:
-1. **Challenge Rewards**: 0.1 ETH per successful challenge
-2. **Indexing Fees**: 0.1% of borrow amounts (paid by protocol)
-3. **Staking Rewards**: 5% APR on staked tokens
-
-**Monthly Projections** (from economic model):
-- Valid challenges: 10/month
-- Challenge profit: 10 × $150 = $1,500
-- Indexing fees: 2% of $1.5M TVL = $30,000/year = $2,500/month
-- **Total**: ~$3,000/month per indexer
-
-**Operating Costs**:
-- Archive node: $500/month (Alchemy Growth plan)
-- Server hosting: $200/month (AWS t3.large)
-- Gas costs: $200/month (10 challenges × $20)
-- **Net profit**: $2,100/month
-
-## Technology Stack
-
-### Backend
-- **Language**: Rust (performance) or Go (ease of development)
-- **Framework**: Tokio (async runtime for Rust) or Gin (Go)
-- **Database**: PostgreSQL 15 with TimescaleDB
-- **Blockchain**: ethers-rs (Rust) or go-ethereum
-- **Cache**: Redis for hot data
-
-### GraphQL API
-- **Server**: Apollo Server (Node.js) or gqlgen (Go)
-- **ORM**: Prisma (Node.js) or sqlx (Rust/Go)
-- **Real-time**: GraphQL subscriptions over WebSocket
-
-### Infrastructure
-- **Container**: Docker + docker-compose
-- **Orchestration**: Kubernetes (production)
-- **Monitoring**: Prometheus + Grafana
-- **Logging**: ELK stack (Elasticsearch, Logstash, Kibana)
-
-## Running Locally
+## Quick Start
 
 ```bash
-# Clone repository
-git clone https://github.com/chronos-protocol/indexer
-cd chronos-indexer
+# Install dependencies
+npm install
 
 # Setup environment
 cp .env.example .env
-# Edit .env with your RPC URLs and private keys
+# Edit .env with your Alchemy API key
 
-# Start database
-docker-compose up -d postgres redis
-
-# Run migrations
-npm run migrate
+# Run database migrations
+npx prisma migrate dev
 
 # Start indexer
-npm run start:indexer
-
-# Start API server
-npm run start:api
+npm run dev
 ```
 
-## Configuration
+## Architecture
 
-```yaml
-# config.yaml
-network:
-  rpc_url: "https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY"
-  ws_url: "wss://eth-mainnet.g.alchemy.com/v2/YOUR_KEY"
-  chain_id: 1
-  archive_node: true
+### Core Components
 
-contracts:
-  claim_manager: "0x..."
-  reputation_oracle: "0x..."
-  lending_pool: "0x..."
+**scanner.ts** - Blockchain event monitor
+- Listens for ClaimSubmitted events
+- Triggers validation for new claims
+- Handles claim challenges and finalizations
 
-indexer:
-  start_block: 18000000
-  batch_size: 1000
-  checkpoint_interval: 100
+**validator.ts** - Archive node validator
+- Queries historical balances (Alchemy unlimited free tier)
+- Samples 52 weekly checkpoints per year
+- Builds merkle trees for on-chain verification
+- Calculates reputation scores
 
-challenger:
-  enabled: true
-  min_profit: 0.05  # ETH
-  max_gas_price: 100  # gwei
-  private_key: "0x..."
+**credit-engine.ts** - Credit scoring system
+- Manages user credit profiles
+- Calculates dynamic LTV based on reputation
+- Estimates borrowing power
+- Makes credit approval decisions
 
-database:
-  host: "localhost"
-  port: 5432
-  name: "chronos"
-  user: "indexer"
+### Reputation Scoring Algorithm
 
-api:
-  port: 4000
-  cors_origins: ["http://localhost:3000"]
+```
+Total Score (0-1000) = Duration Score (0-500) + Balance Score (0-500)
+
+Duration:
+- 6 months  → 200 points
+- 1 year    → 300 points
+- 2 years   → 450 points
+- 3+ years  → 500 points
+
+Balance (logarithmic):
+- 1 ETH     → 100 points
+- 10 ETH    → 200 points
+- 100 ETH   → 300 points
+- 1000+ ETH → 400+ points
 ```
 
-## Security Considerations
+### LTV Calculation
 
-1. **Private Key Management**: Use AWS KMS or Vault
-2. **Rate Limiting**: Prevent API abuse
-3. **Archive Node Access**: Protect RPC endpoints
-4. **Database Security**: Encrypted at rest, SSL connections
-5. **DDoS Protection**: Cloudflare or AWS Shield
+```
+Score → LTV
+500   → 50%
+700   → 75%
+900   → 85%
+1000  → 90%
+```
 
-## Monitoring
+## API Examples
 
-Key metrics to track:
-- Claims processed per hour
-- Validation accuracy rate
-- Challenge success rate
-- API response times
-- Database query performance
-- Indexer uptime
-- Gas costs per challenge
+### Get Credit Profile
 
-## Decentralization Strategy
+```typescript
+import { CreditEngine } from './src/credit-engine';
 
-### Indexer Registration
-```solidity
-contract IndexerRegistry {
-    mapping(address => Indexer) public indexers;
+const engine = new CreditEngine(
+  process.env.ALCHEMY_API_KEY!,
+  process.env.RPC_URL!
+);
 
-    struct Indexer {
-        uint256 stake;  // 10 ETH minimum
-        uint256 reputation;
-        uint256 successfulChallenges;
-        uint256 failedChallenges;
-        bool active;
-    }
+const profile = await engine.getCreditProfile('0x742d35Cc...');
+console.log(`Score: ${profile.reputationScore}/1000`);
+console.log(`LTV: ${profile.ltv}%`);
+console.log(`Available Credit: ${profile.availableCredit} ETH`);
+```
 
-    function registerIndexer() external payable {
-        require(msg.value >= 10 ether, "Insufficient stake");
-        indexers[msg.sender] = Indexer({
-            stake: msg.value,
-            reputation: 100,
-            successfulChallenges: 0,
-            failedChallenges: 0,
-            active: true
-        });
-    }
+### Validate Temporal Claim
+
+```typescript
+import { TemporalValidator } from './src/validator';
+
+const validator = new TemporalValidator(process.env.ALCHEMY_API_KEY!);
+
+const result = await validator.validateTemporalClaim(
+  '0x742d35Cc...',
+  ethers.parseEther('10'),  // Held 10 ETH
+  18000000,                  // From block 18M
+  20500000                   // To block 20.5M
+);
+
+if (result.isValid) {
+  console.log(`✅ Valid! Score: ${result.reputationScore}/1000`);
 }
 ```
 
-### Consensus Mechanism
-- **Challenge Voting**: 3+ indexers must agree before challenge
-- **Slashing**: Indexers lose 1 ETH for false challenges
-- **Rewards**: Split among indexers who validated correctly
+### Check Creditworthiness
+
+```typescript
+const decision = await engine.checkCreditworthiness(
+  '0x742d35Cc...',
+  ethers.parseEther('5')  // Want to borrow 5 ETH
+);
+
+if (decision.approved) {
+  console.log('✅ Loan approved!');
+} else {
+  console.log('❌ Denied:', decision.reasons);
+}
+```
+
+## Database Schema
+
+```prisma
+model Claim {
+  claimId         String   @id
+  user            String
+  minBalance      String
+  startBlock      Int
+  endBlock        Int
+  merkleRoot      String
+  status          String
+  validated       Boolean?
+  validationResult Boolean?
+}
+
+model Reputation {
+  userAddress  String   @id
+  score        Int
+  ageMonths    Int
+  lastClaimId  String
+  updatedAt    DateTime
+}
+```
+
+## How It Works
+
+1. **User submits claim**: "I held 10 ETH for 1 year"
+2. **Scanner detects**: ClaimSubmitted event triggers validation
+3. **Validator queries**: Archive node checks 52 weekly samples
+4. **Score calculated**: Duration + balance → reputation score
+5. **Credit updated**: LTV and borrowing power calculated
+6. **Lending enabled**: User can borrow based on score
+
+## Testing
+
+```bash
+# Run tests
+npm test
+
+# Check a specific address
+EXAMPLE_ADDRESS=0x... npm run dev
+```
+
+## Production Deployment
+
+```bash
+# Build
+npm run build
+
+# Run in production
+npm start
+```
+
+## Why Archive Nodes?
+
+Archive nodes store complete historical state, allowing us to prove:
+- "This address held X balance at block Y"
+- Without expensive on-chain storage
+- Using Alchemy's unlimited free tier
+
+## Security
+
+- ✅ Flash loan protection via weekly sampling
+- ✅ Economic incentives prevent false claims ($600 stake risk)
+- ✅ Merkle proofs enable on-chain verification
+- ✅ No sensitive data stored (all public blockchain data)
+
+## Cost Analysis
+
+- **User claim**: ~$3 (optimistic, no ZK needed)
+- **Archive queries**: FREE (Alchemy unlimited tier)
+- **Indexer operation**: ~$20/month (VPS + database)
+- **Challenge resolution**: ~$20-50 (ZK proof, rare)
 
 ## Next Steps
 
-1. Choose implementation language (Rust recommended for performance)
-2. Setup development environment
-3. Implement blockchain scanner
-4. Build claim validation logic
-5. Deploy to testnet
-6. Beta testing with real users
+1. Deploy ClaimManager contract to Arbitrum testnet
+2. Get Alchemy API key
+3. Set up PostgreSQL database
+4. Run indexer
+5. Test with real on-chain data

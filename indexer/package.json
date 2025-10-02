@@ -1,0 +1,27 @@
+{
+  "name": "eon-indexer",
+  "version": "1.0.0",
+  "description": "Temporal reputation indexer for Eon Protocol",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.9.1",
+    "ethers": "^6.10.0",
+    "merkletreejs": "^0.3.11",
+    "keccak256": "^1.0.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "prisma": "^5.9.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.11"
+  }
+}
