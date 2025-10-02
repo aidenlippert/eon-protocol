@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+*.lcov
+
+# Production
+build/
+dist/
+out/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Secrets
+*.key
+*.pem
+private/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Hardhat/Foundry
+cache/
+artifacts/
+typechain/
+typechain-types/
+out/
+broadcast/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Temporary
+tmp/
+temp/
