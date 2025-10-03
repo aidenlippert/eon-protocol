@@ -40,28 +40,26 @@ export async function initiateKYCVerification(walletAddress: string): Promise<{
   sessionId: string;
 }> {
   try {
-    const response = await fetch(`${DIDIT_API_BASE}/session/`, {
+    // Call our API route instead of Didit directly (avoids CORS)
+    const response = await fetch('/api/kyc-initiate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': DIDIT_API_KEY,
-        'Authorization': `Bearer ${DIDIT_API_KEY}`,
       },
       body: JSON.stringify({
-        vendor_data: walletAddress,
-        callback: `${typeof window !== 'undefined' ? window.location.origin : ''}/profile?verification=complete`,
+        walletAddress,
       }),
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Didit API error: ${response.status} ${response.statusText} - ${errorText}`);
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      throw new Error(errorData.error || `API error: ${response.status}`);
     }
 
     const data = await response.json();
     return {
-      verificationUrl: data.url || data.verification_url,
-      sessionId: data.session_id || data.sessionId,
+      verificationUrl: data.verificationUrl,
+      sessionId: data.sessionId,
     };
   } catch (error) {
     console.error('Failed to initiate KYC:', error);

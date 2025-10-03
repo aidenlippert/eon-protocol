@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,6 +24,43 @@ export default function ProfilePage() {
   const [scoreData, setScoreData] = useState<EnhancedCreditScoreData | null>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [linkedWallets, setLinkedWallets] = useState<LinkedWallet[]>([]);
+
+  // Load saved score from localStorage on mount
+  useEffect(() => {
+    if (address) {
+      const savedScore = localStorage.getItem(`eon-score-${address.toLowerCase()}`);
+      if (savedScore) {
+        try {
+          setScoreData(JSON.parse(savedScore));
+        } catch (e) {
+          console.error('Failed to parse saved score:', e);
+        }
+      }
+
+      const savedWallets = localStorage.getItem(`eon-wallets-${address.toLowerCase()}`);
+      if (savedWallets) {
+        try {
+          setLinkedWallets(JSON.parse(savedWallets));
+        } catch (e) {
+          console.error('Failed to parse saved wallets:', e);
+        }
+      }
+    }
+  }, [address]);
+
+  // Save score to localStorage whenever it changes
+  useEffect(() => {
+    if (address && scoreData) {
+      localStorage.setItem(`eon-score-${address.toLowerCase()}`, JSON.stringify(scoreData));
+    }
+  }, [address, scoreData]);
+
+  // Save linked wallets to localStorage
+  useEffect(() => {
+    if (address) {
+      localStorage.setItem(`eon-wallets-${address.toLowerCase()}`, JSON.stringify(linkedWallets));
+    }
+  }, [address, linkedWallets]);
 
   const handleCalculateScore = async () => {
     if (!address) return;
