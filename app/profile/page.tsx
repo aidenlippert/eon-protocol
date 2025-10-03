@@ -57,7 +57,14 @@ export default function ProfilePage() {
   // Save score to localStorage whenever it changes
   useEffect(() => {
     if (address && scoreData) {
-      localStorage.setItem(`eon-score-${address.toLowerCase()}`, JSON.stringify(scoreData));
+      // Custom replacer to handle BigInt serialization
+      const replacer = (_key: string, value: unknown) => {
+        if (typeof value === 'bigint') {
+          return value.toString();
+        }
+        return value;
+      };
+      localStorage.setItem(`eon-score-${address.toLowerCase()}`, JSON.stringify(scoreData, replacer));
     }
   }, [address, scoreData]);
 
