@@ -8,11 +8,13 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { analyzeWalletComprehensive, type EnhancedCreditScoreData } from '@/lib/comprehensive-analyzer';
 import { getRecommendedLTV, getInterestRateMultiplier } from '@/lib/real-credit-score';
-import { Loader2, Award, TrendingUp, ExternalLink, ChevronDown, ChevronUp, Info, Shield, AlertTriangle } from 'lucide-react';
+import { initiateKYCVerification, checkKYCStatus } from '@/lib/didit-kyc';
+import { Loader2, Award, TrendingUp, ExternalLink, ChevronDown, ChevronUp, Info, Shield, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 export default function ProfilePage() {
   const { address, isConnected } = useAccount();
   const [loading, setLoading] = useState(false);
+  const [kycLoading, setKycLoading] = useState(false);
   const [scoreData, setScoreData] = useState<EnhancedCreditScoreData | null>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
@@ -27,6 +29,48 @@ export default function ProfilePage() {
       console.error('Failed to calculate score:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleVerifyIdentity = async () => {
+    if (!address) return;
+
+    setKycLoading(true);
+    try {
+      // Check if already verified
+      const status = await checkKYCStatus(address);
+      if (status.verified) {
+        alert('You are already verified! Refresh your score to see the bonus.');
+        setKycLoading(false);
+        return;
+      }
+
+      // Initiate KYC
+      const { verificationUrl } = await initiateKYCVerification(address);
+
+      // Open Didit verification in new window
+      window.open(verificationUrl, '_blank', 'width=500,height=700');
+
+      // Poll for completion
+      const checkInterval = setInterval(async () => {
+        const updated = await checkKYCStatus(address);
+        if (updated.verified) {
+          clearInterval(checkInterval);
+          alert('KYC verified! Recalculating your score...');
+          await handleCalculateScore();
+          setKycLoading(false);
+        }
+      }, 5000); // Check every 5 seconds
+
+      // Stop polling after 5 minutes
+      setTimeout(() => {
+        clearInterval(checkInterval);
+        setKycLoading(false);
+      }, 300000);
+    } catch (error) {
+      console.error('Failed to initiate KYC:', error);
+      alert('Failed to start KYC verification. Please try again.');
+      setKycLoading(false);
     }
   };
 
@@ -404,6 +448,32 @@ export default function ProfilePage() {
                         </div>
                       </div>
                     </div>
+
+                    {/* KYC Verification Button */}
+                    {scoreData.sybilResistance.adjustments.noVerificationPenalty < 0 && (
+                      <div className="mb-4">
+                        <Button
+                          onClick={handleVerifyIdentity}
+                          disabled={kycLoading}
+                          className="w-full bg-green-600 hover:bg-green-700"
+                        >
+                          {kycLoading ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Verifying Identity...
+                            </>
+                          ) : (
+                            <>
+                              <CheckCircle2 className="mr-2 h-4 w-4" />
+                              Verify Identity with Didit (FREE)
+                            </>
+                          )}
+                        </Button>
+                        <p className="text-xs text-center text-neutral-400 mt-2">
+                          Complete FREE KYC to remove -150 penalty and get +100-150 bonus
+                        </p>
+                      </div>
+                    )}
 
                     <div className="space-y-4">
                       <div className="bg-neutral-950/50 rounded-lg border border-neutral-800 p-4">

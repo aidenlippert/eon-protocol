@@ -2,18 +2,21 @@
  * Sybil Resistance System
  *
  * Multi-layered approach to prevent score gaming:
- * 1. Proof of Humanity verification (Gitcoin Passport, Worldcoin)
+ * 1. Didit KYC verification (FREE, real identity verification)
  * 2. Wallet bundling (link wallets to aggregate reputation)
  * 3. Economic penalties for new wallets
  * 4. Staking requirements for score boost
  * 5. Cross-chain reputation tracking
  */
 
+import { type DiditVerification, calculateKYCBonus, getReducedKYCPenalty } from './didit-kyc';
+
 export interface ProofOfHumanity {
   verified: boolean;
-  provider: 'gitcoin' | 'worldcoin' | 'holonym' | 'none';
+  provider: 'didit' | 'gitcoin' | 'worldcoin' | 'holonym' | 'none';
   verificationDate: Date | null;
   humanityScore: number; // 0-100
+  kycLevel?: 'basic' | 'full' | 'none';
 }
 
 export interface LinkedWallet {
@@ -51,18 +54,25 @@ export function calculateWalletAgePenalty(walletAgeInDays: number): number {
 }
 
 /**
- * Calculate Proof of Humanity bonus
+ * Calculate KYC/Proof of Humanity bonus
  *
  * Verified humans get significant boost:
+ * - Didit Basic KYC (ID verification): +100 points
+ * - Didit Full KYC (ID + liveness): +150 points
  * - Gitcoin Passport: +100 points
  * - Worldcoin: +100 points
- * - Holonym: +100 points
  * - No verification: 0 bonus (penalty applied below)
  */
 export function calculateHumanityBonus(poh: ProofOfHumanity): number {
   if (!poh.verified) return 0;
 
-  // Base bonus for being verified human
+  // Didit KYC gets higher bonuses
+  if (poh.provider === 'didit') {
+    if (poh.kycLevel === 'full') return 150; // Full KYC with liveness
+    if (poh.kycLevel === 'basic') return 100; // Basic KYC (ID only)
+  }
+
+  // Other providers get base bonus
   let bonus = 100;
 
   // Additional bonus based on humanity score (passport stamps, etc)
@@ -112,16 +122,31 @@ export function calculateBundlingBonus(linkedWallets: LinkedWallet[]): number {
 }
 
 /**
- * Calculate NO-VERIFICATION PENALTY
+ * Calculate NO-KYC PENALTY
  *
- * If you don't prove you're human, you get penalized:
+ * If you don't complete KYC, you get penalized:
  * - This makes sybil attacks economically unviable
- * - Forces legitimate users to verify identity
- * - Verified users get bonus, unverified get penalty
+ * - Forces legitimate users to verify identity (FREE with Didit!)
+ * - Verified users get bonus, unverified get MASSIVE penalty
+ *
+ * Can be reduced for VERY established users (1+ year old wallet + 10K+ staked)
  */
-export function calculateNoVerificationPenalty(poh: ProofOfHumanity): number {
+export function calculateNoVerificationPenalty(
+  poh: ProofOfHumanity,
+  walletAgeInDays: number = 0,
+  stakingAmount: bigint = BigInt(0)
+): number {
   if (poh.verified) return 0;
-  return -150; // MASSIVE penalty for no verification
+
+  // Check if user can get reduced penalty (very rare case)
+  const hasOldWallet = walletAgeInDays >= 365; // 1+ year
+  const hasHighStake = stakingAmount >= BigInt(10000 * 1e6); // 10,000+ USDC
+
+  if (hasOldWallet && hasHighStake) {
+    return -75; // Reduced penalty for VERY established users
+  }
+
+  return -150; // MASSIVE penalty for no KYC
 }
 
 /**
@@ -148,7 +173,7 @@ export function applySybilResistance(
   const humanityBonus = calculateHumanityBonus(poh);
   const stakingBonus = calculateStakingBonus(stakingAmount);
   const bundlingBonus = calculateBundlingBonus(linkedWallets);
-  const noVerificationPenalty = calculateNoVerificationPenalty(poh);
+  const noVerificationPenalty = calculateNoVerificationPenalty(poh, walletAgeInDays, stakingAmount);
 
   const totalAdjustment =
     walletAgePenalty +
@@ -269,7 +294,12 @@ export function getVerificationRecommendations(
 
   if (!poh.verified) {
     recommendations.push(
-      '🔴 CRITICAL: Verify your identity with Gitcoin Passport (+100 points, removes -150 penalty)'
+      '🔴 CRITICAL: Complete FREE KYC with Didit (+100-150 points, removes -150 penalty)',
+      '   Click "Verify Identity" button above to start'
+    );
+  } else if (poh.provider === 'didit' && poh.kycLevel === 'basic') {
+    recommendations.push(
+      '🟢 UPGRADE: Complete Full KYC with liveness check for +50 more points (Basic: +100 → Full: +150)'
     );
   }
 
@@ -290,4 +320,17 @@ export function getVerificationRecommendations(
   }
 
   return recommendations;
+}
+
+/**
+ * Convert Didit verification to ProofOfHumanity format
+ */
+export function diditToProofOfHumanity(didit: DiditVerification): ProofOfHumanity {
+  return {
+    verified: didit.verified,
+    provider: didit.verified ? 'didit' : 'none',
+    verificationDate: didit.verificationDate,
+    humanityScore: didit.verified ? 100 : 0,
+    kycLevel: didit.verificationLevel,
+  };
 }
