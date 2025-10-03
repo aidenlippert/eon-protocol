@@ -1,0 +1,11 @@
+{
+  "creditRegistry": "0xBF69B777Af1ADCcF2814344b06AF028d32c4b1FE",
+  "lendingPool": "0x19965cACd1893ED591fd20854d95a3Ad923E2712",
+  "healthFactorMonitor": "0x47f57c69339d5e0646Ef925FF1A779e968F20E7e",
+  "insuranceFund": "0x5dC974Ac454534F28C31BCFe07af7272F326B888",
+  "treasury": "0x1AF3c73eB17f38bC645faE487942e57C5B9F4FE3",
+  "attester": "0x1AF3c73eB17f38bC645faE487942e57C5B9F4FE3",
+  "deployer": "0x1AF3c73eB17f38bC645faE487942e57C5B9F4FE3",
+  "network": "arbitrumSepolia",
+  "timestamp": 1759532989407
+}

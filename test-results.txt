@@ -1,0 +1,367 @@
+
+
+  CreditRegistryV1_1
+    Deployment
+      ✔ Should set the right owner
+      ✔ Should set the treasury address
+      ✔ Should authorize deployer as attester
+      ✔ Should set correct challenge period
+      ✔ Should set correct challenge bond
+    Score Attestation
+      ✔ Should allow authorized attester to attest score
+      ✔ Should reject attestation from unauthorized attester
+      ✔ Should reject invalid score (< 300)
+      ✔ Should reject invalid score (> 850)
+      ✔ Should reject invalid tier (> 4)
+      ✔ Should reject invalid LTV (> 90)
+      ✔ Should store pending attestation correctly
+      ✔ Should reject attestation if one is already pending
+    Score Finalization
+      ✔ Should finalize score after challenge period
+      ✔ Should reject finalization before challenge period
+      ✔ Should store finalized score correctly
+      ✔ Should reject finalization with wrong score hash
+    Challenge Mechanism
+      ✔ Should allow challenge with sufficient bond
+      ✔ Should reject challenge with insufficient bond
+      ✔ Should reject challenge after challenge period
+      ✔ Should reject duplicate challenge
+      ✔ Should store challenge correctly
+      ✔ Should mark attestation as challenged
+    View Functions
+      ✔ Should return score for user
+      ✔ Should check if score is valid and recent
+      ✔ Should return false for expired score
+      ✔ Should return false for user with no score
+    Admin Functions
+      ✔ Should allow owner to authorize attester
+      ✔ Should allow owner to deauthorize attester
+      ✔ Should reject non-owner authorization
+      ✔ Should allow owner to update challenge period
+      ✔ Should reject invalid challenge period (too short)
+      ✔ Should reject invalid challenge period (too long)
+      ✔ Should allow owner to update challenge bond
+      ✔ Should reject invalid challenge bond (too low)
+      ✔ Should reject invalid challenge bond (too high)
+      ✔ Should allow owner to update treasury
+      ✔ Should reject invalid treasury address
+    Edge Cases
+      ✔ Should handle multiple users independently
+      ✔ Should handle score updates after finalization
+    Score Tier Examples
+      ✔ Should handle Exceptional tier (Platinum)
+      ✔ Should handle Subprime tier
+
+  DutchAuctionLiquidator
+    Deployment
+      ✔ Should set correct addresses
+      ✔ Should set correct grace period constants
+      ✔ Should set correct auction parameters
+    Grace Period Calculation
+      ✔ Should give 72h grace period for Platinum tier (800+)
+      ✔ Should give 24h grace period for Gold tier (600-799)
+      ✔ Should give 0h grace period for Silver tier (400-599)
+      ✔ Should give 0h grace period for Bronze tier (<400)
+    Starting Liquidation
+      ✔ Should start auction with correct grace period
+      ✔ Should emit AuctionStarted event
+      ✔ Should reject inactive loan
+    Discount Calculation
+      ✔ Should have 0% discount at auction start
+      ✔ Should have ~10% discount after 3 hours
+      ✔ Should have 20% discount after 6 hours
+      ✔ Should cap at 20% discount after auction ends
+      ✔ Should respect grace period before starting discount
+    Executing Liquidation
+      ✔ Should execute liquidation after grace period
+      ✔ Should reject execution during grace period
+      ✔ Should reject double execution
+      ✔ Should emit AuctionExecuted event
+    Auction Cancellation
+      ✔ Should allow owner to cancel auction
+      ✔ Should prevent non-owner from canceling
+      ✔ Should emit AuctionCancelled event
+    Executable Check
+      ✔ Should return false during grace period
+      ✔ Should return true after grace period
+      ✔ Should return false after execution
+    Grace Period Remaining
+      ✔ Should show correct time remaining
+      ✔ Should return 0 after grace period ends
+
+  HealthFactorMonitor
+    Deployment
+      ✔ Should set the correct addresses
+      ✔ Should set the correct liquidation threshold
+      ✔ Should set the owner correctly
+    Health Factor Calculation
+      ✔ Should calculate correct health factor for healthy loan
+      ✔ Should calculate correct health factor for unhealthy loan
+      ✔ Should handle edge case: exact liquidation threshold
+      ✔ Should handle zero debt (infinite health factor)
+      ✔ Should handle zero collateral (zero health factor)
+      ✔ Should update health factor when called multiple times
+      ✔ Should emit HealthFactorUpdated event
+      ✔ Should revert for inactive loan
+    Risk Level Classification
+      ✔ Should classify Safe risk level (HF >= 1.2)
+      ✔ Should classify Warning risk level (1.05 <= HF < 1.2)
+      ✔ Should classify Danger risk level (0.95 < HF < 1.05)
+      ✔ Should classify Critical risk level (HF <= 0.95)
+    Liquidation Status
+      ✔ Should return false for healthy loan
+      ✔ Should return true for unhealthy loan
+      ✔ Should return true when HF equals threshold
+    Required Collateral Calculation
+      ✔ Should calculate required collateral to reach target HF
+      ✔ Should return 0 when current HF already exceeds target
+      ✔ Should handle zero debt case
+    Batch Health Factor Updates
+      ✔ Should calculate health factors for multiple loans
+      ✔ Should handle concurrent loans for same borrower
+    Different Reputation Tiers
+      ✔ Should use Bronze tier LTV (50%)
+      ✔ Should use Silver tier LTV (65%)
+      ✔ Should use Gold tier LTV (75%)
+      ✔ Should use Platinum tier LTV (90%)
+    Authorization
+      ✔ Should allow owner to update oracle address
+      ✔ Should prevent non-owner from updating oracle
+      ✔ Should allow owner to update liquidation threshold
+      ✔ Should prevent non-owner from updating threshold
+      ✔ Should reject invalid threshold (> 100%)
+      ✔ Should reject zero threshold
+    Edge Cases
+      ✔ Should handle very large collateral amounts
+      ✔ Should handle very small amounts (wei)
+      ✔ Should handle loan with no health factor calculated yet
+    Events
+      ✔ Should emit HealthFactorUpdated on calculation
+      ✔ Should emit with liquidatable = true for unhealthy loan
+      ✔ Should emit OracleUpdated when oracle changes
+      ✔ Should emit ThresholdUpdated when threshold changes
+
+  InsuranceFund
+    Deployment
+      1) "before each" hook for "Should set the correct stablecoin address"
+
+  Integration Tests - Complete User Journey
+    Scenario 1: New User → Borrowing → Successful Repayment
+      2) "before each" hook for "Should handle complete successful loan cycle"
+
+  LendingPoolV1
+    Deployment
+      ✔ Should set the correct credit registry address
+      ✔ Should set the correct treasury address
+      ✔ Should set the correct owner
+      ✔ Should have correct initial constants
+      3) Should have correct LTV limits by tier
+    Asset Management
+      4) Should allow owner to enable borrow asset
+      5) Should allow owner to enable collateral asset with price feed
+      6) Should revert if non-owner tries to enable asset
+      7) Should revert if enabling same borrow asset twice
+      8) Should allow owner to disable borrow asset
+    Liquidity Provider Operations
+      9) "before each" hook for "Should allow LP to deposit"
+    Borrow Operations
+      10) "before each" hook for "Should allow platinum user to borrow at 90% LTV"
+    Repay Operations
+      11) "before each" hook for "Should allow full repayment immediately (no interest)"
+    Liquidation Operations
+      12) "before each" hook for "Should allow liquidation when health factor < 1"
+    Interest Rate Calculations
+      13) "before each" hook for "Should calculate correct rate at 0% utilization"
+    Admin Functions
+      14) Should allow owner to pause
+      15) Should allow owner to unpause
+      16) Should revert operations when paused
+      17) Should allow owner to set liquidation bonus
+      18) Should allow owner to set protocol fee
+      19) Should revert if non-owner tries admin functions
+    Edge Cases
+      20) "before each" hook for "Should handle zero liquidity pool"
+    View Functions
+      21) "before each" hook for "Should return correct user loan count"
+    Integration Scenarios
+      22) "before each" hook for "Should handle complete user journey: deposit → borrow → repay → withdraw"
+
+  ReputationScorer
+    Deployment
+      ✔ Should set the right owner
+      ✔ Should initialize with correct weights
+    Score Calculation
+      ✔ Should calculate score with base score only
+      ✔ Should assign correct tier based on score
+      ✔ Should assign correct LTV based on score
+      ✔ Should reject score > 1000
+      ✔ Should only allow authorized updaters
+    Payment History
+      ✔ Should record payment correctly
+      ✔ Should calculate late days correctly
+      ✔ Should improve score with on-time payments (55ms)
+      ✔ Should penalize score with late payments (45ms)
+    Wallet Age Scoring
+      ✔ Should record wallet creation time
+      ✔ Should only record creation time once
+    Protocol Activity
+      ✔ Should increment interaction count
+      ✔ Should max out protocol score at 100 interactions (298ms)
+    Score Breakdown
+      ✔ Should return complete score breakdown
+    Authorization
+      ✔ Should allow owner to set authorized updater
+      ✔ Should prevent non-owner from setting authorized updater
+      ✔ Should emit event when setting authorized updater
+    Edge Cases
+      ✔ Should handle zero base score
+      ✔ Should handle maximum base score
+      ✔ Should handle user with no payment history
+    Events
+      ✔ Should emit ScoreUpdated event
+      ✔ Should emit PaymentRecorded event
+
+
+  137 passing (8s)
+  22 failing
+
+  1) InsuranceFund
+       "before each" hook for "Should set the correct stablecoin address":
+     Error: incorrect number of arguments to constructor
+      at ContractFactory.getDeployTransaction (node_modules/ethers/src.ts/contract/factory.ts:87:19)
+      at ContractFactory.deploy (node_modules/ethers/src.ts/contract/factory.ts:105:31)
+      at Context.<anonymous> (test/InsuranceFund.test.ts:23:41)
+
+  2) Integration Tests - Complete User Journey
+       "before each" hook for "Should handle complete successful loan cycle":
+     Error: incorrect number of arguments to constructor
+      at ContractFactory.getDeployTransaction (node_modules/ethers/src.ts/contract/factory.ts:87:19)
+      at ContractFactory.deploy (node_modules/ethers/src.ts/contract/factory.ts:105:31)
+      at Context.<anonymous> (test/Integration.test.ts:39:41)
+
+  3) LendingPoolV1
+       Deployment
+         Should have correct LTV limits by tier:
+     TypeError: lendingPool.SUBPRIME_LTV is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:94:32)
+
+  4) LendingPoolV1
+       Asset Management
+         Should allow owner to enable borrow asset:
+     TypeError: lendingPool.enableBorrowAsset is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:100:32)
+
+  5) LendingPoolV1
+       Asset Management
+         Should allow owner to enable collateral asset with price feed:
+     TypeError: lendingPool.enableCollateralAsset is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:112:21)
+
+  6) LendingPoolV1
+       Asset Management
+         Should revert if non-owner tries to enable asset:
+     TypeError: lendingPool.connect(...).enableBorrowAsset is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:124:34)
+
+  7) LendingPoolV1
+       Asset Management
+         Should revert if enabling same borrow asset twice:
+     TypeError: lendingPool.enableBorrowAsset is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:129:25)
+
+  8) LendingPoolV1
+       Asset Management
+         Should allow owner to disable borrow asset:
+     TypeError: lendingPool.enableBorrowAsset is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:136:25)
+
+  9) LendingPoolV1
+       Liquidity Provider Operations
+         "before each" hook for "Should allow LP to deposit":
+     TypeError: lendingPool.enableBorrowAsset is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:145:25)
+
+  10) LendingPoolV1
+       Borrow Operations
+         "before each" hook for "Should allow platinum user to borrow at 90% LTV":
+     TypeError: lendingPool.enableBorrowAsset is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:271:25)
+
+  11) LendingPoolV1
+       Repay Operations
+         "before each" hook for "Should allow full repayment immediately (no interest)":
+     TypeError: lendingPool.enableBorrowAsset is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:489:25)
+
+  12) LendingPoolV1
+       Liquidation Operations
+         "before each" hook for "Should allow liquidation when health factor < 1":
+     TypeError: lendingPool.enableBorrowAsset is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:628:25)
+
+  13) LendingPoolV1
+       Interest Rate Calculations
+         "before each" hook for "Should calculate correct rate at 0% utilization":
+     TypeError: lendingPool.enableBorrowAsset is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:720:25)
+
+  14) LendingPoolV1
+       Admin Functions
+         Should allow owner to pause:
+     TypeError: lendingPool.pause is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:834:25)
+      at processImmediate (node:internal/timers:485:21)
+
+  15) LendingPoolV1
+       Admin Functions
+         Should allow owner to unpause:
+     TypeError: lendingPool.pause is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:839:25)
+      at processImmediate (node:internal/timers:485:21)
+
+  16) LendingPoolV1
+       Admin Functions
+         Should revert operations when paused:
+     TypeError: lendingPool.enableBorrowAsset is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:845:25)
+
+  17) LendingPoolV1
+       Admin Functions
+         Should allow owner to set liquidation bonus:
+     TypeError: lendingPool.setLiquidationBonus is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:854:25)
+      at processImmediate (node:internal/timers:485:21)
+
+  18) LendingPoolV1
+       Admin Functions
+         Should allow owner to set protocol fee:
+     TypeError: lendingPool.protocolFee is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:860:32)
+
+  19) LendingPoolV1
+       Admin Functions
+         Should revert if non-owner tries admin functions:
+     TypeError: lendingPool.connect(...).setLiquidationBonus is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:865:34)
+      at processImmediate (node:internal/timers:485:21)
+
+  20) LendingPoolV1
+       Edge Cases
+         "before each" hook for "Should handle zero liquidity pool":
+     TypeError: lendingPool.enableBorrowAsset is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:872:25)
+
+  21) LendingPoolV1
+       View Functions
+         "before each" hook for "Should return correct user loan count":
+     TypeError: lendingPool.enableBorrowAsset is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:981:25)
+
+  22) LendingPoolV1
+       Integration Scenarios
+         "before each" hook for "Should handle complete user journey: deposit → borrow → repay → withdraw":
+     TypeError: lendingPool.enableBorrowAsset is not a function
+      at Context.<anonymous> (test/LendingPoolV1.test.ts:1041:25)
+
+
+

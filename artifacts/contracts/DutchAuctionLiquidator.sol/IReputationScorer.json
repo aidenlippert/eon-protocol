@@ -1,0 +1,55 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IReputationScorer",
+  "sourceName": "contracts/DutchAuctionLiquidator.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        }
+      ],
+      "name": "scores",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "baseScore",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "paymentScore",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "walletAgeScore",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "protocolScore",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalScore",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lastUpdated",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

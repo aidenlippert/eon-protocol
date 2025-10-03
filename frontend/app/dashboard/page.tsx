@@ -1,30 +1,19 @@
 'use client';
 
-import { useAccount, useReadContract } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CONTRACTS } from '@/lib/contracts';
-import { LENDING_POOL_ABI, REPUTATION_SCORER_ABI } from '@/lib/abi';
-import { formatUnits } from 'viem';
 import { Wallet, TrendingUp, Shield, AlertTriangle } from 'lucide-react';
+import { useCreditScore } from '@/lib/hooks/useCreditScore';
+import { useLendingPool } from '@/lib/hooks/useLendingPool';
+import { useHealthFactor } from '@/lib/hooks/useHealthFactor';
 
 export default function DashboardPage() {
-  const { address, isConnected } = useAccount();
-
-  const { data: accountData } = useReadContract({
-    address: CONTRACTS.LendingPool as `0x${string}`,
-    abi: LENDING_POOL_ABI,
-    functionName: 'getUserAccountData',
-    args: address ? [address] : undefined,
-  });
-
-  const { data: creditScore } = useReadContract({
-    address: CONTRACTS.ReputationScorer as `0x${string}`,
-    abi: REPUTATION_SCORER_ABI,
-    functionName: 'scores',
-    args: address ? [address] : undefined,
-  });
+  const { isConnected } = useAccount();
+  const { creditScore, tierLabel, riskLevel, isLoading: scoreLoading } = useCreditScore();
+  const { loanCount } = useLendingPool();
+  const { healthFactor, status, isLiquidatable, isLoading: hfLoading } = useHealthFactor(loanCount ? 0 : undefined);
 
   if (!isConnected) {
     return (
@@ -40,20 +29,13 @@ export default function DashboardPage() {
     );
   }
 
-  const totalCollateral = accountData ? Number(formatUnits(accountData[0], 6)) : 0;
-  const totalDebt = accountData ? Number(formatUnits(accountData[1], 6)) : 0;
-  const availableBorrow = accountData ? Number(formatUnits(accountData[2], 6)) : 0;
-  const healthFactor = accountData ? Number(formatUnits(accountData[5], 18)) : 0;
-  const score = creditScore ? Number(creditScore) : 300;
+  const score = creditScore?.score || 0;
+  const tier = tierLabel || 'No Score';
+  const risk = riskLevel || 'Unknown';
 
-  const getCreditTier = (score: number) => {
-    if (score >= 800) return 'Platinum';
-    if (score >= 650) return 'Gold';
-    if (score >= 500) return 'Silver';
-    return 'Bronze';
-  };
-
-  const tier = getCreditTier(score);
+  // Mock data for positions (will be replaced with actual loan data)
+  const totalCollateral = 0;
+  const totalDebt = 0;
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -67,10 +49,18 @@ export default function DashboardPage() {
               <span className="text-sm text-neutral-400">Credit Score</span>
               <Wallet className="h-4 w-4 text-violet-400" />
             </div>
-            <div className="text-3xl font-bold text-violet-400">{score}</div>
-            <Badge className="mt-2 bg-violet-500/10 text-violet-400 border-violet-500/20">
-              {tier}
-            </Badge>
+            {scoreLoading ? (
+              <div className="text-3xl font-bold text-neutral-600">Loading...</div>
+            ) : score > 0 ? (
+              <>
+                <div className="text-3xl font-bold text-violet-400">{score}</div>
+                <Badge className="mt-2 bg-violet-500/10 text-violet-400 border-violet-500/20">
+                  {tier}
+                </Badge>
+              </>
+            ) : (
+              <div className="text-lg font-medium text-neutral-500">No Credit Score</div>
+            )}
           </Card>
 
           <Card className="bg-neutral-900/50 border-neutral-800 p-6">
@@ -94,14 +84,23 @@ export default function DashboardPage() {
           <Card className="bg-neutral-900/50 border-neutral-800 p-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-neutral-400">Health Factor</span>
-              <AlertTriangle className="h-4 w-4 text-yellow-400" />
+              <AlertTriangle className={`h-4 w-4 ${status?.severity === 'safe' ? 'text-green-400' : status?.severity === 'warning' ? 'text-yellow-400' : status?.severity === 'danger' ? 'text-orange-400' : 'text-red-400'}`} />
             </div>
-            <div className={`text-3xl font-bold ${healthFactor > 1.5 ? 'text-green-400' : healthFactor > 1.0 ? 'text-yellow-400' : 'text-red-400'}`}>
-              {healthFactor > 0 ? healthFactor.toFixed(2) : '∞'}
-            </div>
-            <div className="text-sm text-neutral-400 mt-2">
-              {healthFactor > 1.5 ? 'Healthy' : healthFactor > 1.0 ? 'Moderate' : 'At Risk'}
-            </div>
+            {hfLoading ? (
+              <div className="text-2xl font-bold text-neutral-600">Loading...</div>
+            ) : healthFactor ? (
+              <>
+                <div className={`text-3xl font-bold ${status?.color === 'green' ? 'text-green-400' : status?.color === 'yellow' ? 'text-yellow-400' : status?.color === 'orange' ? 'text-orange-400' : 'text-red-400'}`}>
+                  {healthFactor.toFixed(2)}
+                </div>
+                <div className="text-sm text-neutral-400 mt-2">{status?.label}</div>
+              </>
+            ) : (
+              <>
+                <div className="text-3xl font-bold text-green-400">∞</div>
+                <div className="text-sm text-neutral-400 mt-2">No Loans</div>
+              </>
+            )}
           </Card>
         </div>
 
