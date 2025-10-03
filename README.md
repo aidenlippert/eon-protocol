@@ -238,3 +238,4 @@ MIT License - see [LICENSE](LICENSE) file for details
 **Built with ⚡ for the future of trustless credit**
 
 *Eon Protocol - Time as Collateral*
+# Eon Protocol - Phase 1 Live\!
