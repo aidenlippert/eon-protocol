@@ -3,6 +3,66 @@
  * FICO-based scoring adapted for on-chain data
  */
 
+export interface LendingPosition {
+  protocol: string;
+  borrowAmount: bigint;
+  collateralAmount: bigint;
+  healthFactor: number;
+  isLiquidated: boolean;
+}
+
+export interface CreditScoreData {
+  score: number;
+  factors: {
+    paymentHistory: number;
+    creditUtilization: number;
+    creditHistoryLength: number;
+    creditMix: number;
+    newCredit: number;
+  };
+  walletAge: number;
+  totalTransactions: number;
+  defiInteractions: number;
+  liquidationCount: number;
+}
+
+/**
+ * Calculate credit score from wallet data
+ * Based on FICO methodology adapted for DeFi
+ */
+export function calculateCreditScore(
+  transactions: number,
+  defiInteractions: number,
+  liquidations: number,
+  walletAgeInDays: number,
+  lendingPositions: LendingPosition[]
+): CreditScoreData {
+  const factors = {
+    paymentHistory: Math.min(200, 200 - (liquidations * 50)), // Max 200, -50 per liquidation
+    creditUtilization: 150, // Placeholder
+    creditHistoryLength: Math.min(150, (walletAgeInDays / 365) * 150), // Max 150
+    creditMix: Math.min(100, defiInteractions * 10), // Max 100
+    newCredit: Math.max(50, 100 - (transactions < 50 ? 50 : 0)), // Max 100
+  };
+
+  const score = Math.min(850, Math.max(300,
+    factors.paymentHistory +
+    factors.creditUtilization +
+    factors.creditHistoryLength +
+    factors.creditMix +
+    factors.newCredit
+  ));
+
+  return {
+    score,
+    factors,
+    walletAge: walletAgeInDays,
+    totalTransactions: transactions,
+    defiInteractions,
+    liquidationCount: liquidations,
+  };
+}
+
 /**
  * Get recommended Loan-to-Value ratio based on credit score
  * Higher scores = higher LTV allowed

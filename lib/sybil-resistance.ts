@@ -3,6 +3,19 @@
  * Prevents users from gaming the system by creating new wallets
  */
 
+export interface SybilResistanceResult {
+  finalScore: number;
+  baseScore: number;
+  adjustments: {
+    walletAgePenalty: number;
+    humanityBonus: number;
+    stakingBonus: number;
+    bundlingBonus: number;
+    noVerificationPenalty: number;
+    totalAdjustment: number;
+  };
+}
+
 export interface LinkedWallet {
   address: string;
   linkedAt: Date;
@@ -279,4 +292,43 @@ export function getVerificationRecommendations(
   }
 
   return recommendations;
+}
+
+/**
+ * Apply sybil resistance adjustments to base credit score
+ * Returns final score after all adjustments
+ */
+export function applySybilResistance(
+  baseScore: number,
+  walletAgeInDays: number,
+  verification: ProofOfHumanity,
+  stakingAmount: bigint,
+  linkedWallets: LinkedWallet[]
+): SybilResistanceResult {
+  // Calculate all adjustments
+  const walletAgePenalty = calculateWalletAgePenalty(walletAgeInDays);
+  const kycResult = calculateKYCBonus(verification);
+  const stakingBonus = calculateStakingBonus(stakingAmount);
+  const bundlingBonus = calculateBundlingBonus(linkedWallets);
+
+  const totalAdjustment =
+    walletAgePenalty +
+    kycResult.total +
+    stakingBonus +
+    bundlingBonus;
+
+  const finalScore = Math.min(850, Math.max(300, baseScore + totalAdjustment));
+
+  return {
+    finalScore,
+    baseScore,
+    adjustments: {
+      walletAgePenalty,
+      humanityBonus: kycResult.bonus,
+      stakingBonus,
+      bundlingBonus,
+      noVerificationPenalty: kycResult.penalty,
+      totalAdjustment,
+    },
+  };
 }
