@@ -27,10 +27,10 @@ import {
 export interface EnhancedCreditScoreData extends CreditScoreData {
   tier: string;
   breakdown: {
-    paymentHistory: { score: number; weight: number; evidence: { totalLoans: number; repaidOnTime: number; liquidations: number; avgHealthFactor: string } };
-    creditUtilization: { score: number; weight: number; evidence: { currentUtilization: string; averageUtilization: string; peakUtilization: string } };
+    paymentHistory: { score: number; weight: number; evidence: { totalLoans: number; repaidOnTime: number; liquidations: number; avgHealthFactor: number } };
+    creditUtilization: { score: number; weight: number; evidence: { currentUtilization: number; averageUtilization: number; peakUtilization: number } };
     creditHistoryLength: { score: number; weight: number; evidence: { walletAge: string; firstTxDate: string; accountAgeInDays: number } };
-    creditMix: { score: number; weight: number; evidence: { protocolsUsed: string[]; assetTypes: string[]; diversityScore: string } };
+    creditMix: { score: number; weight: number; evidence: { protocolsUsed: string[]; assetTypes: string[]; diversityScore: number } };
     newCredit: { score: number; weight: number; evidence: { recentLoans: number; avgTimeBetween: string; hardInquiries: number } };
   };
   sybilResistance: {
@@ -407,16 +407,16 @@ export async function analyzeWalletComprehensive(
         totalLoans: lendingPositions.length,
         repaidOnTime: lendingPositions.filter(p => !p.isLiquidated).length,
         liquidations: baseScoreData.liquidationCount,
-        avgHealthFactor: '1.5', // Placeholder
+        avgHealthFactor: 1.5, // Placeholder number
       },
     },
     creditUtilization: {
       score: baseScoreData.factors.creditUtilization,
       weight: 30,
       evidence: {
-        currentUtilization: '0%',
-        averageUtilization: '0%',
-        peakUtilization: '0%',
+        currentUtilization: 0, // Number not string
+        averageUtilization: 0,
+        peakUtilization: 0,
       },
     },
     creditHistoryLength: {
@@ -434,7 +434,7 @@ export async function analyzeWalletComprehensive(
       evidence: {
         protocolsUsed: crossChainData?.totalProtocols || [],
         assetTypes: [],
-        diversityScore: `${baseScoreData.defiInteractions}/10`,
+        diversityScore: baseScoreData.defiInteractions, // Number not string
       },
     },
     newCredit: {
