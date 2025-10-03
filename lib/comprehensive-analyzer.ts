@@ -7,7 +7,7 @@
 import { createPublicClient, http, parseAbiItem } from 'viem';
 import { arbitrumSepolia } from 'viem/chains';
 import { fetchTransactionHistory, type Transaction } from './transaction-analyzer';
-import { calculateCreditScore, type LendingPosition, type CreditScoreData } from './real-credit-score';
+import { calculateCreditScore, getScoreTier, type LendingPosition, type CreditScoreData } from './real-credit-score';
 import {
   applySybilResistance,
   detectSybilAttack,
@@ -25,6 +25,7 @@ import {
 } from './cross-chain-aggregator';
 
 export interface EnhancedCreditScoreData extends CreditScoreData {
+  tier: string; // Score tier: 'Exceptional', 'Very Good', 'Good', 'Fair', 'Subprime'
   sybilResistance: {
     finalScore: number;
     baseScore: number;
@@ -394,6 +395,7 @@ export async function analyzeWalletComprehensive(
   return {
     ...baseScoreData,
     score: finalScoreWithCrossChain, // FINAL SCORE with all bonuses
+    tier: getScoreTier(finalScoreWithCrossChain), // Score tier based on final score
     sybilResistance: {
       finalScore: finalScoreWithCrossChain,
       baseScore: baseScoreData.score,
