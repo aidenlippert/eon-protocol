@@ -25,7 +25,14 @@ import {
 } from './cross-chain-aggregator';
 
 export interface EnhancedCreditScoreData extends CreditScoreData {
-  tier: string; // Score tier: 'Exceptional', 'Very Good', 'Good', 'Fair', 'Subprime'
+  tier: string;
+  breakdown: {
+    paymentHistory: { score: number; weight: number; evidence: { totalLoans: number; repaidOnTime: number; liquidations: number; avgHealthFactor: string } };
+    creditUtilization: { score: number; weight: number; evidence: { currentUtilization: string; averageUtilization: string; peakUtilization: string } };
+    creditHistoryLength: { score: number; weight: number; evidence: { walletAge: string; firstTxDate: string; accountAgeInDays: number } };
+    creditMix: { score: number; weight: number; evidence: { protocolsUsed: string[]; assetTypes: string[]; diversityScore: string } };
+    newCredit: { score: number; weight: number; evidence: { recentLoans: number; avgTimeBetween: string; hardInquiries: number } };
+  };
   sybilResistance: {
     finalScore: number;
     baseScore: number;
@@ -391,11 +398,62 @@ export async function analyzeWalletComprehensive(
     totalProtocols: crossChainData.totalProtocols.length,
   } : undefined;
 
-  // 18. Return enhanced score with sybil resistance AND cross-chain data
+  // 18. Build breakdown data
+  const breakdown = {
+    paymentHistory: {
+      score: baseScoreData.factors.paymentHistory,
+      weight: 35,
+      evidence: {
+        totalLoans: lendingPositions.length,
+        repaidOnTime: lendingPositions.filter(p => !p.isLiquidated).length,
+        liquidations: baseScoreData.liquidationCount,
+        avgHealthFactor: '1.5', // Placeholder
+      },
+    },
+    creditUtilization: {
+      score: baseScoreData.factors.creditUtilization,
+      weight: 30,
+      evidence: {
+        currentUtilization: '0%',
+        averageUtilization: '0%',
+        peakUtilization: '0%',
+      },
+    },
+    creditHistoryLength: {
+      score: baseScoreData.factors.creditHistoryLength,
+      weight: 15,
+      evidence: {
+        walletAge: `${Math.floor(baseScoreData.walletAge / 365)}y ${Math.floor((baseScoreData.walletAge % 365) / 30)}m`,
+        firstTxDate: 'Unknown',
+        accountAgeInDays: baseScoreData.walletAge,
+      },
+    },
+    creditMix: {
+      score: baseScoreData.factors.creditMix,
+      weight: 10,
+      evidence: {
+        protocolsUsed: crossChainData?.totalProtocols || [],
+        assetTypes: [],
+        diversityScore: `${baseScoreData.defiInteractions}/10`,
+      },
+    },
+    newCredit: {
+      score: baseScoreData.factors.newCredit,
+      weight: 10,
+      evidence: {
+        recentLoans: loanFrequency.recentLoans,
+        avgTimeBetween: `${Math.floor(loanFrequency.avgTimeBetweenLoans / 86400)}d`,
+        hardInquiries: 0,
+      },
+    },
+  };
+
+  // 19. Return enhanced score with sybil resistance AND cross-chain data
   return {
     ...baseScoreData,
     score: finalScoreWithCrossChain, // FINAL SCORE with all bonuses
     tier: getScoreTier(finalScoreWithCrossChain), // Score tier based on final score
+    breakdown,
     sybilResistance: {
       finalScore: finalScoreWithCrossChain,
       baseScore: baseScoreData.score,
