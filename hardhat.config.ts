@@ -1,11 +1,11 @@
-require("@nomicfoundation/hardhat-toolbox");
-require("@nomicfoundation/hardhat-verify");
-require("dotenv").config();
+import { HardhatUserConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-toolbox";
+import "@nomicfoundation/hardhat-ethers";
+import "dotenv/config";
 
-/** @type import('hardhat/config').HardhatUserConfig */
-module.exports = {
+const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.24",
+    version: "0.8.20",
     settings: {
       optimizer: {
         enabled: true,
@@ -14,6 +14,9 @@ module.exports = {
     },
   },
   networks: {
+    hardhat: {
+      chainId: 31337,
+    },
     arbitrumSepolia: {
       url: process.env.ARBITRUM_SEPOLIA_RPC || "https://sepolia-rollup.arbitrum.io/rpc",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
@@ -30,18 +33,16 @@ module.exports = {
       arbitrumSepolia: process.env.ARBISCAN_API_KEY || "",
       arbitrumOne: process.env.ARBISCAN_API_KEY || "",
     },
-    customChains: [
-      {
-        network: "arbitrumSepolia",
-        chainId: 421614,
-        urls: {
-          apiURL: "https://api-sepolia.arbiscan.io/api",
-          browserURL: "https://sepolia.arbiscan.io"
-        }
-      }
-    ]
   },
-  sourcify: {
-    enabled: true
-  }
+  paths: {
+    sources: "./contracts",
+    tests: "./test",
+    cache: "./cache",
+    artifacts: "./artifacts",
+  },
+  mocha: {
+    timeout: 60000,
+  },
 };
+
+export default config;
