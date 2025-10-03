@@ -5,10 +5,12 @@
 
 export interface LendingPosition {
   protocol: string;
-  borrowAmount: bigint;
-  collateralAmount: bigint;
+  borrowed: bigint;
+  collateral: bigint;
   healthFactor: number;
-  isLiquidated: boolean;
+  timestamp: number;
+  repaid: boolean;
+  liquidated: boolean;
 }
 
 export interface CreditScoreData {

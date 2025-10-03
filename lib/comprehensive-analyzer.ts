@@ -28,10 +28,10 @@ export interface EnhancedCreditScoreData extends CreditScoreData {
   tier: string;
   breakdown: {
     paymentHistory: { score: number; weight: number; evidence: { totalLoans: number; repaidOnTime: number; liquidations: number; avgHealthFactor: number } };
-    creditUtilization: { score: number; weight: number; evidence: { currentUtilization: number; averageUtilization: number; peakUtilization: number } };
-    creditHistoryLength: { score: number; weight: number; evidence: { walletAge: string; firstTxDate: string; accountAgeInDays: number } };
+    creditUtilization: { score: number; weight: number; evidence: { currentUtilization: number; avgUtilization: number; maxUtilization: number } };
+    creditHistoryLength: { score: number; weight: number; evidence: { walletAgeInDays: number; defiAgeInDays: number; firstDefiInteraction: string } };
     creditMix: { score: number; weight: number; evidence: { protocolsUsed: string[]; assetTypes: string[]; diversityScore: number } };
-    newCredit: { score: number; weight: number; evidence: { recentLoans: number; avgTimeBetween: string; hardInquiries: number } };
+    newCredit: { score: number; weight: number; evidence: { recentLoans: number; avgTimeBetweenLoans: string; hardInquiries: number } };
   };
   sybilResistance: {
     finalScore: number;
@@ -228,9 +228,9 @@ export async function analyzeWalletComprehensive(
   // Default values for sybil resistance
   const poh: ProofOfHumanity = proofOfHumanity || {
     verified: false,
-    provider: 'none',
+    verificationId: null,
     verificationDate: null,
-    humanityScore: 0,
+    verificationLevel: 'none',
   };
   const wallets: LinkedWallet[] = linkedWallets || [];
   const staking: bigint = stakingAmount || BigInt(0);
@@ -415,17 +415,17 @@ export async function analyzeWalletComprehensive(
       weight: 30,
       evidence: {
         currentUtilization: 0, // Number not string
-        averageUtilization: 0,
-        peakUtilization: 0,
+        avgUtilization: 0,
+        maxUtilization: 0,
       },
     },
     creditHistoryLength: {
       score: baseScoreData.factors.creditHistoryLength,
       weight: 15,
       evidence: {
-        walletAge: `${Math.floor(baseScoreData.walletAge / 365)}y ${Math.floor((baseScoreData.walletAge % 365) / 30)}m`,
-        firstTxDate: 'Unknown',
-        accountAgeInDays: baseScoreData.walletAge,
+        walletAgeInDays: baseScoreData.walletAge,
+        defiAgeInDays: baseScoreData.walletAge, // Same as wallet age for now
+        firstDefiInteraction: new Date(Date.now() - baseScoreData.walletAge * 24 * 60 * 60 * 1000).toISOString(),
       },
     },
     creditMix: {
@@ -442,7 +442,7 @@ export async function analyzeWalletComprehensive(
       weight: 10,
       evidence: {
         recentLoans: loanFrequency.recentLoans,
-        avgTimeBetween: `${Math.floor(loanFrequency.avgTimeBetweenLoans / 86400)}d`,
+        avgTimeBetweenLoans: `${Math.floor(loanFrequency.avgTimeBetweenLoans / 86400)}d`,
         hardInquiries: 0,
       },
     },
