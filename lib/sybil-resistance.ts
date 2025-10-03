@@ -187,3 +187,96 @@ export function getReducedKYCPenalty(
 
   return -150; // Full penalty
 }
+
+/**
+ * Comprehensive sybil attack detection
+ * Analyzes wallet age, verification, staking, and linked wallets
+ */
+export function detectSybilAttack(
+  walletAgeInDays: number,
+  verification: ProofOfHumanity,
+  stakingAmount: bigint,
+  linkedWallets: LinkedWallet[],
+  transactionCount: number
+): {
+  isSybilAttack: boolean;
+  riskScore: number;
+  reasons: string[];
+} {
+  const reasons: string[] = [];
+  let riskScore = 0;
+
+  // Wallet age check
+  if (walletAgeInDays < 30) {
+    reasons.push('Wallet less than 30 days old');
+    riskScore += 30;
+  }
+
+  // Verification check
+  if (!verification.verified) {
+    reasons.push('No Proof of Humanity verification');
+    riskScore += 50;
+  }
+
+  // Staking check
+  const stakingInUSDC = Number(stakingAmount) / 1e6;
+  if (stakingInUSDC === 0) {
+    reasons.push('No staking commitment');
+    riskScore += 15;
+  }
+
+  // Linked wallets check
+  if (linkedWallets.length === 0) {
+    reasons.push('No linked wallets');
+    riskScore += 20;
+  }
+
+  // Transaction count check
+  if (transactionCount < 10) {
+    reasons.push('Very low transaction count');
+    riskScore += 20;
+  }
+
+  return {
+    isSybilAttack: riskScore > 100,
+    riskScore,
+    reasons,
+  };
+}
+
+/**
+ * Get verification recommendations based on user's current state
+ */
+export function getVerificationRecommendations(
+  verification: ProofOfHumanity,
+  stakingAmount: bigint,
+  linkedWallets: LinkedWallet[]
+): string[] {
+  const recommendations: string[] = [];
+
+  // KYC recommendation
+  if (!verification.verified) {
+    recommendations.push('🔴 CRITICAL: Complete FREE KYC with Didit (+100-150 points, removes -150 penalty)');
+  } else if (verification.verificationLevel === 'basic') {
+    recommendations.push('🟡 UPGRADE: Complete full KYC with liveness check (+50 more points)');
+  }
+
+  // Staking recommendation
+  const stakingInUSDC = Number(stakingAmount) / 1e6;
+  if (stakingInUSDC === 0) {
+    recommendations.push('🟡 RECOMMENDED: Stake 100+ USDC for bonus (+25 points)');
+  } else if (stakingInUSDC < 1000) {
+    recommendations.push('🟡 OPTIONAL: Increase stake to 1,000+ USDC (+30 points total)');
+  } else if (stakingInUSDC < 10000) {
+    recommendations.push('🟡 OPTIONAL: Increase stake to 10,000+ USDC (+50 points total)');
+  }
+
+  // Wallet bundling recommendation
+  if (linkedWallets.length === 0) {
+    recommendations.push('🟡 OPTIONAL: Link additional wallets to show transparency (+25-50 points)');
+  } else if (linkedWallets.length < 4) {
+    recommendations.push('🟡 OPTIONAL: Link more wallets for higher bonus (+40-50 points for 4-6 wallets)');
+  }
+
+  return recommendations;
+}
