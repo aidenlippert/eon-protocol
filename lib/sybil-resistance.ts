@@ -212,7 +212,7 @@ export function detectSybilAttack(
   linkedWallets: LinkedWallet[],
   transactionCount: number
 ): {
-  isSybilAttack: boolean;
+  isSuspicious: boolean;
   riskScore: number;
   reasons: string[];
 } {
@@ -251,7 +251,7 @@ export function detectSybilAttack(
   }
 
   return {
-    isSybilAttack: riskScore > 100,
+    isSuspicious: riskScore > 100,
     riskScore,
     reasons,
   };

@@ -13,6 +13,10 @@ import { type LinkedWallet } from '@/lib/sybil-resistance';
 import { WalletLinker } from '@/components/wallet-linker';
 import { Loader2, Award, TrendingUp, ExternalLink, ChevronDown, ChevronUp, Info, Shield, AlertTriangle, CheckCircle2, Globe } from 'lucide-react';
 
+// Disable static generation for this page since it requires user wallet connection
+export const dynamic = 'force-dynamic';
+export const dynamicParams = true;
+
 export default function ProfilePage() {
   const { address, isConnected } = useAccount();
   const [loading, setLoading] = useState(false);

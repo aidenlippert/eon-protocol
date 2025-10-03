@@ -245,19 +245,13 @@ export async function analyzeWalletComprehensive(
 
   if (transactions.length === 0) {
     // New wallet with no history - return minimum score with sybil resistance
-    const baseScoreData = calculateCreditScore({
-      lendingPositions: [],
-      currentBorrowed: BigInt(0),
-      currentCollateral: BigInt(0),
-      avgUtilization: 0,
-      maxUtilization: 0,
-      walletAgeInDays: 0,
-      firstDefiInteraction: null,
-      protocolsUsed: [],
-      assetTypes: [],
-      recentLoans: 0,
-      avgTimeBetweenLoans: 0,
-    });
+    const baseScoreData = calculateCreditScore(
+      0,  // transactions
+      0,  // defiInteractions
+      0,  // liquidations
+      0,  // walletAgeInDays
+      []  // lendingPositions
+    );
 
     const sybilResult = applySybilResistance(
       baseScoreData.score,
@@ -285,6 +279,14 @@ export async function analyzeWalletComprehensive(
     return {
       ...baseScoreData,
       score: finalScore,
+      tier: getScoreTier(finalScore),
+      breakdown: {
+        paymentHistory: { score: baseScoreData.factors.paymentHistory, weight: 35, evidence: { totalLoans: 0, repaidOnTime: 0, liquidations: 0, avgHealthFactor: 0 } },
+        creditUtilization: { score: baseScoreData.factors.creditUtilization, weight: 30, evidence: { currentUtilization: 0, avgUtilization: 0, maxUtilization: 0 } },
+        creditHistoryLength: { score: baseScoreData.factors.creditHistoryLength, weight: 15, evidence: { walletAgeInDays: 0, defiAgeInDays: 0, firstDefiInteraction: '' } },
+        creditMix: { score: baseScoreData.factors.creditMix, weight: 10, evidence: { protocolsUsed: [], assetTypes: [], diversityScore: 0 } },
+        newCredit: { score: baseScoreData.factors.newCredit, weight: 10, evidence: { recentLoans: 0, avgTimeBetweenLoans: '0d', hardInquiries: 0 } },
+      },
       sybilResistance: {
         finalScore,
         baseScore: baseScoreData.score,
@@ -345,20 +347,23 @@ export async function analyzeWalletComprehensive(
     }
   }
 
-  // 10. Calculate BASE credit score (without sybil resistance)
-  const baseScoreData = calculateCreditScore({
-    lendingPositions,
-    currentBorrowed,
-    currentCollateral,
-    avgUtilization,
-    maxUtilization,
+  // 10. Calculate DeFi interactions count
+  const defiInteractions = transactions.filter(tx => {
+    const addr = tx.to?.toLowerCase() || '';
+    return LENDING_PROTOCOLS[addr as keyof typeof LENDING_PROTOCOLS] || SWAP_PROTOCOLS[addr as keyof typeof SWAP_PROTOCOLS];
+  }).length;
+
+  // 11. Count liquidations
+  const liquidations = lendingPositions.filter(p => p.liquidated).length;
+
+  // 12. Calculate BASE credit score (without sybil resistance)
+  const baseScoreData = calculateCreditScore(
+    transactions.length,
+    defiInteractions,
+    liquidations,
     walletAgeInDays,
-    firstDefiInteraction,
-    protocolsUsed,
-    assetTypes,
-    recentLoans,
-    avgTimeBetweenLoans,
-  });
+    lendingPositions
+  );
 
   // 11. Apply Sybil Resistance Adjustments
   const sybilResult = applySybilResistance(
@@ -405,7 +410,7 @@ export async function analyzeWalletComprehensive(
       weight: 35,
       evidence: {
         totalLoans: lendingPositions.length,
-        repaidOnTime: lendingPositions.filter(p => !p.isLiquidated).length,
+        repaidOnTime: lendingPositions.filter(p => !p.liquidated).length,
         liquidations: baseScoreData.liquidationCount,
         avgHealthFactor: 1.5, // Placeholder number
       },
@@ -441,8 +446,8 @@ export async function analyzeWalletComprehensive(
       score: baseScoreData.factors.newCredit,
       weight: 10,
       evidence: {
-        recentLoans: loanFrequency.recentLoans,
-        avgTimeBetweenLoans: `${Math.floor(loanFrequency.avgTimeBetweenLoans / 86400)}d`,
+        recentLoans,
+        avgTimeBetweenLoans: `${Math.floor(avgTimeBetweenLoans / 86400)}d`,
         hardInquiries: 0,
       },
     },
