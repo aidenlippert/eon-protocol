@@ -9,7 +9,9 @@ import { Badge } from '@/components/ui/badge';
 import { analyzeWalletComprehensive, type EnhancedCreditScoreData } from '@/lib/comprehensive-analyzer';
 import { getRecommendedLTV, getInterestRateMultiplier } from '@/lib/real-credit-score';
 import { initiateKYCVerification, checkKYCStatus } from '@/lib/didit-kyc';
-import { Loader2, Award, TrendingUp, ExternalLink, ChevronDown, ChevronUp, Info, Shield, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { type LinkedWallet } from '@/lib/sybil-resistance';
+import { WalletLinker } from '@/components/wallet-linker';
+import { Loader2, Award, TrendingUp, ExternalLink, ChevronDown, ChevronUp, Info, Shield, AlertTriangle, CheckCircle2, Globe } from 'lucide-react';
 
 export default function ProfilePage() {
   const { address, isConnected } = useAccount();
@@ -17,19 +19,50 @@ export default function ProfilePage() {
   const [kycLoading, setKycLoading] = useState(false);
   const [scoreData, setScoreData] = useState<EnhancedCreditScoreData | null>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [linkedWallets, setLinkedWallets] = useState<LinkedWallet[]>([]);
 
   const handleCalculateScore = async () => {
     if (!address) return;
 
     setLoading(true);
     try {
-      const data = await analyzeWalletComprehensive(address);
+      // Pass linked wallets to analyzer for bundling bonus
+      const data = await analyzeWalletComprehensive(
+        address,
+        undefined, // KYC will be checked separately
+        linkedWallets,
+        undefined, // Staking amount
+        true // Enable cross-chain
+      );
       setScoreData(data);
     } catch (error) {
       console.error('Failed to calculate score:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLinkWallet = async (walletAddress: string) => {
+    const newWallet: LinkedWallet = {
+      address: walletAddress,
+      linkedAt: new Date(),
+      verified: false,
+      isPrimary: false,
+    };
+
+    setLinkedWallets([...linkedWallets, newWallet]);
+
+    // TODO: Store in smart contract or local storage
+    // For now, just in state - will recalculate score
+    await handleCalculateScore();
+  };
+
+  const handleUnlinkWallet = async (walletAddress: string) => {
+    setLinkedWallets(linkedWallets.filter(w => w.address !== walletAddress));
+
+    // TODO: Remove from smart contract or local storage
+    // For now, just from state - will recalculate score
+    await handleCalculateScore();
   };
 
   const handleVerifyIdentity = async () => {
@@ -681,6 +714,63 @@ export default function ProfilePage() {
                 </li>
               </ul>
             </Card>
+
+            {/* Cross-Chain Activity Card */}
+            {scoreData?.crossChain && (
+              <Card className="bg-neutral-900/50 border-neutral-800 p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                    <Globe className="h-5 w-5 text-blue-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold">Cross-Chain Activity</h3>
+                    <p className="text-xs text-neutral-400">{scoreData.crossChain.summary}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <div className="text-sm text-neutral-400 mb-1">Active Chains</div>
+                    <div className="text-2xl font-bold text-blue-400">{scoreData.crossChain.activeChains}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-neutral-400 mb-1">Protocols Used</div>
+                    <div className="text-2xl font-bold">{scoreData.crossChain.totalProtocols}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-neutral-400 mb-1">Cross-Chain Bonus</div>
+                    <div className="text-2xl font-bold text-green-400">
+                      +{scoreData.sybilResistance.adjustments.crossChainBonus}
+                    </div>
+                  </div>
+                </div>
+
+                {scoreData.crossChain.activeChains > 0 && (
+                  <div className="mt-4 space-y-2">
+                    {scoreData.crossChain.data.chains
+                      .filter(chain => chain.transactionCount > 0)
+                      .map(chain => (
+                        <div key={chain.chainId} className="flex items-center justify-between p-2 bg-neutral-950/50 rounded">
+                          <span className="text-sm">{chain.chainName}</span>
+                          <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-xs">
+                            {chain.transactionCount} txs
+                          </Badge>
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </Card>
+            )}
+
+            {/* Wallet Linker Card */}
+            {address && (
+              <WalletLinker
+                primaryWallet={address}
+                linkedWallets={linkedWallets}
+                onLink={handleLinkWallet}
+                onUnlink={handleUnlinkWallet}
+              />
+            )}
           </div>
         </div>
       </div>

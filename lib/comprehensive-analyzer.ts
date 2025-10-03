@@ -1,6 +1,7 @@
 /**
  * Comprehensive On-Chain Data Analyzer
  * Fetches and analyzes ALL relevant on-chain data for credit scoring
+ * INCLUDING cross-chain aggregation and wallet bundling
  */
 
 import { createPublicClient, http, parseAbiItem } from 'viem';
@@ -14,6 +15,14 @@ import {
   type ProofOfHumanity,
   type LinkedWallet,
 } from './sybil-resistance';
+import {
+  aggregateCrossChainData,
+  aggregateWalletBundle,
+  getOldestWalletAge,
+  getCombinedProtocols,
+  type ChainId,
+  type CrossChainWalletData,
+} from './cross-chain-aggregator';
 
 export interface EnhancedCreditScoreData extends CreditScoreData {
   sybilResistance: {
@@ -25,6 +34,7 @@ export interface EnhancedCreditScoreData extends CreditScoreData {
       stakingBonus: number;
       bundlingBonus: number;
       noVerificationPenalty: number;
+      crossChainBonus: number;
       totalAdjustment: number;
     };
     sybilCheck: {
@@ -33,6 +43,12 @@ export interface EnhancedCreditScoreData extends CreditScoreData {
       reasons: string[];
     };
     recommendations: string[];
+  };
+  crossChain?: {
+    data: CrossChainWalletData;
+    summary: string;
+    activeChains: number;
+    totalProtocols: number;
   };
 }
 
@@ -191,13 +207,15 @@ function calculateRecentActivity(positions: LendingPosition[]): {
 
 /**
  * Main function to analyze wallet and calculate comprehensive credit score
- * WITH SYBIL RESISTANCE
+ * WITH SYBIL RESISTANCE AND CROSS-CHAIN AGGREGATION
  */
 export async function analyzeWalletComprehensive(
   address: `0x${string}`,
   proofOfHumanity?: ProofOfHumanity,
   linkedWallets?: LinkedWallet[],
-  stakingAmount?: bigint
+  stakingAmount?: bigint,
+  enableCrossChain: boolean = true,
+  chainsToCheck?: ChainId[]
 ): Promise<EnhancedCreditScoreData> {
   // Default values for sybil resistance
   const poh: ProofOfHumanity = proofOfHumanity || {
@@ -208,7 +226,13 @@ export async function analyzeWalletComprehensive(
   };
   const wallets: LinkedWallet[] = linkedWallets || [];
   const staking: bigint = stakingAmount || BigInt(0);
-  // 1. Fetch transaction history
+
+  // 0. Optionally fetch cross-chain data (runs in parallel with main chain)
+  const crossChainPromise = enableCrossChain
+    ? aggregateCrossChainData(address, chainsToCheck)
+    : Promise.resolve(null);
+
+  // 1. Fetch transaction history (from primary chain - Arbitrum Sepolia)
   const transactions = await fetchTransactionHistory(address);
 
   if (transactions.length === 0) {
@@ -238,16 +262,33 @@ export async function analyzeWalletComprehensive(
     const sybilCheck = detectSybilAttack(0, poh, staking, wallets, 0);
     const recommendations = getVerificationRecommendations(poh, staking, wallets);
 
+    // Still check cross-chain for new wallets (might have history elsewhere)
+    const crossChainData = await crossChainPromise;
+    const crossChainBonus = crossChainData?.crossChainScore || 0;
+    const finalScore = Math.min(850, sybilResult.finalScore + crossChainBonus);
+
+    const crossChainSummary = crossChainData ? {
+      data: crossChainData,
+      summary: `Active on ${crossChainData.chains.filter(c => c.transactionCount > 0).length} chains`,
+      activeChains: crossChainData.chains.filter(c => c.transactionCount > 0).length,
+      totalProtocols: crossChainData.totalProtocols.length,
+    } : undefined;
+
     return {
       ...baseScoreData,
-      score: sybilResult.finalScore,
+      score: finalScore,
       sybilResistance: {
-        finalScore: sybilResult.finalScore,
+        finalScore,
         baseScore: baseScoreData.score,
-        adjustments: sybilResult.adjustments,
+        adjustments: {
+          ...sybilResult.adjustments,
+          crossChainBonus,
+          totalAdjustment: sybilResult.adjustments.totalAdjustment + crossChainBonus,
+        },
         sybilCheck,
         recommendations,
       },
+      crossChain: crossChainSummary,
     };
   }
 
@@ -332,16 +373,38 @@ export async function analyzeWalletComprehensive(
   // 13. Get verification recommendations
   const recommendations = getVerificationRecommendations(poh, staking, wallets);
 
-  // 14. Return enhanced score with sybil resistance
+  // 14. Wait for cross-chain data
+  const crossChainData = await crossChainPromise;
+
+  // 15. Calculate cross-chain bonus
+  const crossChainBonus = crossChainData?.crossChainScore || 0;
+
+  // 16. Apply cross-chain bonus to final score
+  const finalScoreWithCrossChain = Math.min(850, sybilResult.finalScore + crossChainBonus);
+
+  // 17. Prepare cross-chain summary
+  const crossChainSummary = crossChainData ? {
+    data: crossChainData,
+    summary: `Active on ${crossChainData.chains.filter(c => c.transactionCount > 0).length} chains`,
+    activeChains: crossChainData.chains.filter(c => c.transactionCount > 0).length,
+    totalProtocols: crossChainData.totalProtocols.length,
+  } : undefined;
+
+  // 18. Return enhanced score with sybil resistance AND cross-chain data
   return {
     ...baseScoreData,
-    score: sybilResult.finalScore, // OVERRIDE WITH SYBIL-ADJUSTED SCORE
+    score: finalScoreWithCrossChain, // FINAL SCORE with all bonuses
     sybilResistance: {
-      finalScore: sybilResult.finalScore,
+      finalScore: finalScoreWithCrossChain,
       baseScore: baseScoreData.score,
-      adjustments: sybilResult.adjustments,
+      adjustments: {
+        ...sybilResult.adjustments,
+        crossChainBonus,
+        totalAdjustment: sybilResult.adjustments.totalAdjustment + crossChainBonus,
+      },
       sybilCheck,
       recommendations,
     },
+    crossChain: crossChainSummary,
   };
 }
