@@ -40,7 +40,13 @@ export default function ProfilePage() {
       const savedWallets = localStorage.getItem(`eon-wallets-${address.toLowerCase()}`);
       if (savedWallets) {
         try {
-          setLinkedWallets(JSON.parse(savedWallets));
+          const parsed = JSON.parse(savedWallets);
+          // Convert linkedAt strings back to Date objects
+          const wallets = parsed.map((w: LinkedWallet) => ({
+            ...w,
+            linkedAt: new Date(w.linkedAt)
+          }));
+          setLinkedWallets(wallets);
         } catch (e) {
           console.error('Failed to parse saved wallets:', e);
         }
