@@ -1,0 +1,17 @@
+// Eon Protocol Contract Addresses on Arbitrum Sepolia
+
+export const CONTRACTS = {
+  USDC: "0x2EDFa4367b8A28Ec8C2009DB0Ef06BDfb051480d",
+  LendingPool: "0xDFc6659B8ca357aae62D5E272b7670d1D036C631",
+  ReputationScorer: "0x194b2E2f55518ED6303484127dB8b65C7B530a4B",
+  DutchAuctionLiquidator: "0x96Db2eB006C210d82F550E1E546e724202eEF78c",
+  HealthFactorMonitor: "0x279fA2958f06462A811D001Dc7393e4566640e6d",
+  InsuranceFund: "0xc019e03bC0b3Ce50c712740C0c4331DF44A12426",
+} as const;
+
+export const NETWORK = {
+  chainId: 421614,
+  name: "Arbitrum Sepolia",
+  rpcUrl: "https://sepolia-rollup.arbitrum.io/rpc",
+  blockExplorer: "https://sepolia.arbiscan.io",
+} as const;
