@@ -1,137 +1,36 @@
-# Eon Protocol Frontend
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-**Barebones 3-page dApp for temporal reputation claims**
+## Getting Started
 
-## Quick Start
+First, run the development server:
 
 ```bash
-# Install dependencies
-npm install
-
-# Create .env.local
-cp .env.example .env.local
-# Add your WalletConnect Project ID
-
-# Run development server
 npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-Open http://localhost:3000
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Pages
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-### 1. Home (`/`)
-- Hero + how it works
-- Connect wallet
-- Navigate to claim or profile
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-### 2. Claim (`/claim`)
-- Submit temporal ownership claim
-- Input: ETH amount + duration
-- Output: Estimated reputation score + LTV
-- Submits to ClaimManager contract
+## Learn More
 
-### 3. Profile (`/profile`)
-- View credit score (0-1000)
-- See LTV, available credit, risk tier
-- List active claims
-- Borrow ETH button
+To learn more about Next.js, take a look at the following resources:
 
-## Setup After Contract Deployment
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-1. Deploy contracts to Arbitrum Sepolia
-2. Copy addresses from `deployments-arbitrumSepolia.json`
-3. Update `app/contracts.ts`:
-   ```typescript
-   export const CONTRACTS = {
-     arbitrumSepolia: {
-       claimManager: '0xYOUR_ADDRESS_HERE',
-       chronosNFT: '0xYOUR_ADDRESS_HERE',
-       lendingPool: '0xYOUR_ADDRESS_HERE',
-     }
-   };
-   ```
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Environment Variables
+## Deploy on Vercel
 
-Create `.env.local`:
-```
-NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
-```
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-**Get WalletConnect ID:**
-1. Go to https://cloud.walletconnect.com
-2. Create new project
-3. Copy Project ID
-
-## Deploy to Vercel
-
-```bash
-npm install -g vercel
-vercel --prod
-```
-
-Add environment variables in Vercel dashboard.
-
-## Tech Stack
-
-- **Framework:** Next.js 15 (App Router)
-- **Styling:** Tailwind CSS
-- **Web3:** wagmi v2 + viem v2
-- **Wallet:** RainbowKit
-- **Chain:** Arbitrum Sepolia (testnet)
-
-## Features
-
-✅ Wallet connection (RainbowKit)
-✅ Chain validation (Arbitrum Sepolia only)
-✅ Real-time reputation scoring
-✅ Contract interaction (submitClaim)
-✅ Responsive design (mobile-friendly)
-
-## Missing (Add Later)
-
-❌ Supabase integration (fetch real credit profiles)
-❌ Borrow page (lending pool interaction)
-❌ Claim finalization
-❌ Loan repayment
-❌ Analytics dashboard
-❌ Dark/light mode toggle
-
-## Development
-
-```bash
-# Run dev server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
-
-# Lint
-npm run lint
-```
-
-## Troubleshooting
-
-**Error: "Chain mismatch"**
-→ Switch to Arbitrum Sepolia in wallet
-
-**Error: "Contract not deployed"**
-→ Update contract addresses in `app/contracts.ts`
-
-**Error: "Insufficient funds"**
-→ Get testnet ETH from https://faucet.quicknode.com/arbitrum/sepolia
-
-## Next Steps
-
-1. Deploy contracts
-2. Update contract addresses
-3. Connect Supabase for real data
-4. Test with real claims
-5. Deploy to Vercel
-6. Share with testers
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
