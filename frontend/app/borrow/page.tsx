@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useAccount } from 'wagmi';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, Wallet, Shield } from 'lucide-react';
 import { useCreditScore } from '@/lib/hooks/useCreditScore';
@@ -100,12 +99,12 @@ export default function BorrowPage() {
               Deposit USDC as collateral to borrow against your credit tier
             </p>
             <div className="space-y-4">
-              <Input
+              <input
                 type="number"
                 placeholder="Amount (USDC)"
                 value={depositAmount}
                 onChange={(e) => setDepositAmount(e.target.value)}
-                className="bg-neutral-950/50 border-neutral-800"
+                className="flex h-10 w-full rounded-md border border-neutral-800 bg-neutral-950/50 px-3 py-2 text-sm placeholder:text-neutral-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
               />
               <Button
                 className="w-full bg-green-600 hover:bg-green-700"
@@ -127,12 +126,12 @@ export default function BorrowPage() {
               Borrow up to {ltv}% of your collateral value
             </p>
             <div className="space-y-4">
-              <Input
+              <input
                 type="number"
                 placeholder="Amount (USDC)"
                 value={borrowAmount}
                 onChange={(e) => setBorrowAmount(e.target.value)}
-                className="bg-neutral-950/50 border-neutral-800"
+                className="flex h-10 w-full rounded-md border border-neutral-800 bg-neutral-950/50 px-3 py-2 text-sm placeholder:text-neutral-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
               />
               <Button
                 className="w-full bg-violet-600 hover:bg-violet-700"
@@ -149,12 +148,12 @@ export default function BorrowPage() {
         <Card className="bg-neutral-900/50 border-neutral-800 p-8">
           <h2 className="text-2xl font-bold mb-6">Repay Loan</h2>
           <div className="space-y-4">
-            <Input
+            <input
               type="number"
               placeholder="Repayment Amount (USDC)"
               value={repayAmount}
               onChange={(e) => setRepayAmount(e.target.value)}
-              className="bg-neutral-950/50 border-neutral-800"
+              className="flex h-10 w-full rounded-md border border-neutral-800 bg-neutral-950/50 px-3 py-2 text-sm placeholder:text-neutral-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
             />
             <Button
               className="w-full bg-blue-600 hover:bg-blue-700"
