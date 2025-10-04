@@ -9,7 +9,7 @@ import { CheckCircle2, Shield, AlertCircle, Loader2, X } from "lucide-react";
 import { useKYCStatus } from "@/lib/hooks/useKYC";
 
 // Your Didit Workflow ID from console
-const DIDIT_WORKFLOW_ID = "54740218";
+const DIDIT_WORKFLOW_ID = "54740218-aecf-4d4d-a2f8-a200fb9e8b34";
 
 export function DiditWidget() {
   const { address, isConnected } = useAccount();
