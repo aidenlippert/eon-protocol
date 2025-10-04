@@ -76,21 +76,28 @@ export function DiditWidget() {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to create session');
-      }
-
       const data = await response.json();
 
+      if (!response.ok) {
+        console.error('API Error:', data);
+        alert(`Failed to create verification session:\n\n${data.error || data.message || 'Unknown error'}\n\nCheck console for details.`);
+        setIsCreatingSession(false);
+        return;
+      }
+
+      console.log('Session created:', data);
+
       if (data.url) {
+        console.log('Opening verification URL:', data.url);
         setSessionUrl(data.url);
         setShowWidget(true);
       } else {
-        throw new Error('No session URL received');
+        console.error('No URL in response:', data);
+        alert('No verification URL received. Check console for details.');
       }
     } catch (error) {
       console.error('Session creation failed:', error);
-      alert('Failed to start verification. Please try again.');
+      alert(`Failed to start verification:\n\n${error instanceof Error ? error.message : 'Unknown error'}\n\nCheck browser console for details.`);
     } finally {
       setIsCreatingSession(false);
     }

@@ -8,6 +8,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { workflow_id, vendor_data, callback, metadata } = body;
 
+    console.log('=== KYC Session Creation ===');
+    console.log('API Key present:', !!DIDIT_API_KEY);
+    console.log('Workflow ID:', workflow_id);
+    console.log('Vendor data:', vendor_data);
+
     if (!workflow_id || !vendor_data) {
       return NextResponse.json(
         { error: 'workflow_id and vendor_data are required' },
@@ -15,20 +20,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // If no API key is set, return a mock session for testing
+    // If no API key is set, return error
     if (!DIDIT_API_KEY) {
-      console.warn('DIDIT_API_KEY not set - returning mock session');
+      console.error('❌ DIDIT_API_KEY not set!');
       return NextResponse.json({
-        session_id: 'mock-session-' + Date.now(),
-        session_token: 'mock-token',
-        status: 'Not Started',
-        url: `https://verify.didit.me/${workflow_id}`,
-        message: 'Mock session - set DIDIT_API_KEY environment variable for real integration'
-      });
+        error: 'DIDIT_API_KEY not configured',
+        message: 'Please add DIDIT_API_KEY to environment variables'
+      }, { status: 500 });
     }
 
     // Create Didit verification session
-    const response = await fetch(DIDIT_API_URL, {
+    console.log('Calling Didit API...');
+    const diditResponse = await fetch(DIDIT_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -37,21 +40,37 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         workflow_id,
         vendor_data,
-        callback: callback || `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/kyc-webhook`,
+        callback: callback || `${process.env.NEXT_PUBLIC_APP_URL || 'https://eon-protocol.vercel.app'}/api/kyc-webhook`,
         metadata: metadata || {},
       }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('Didit API error:', errorData);
+    console.log('Didit API status:', diditResponse.status);
+
+    if (!diditResponse.ok) {
+      const errorText = await diditResponse.text();
+      console.error('❌ Didit API error:', errorText);
+
+      let errorData;
+      try {
+        errorData = JSON.parse(errorText);
+      } catch {
+        errorData = { message: errorText };
+      }
+
       return NextResponse.json(
-        { error: 'Failed to create Didit session', details: errorData },
-        { status: response.status }
+        {
+          error: 'Failed to create Didit session',
+          details: errorData,
+          status: diditResponse.status
+        },
+        { status: diditResponse.status }
       );
     }
 
-    const sessionData = await response.json();
+    const sessionData = await diditResponse.json();
+    console.log('✅ Session created:', sessionData.session_id);
+    console.log('Session URL:', sessionData.url);
 
     return NextResponse.json({
       session_id: sessionData.session_id,
@@ -61,9 +80,12 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('KYC session creation error:', error);
+    console.error('❌ KYC session creation error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      {
+        error: 'Internal server error',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }
