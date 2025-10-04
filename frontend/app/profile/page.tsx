@@ -8,6 +8,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Award, TrendingUp, Shield, AlertTriangle, CheckCircle2, ExternalLink } from 'lucide-react';
 import { useCreditScore } from '../../lib/hooks/useCreditScore';
+import { DiditWidget } from '@/components/kyc/DiditWidget';
 
 export default function ProfilePage() {
   const { address, isConnected } = useAccount();
@@ -25,15 +26,6 @@ export default function ProfilePage() {
     }
   }, [address]);
 
-  const handleVerifyKYC = () => {
-    if (!address) return;
-
-    // Simply open Didit website in new tab
-    window.open('https://www.didit.me/', '_blank');
-
-    // Show info about submitting proof on-chain
-    alert('Complete KYC on Didit, then return to submit your proof on-chain via the Dashboard.');
-  };
 
   if (!isConnected) {
     return (
@@ -173,28 +165,8 @@ export default function ProfilePage() {
                         </Badge>
                       )}
                     </div>
-                    <p className="text-xs text-neutral-400 mb-3">KYC verification + wallet age + staking</p>
-
-                    {!kycVerified && (
-                      <Button
-                        onClick={handleVerifyKYC}
-                        disabled={kycLoading}
-                        size="sm"
-                        className="w-full bg-green-600 hover:bg-green-700"
-                      >
-                        {kycLoading ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Verifying with Didit...
-                          </>
-                        ) : (
-                          <>
-                            <CheckCircle2 className="mr-2 h-4 w-4" />
-                            Verify Identity (FREE)
-                          </>
-                        )}
-                      </Button>
-                    )}
+                    <p className="text-xs text-neutral-400">KYC verification + wallet age + staking</p>
+                    <p className="text-xs text-violet-400 mt-2">→ Complete verification in sidebar →</p>
                   </div>
 
                   <div className="bg-neutral-950/50 rounded-lg p-4">
@@ -251,55 +223,8 @@ export default function ProfilePage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Sybil Resistance Card */}
-            <Card className="bg-neutral-900/50 border-neutral-800 p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-                  <Shield className="h-5 w-5 text-green-400" />
-                </div>
-                <h3 className="text-lg font-semibold">Sybil Resistance</h3>
-              </div>
-
-              {kycVerified ? (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-green-400">
-                    <CheckCircle2 className="h-4 w-4" />
-                    <span className="text-sm font-medium">Identity Verified</span>
-                  </div>
-                  <p className="text-xs text-neutral-400">
-                    Your identity is verified with Didit KYC. This protects the protocol from sybil attacks.
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-red-400">
-                    <AlertTriangle className="h-4 w-4" />
-                    <span className="text-sm font-medium">Not Verified</span>
-                  </div>
-                  <p className="text-xs text-neutral-400 mb-4">
-                    Verify your identity to improve your score and access better rates. FREE and takes 5 minutes.
-                  </p>
-                  <Button
-                    onClick={handleVerifyKYC}
-                    disabled={kycLoading}
-                    size="sm"
-                    className="w-full bg-green-600 hover:bg-green-700"
-                  >
-                    {kycLoading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Starting...
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle2 className="mr-2 h-4 w-4" />
-                        Verify with Didit
-                      </>
-                    )}
-                  </Button>
-                </div>
-              )}
-            </Card>
+            {/* KYC Verification Widget */}
+            <DiditWidget />
 
             {/* How to Improve */}
             <Card className="bg-neutral-900/50 border-neutral-800 p-6">
