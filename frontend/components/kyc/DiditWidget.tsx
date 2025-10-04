@@ -55,7 +55,10 @@ export function DiditWidget() {
     return () => window.removeEventListener('message', handleMessage);
   }, []);
 
-  const createSession = async () => {
+  const createSession = async (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+
     if (!address) return;
 
     setIsCreatingSession(true);
@@ -88,11 +91,17 @@ export function DiditWidget() {
       console.log('Session created:', data);
 
       if (data.url) {
-        console.log('Opening verification URL:', data.url);
+        console.log('✅ Opening verification iframe with URL:', data.url);
+        console.log('✅ Setting showWidget to TRUE');
         setSessionUrl(data.url);
         setShowWidget(true);
+
+        // Prevent any navigation
+        setTimeout(() => {
+          console.log('✅ Widget should be visible now. showWidget =', true);
+        }, 100);
       } else {
-        console.error('No URL in response:', data);
+        console.error('❌ No URL in response:', data);
         alert('No verification URL received. Check console for details.');
       }
     } catch (error) {
@@ -162,6 +171,7 @@ export function DiditWidget() {
               </Alert>
 
               <Button
+                type="button"
                 className="w-full bg-violet-600 hover:bg-violet-700"
                 onClick={createSession}
                 disabled={isCreatingSession || showWidget}
