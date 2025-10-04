@@ -6,9 +6,9 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, Wallet, Shield } from 'lucide-react';
-import { useCreditScore } from '@/lib/hooks/useCreditScore';
-import { useLendingPool } from '@/lib/hooks/useLendingPool';
-import { getContractAddress } from '@/lib/contracts/addresses';
+import { useCreditScore } from '../../lib/hooks/useCreditScore';
+import { useLendingPool } from '../../lib/hooks/useLendingPool';
+import { getContractAddress } from '../../lib/contracts/addresses';
 
 export default function BorrowPage() {
   const { isConnected } = useAccount();

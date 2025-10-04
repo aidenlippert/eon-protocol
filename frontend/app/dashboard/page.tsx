@@ -5,9 +5,9 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Wallet, TrendingUp, Shield, AlertTriangle } from 'lucide-react';
-import { useCreditScore } from '@/lib/hooks/useCreditScore';
-import { useLendingPool } from '@/lib/hooks/useLendingPool';
-import { useHealthFactor } from '@/lib/hooks/useHealthFactor';
+import { useCreditScore } from '../../lib/hooks/useCreditScore';
+import { useLendingPool } from '../../lib/hooks/useLendingPool';
+import { useHealthFactor } from '../../lib/hooks/useHealthFactor';
 
 export default function DashboardPage() {
   const { isConnected } = useAccount();
