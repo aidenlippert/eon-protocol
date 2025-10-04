@@ -1,0 +1,18 @@
+{
+  "network": "arbitrumSepolia",
+  "chainId": "421614",
+  "deployed": "2025-10-04T02:07:37.763Z",
+  "deployer": "0x1AF3c73eB17f38bC645faE487942e57C5B9F4FE3",
+  "contracts": {
+    "StakingToken": "0x4d039C6ddc2301EC07d84e9426317bfA5eA38B7a",
+    "CreditRegistryV2": "0x73559C2d5173042164b2c61Faf238Fa79fa326c9",
+    "ScoreOraclePhase3": "0x05CA68b1957caBDaCfb5A6643e7E0b0c08DD4825",
+    "CreditVaultV2": "0x813045b85D230f3e7bFA0BE6FdF7D1D12f055247",
+    "MockUSDC": "0x3aE970e1d73cB7eEFF6D007Ee6C15D79d91325AD",
+    "MockWETH": "0x5D661e2F392A846f2E4B44D322A6f272106a334e"
+  },
+  "priceFeeds": {
+    "USDC": "0x95a2699e8F28099F659004888F97e0FD0220abB5",
+    "WETH": "0x46980B0c634E0E0cDbD87BBf98408be551819781"
+  }
+}

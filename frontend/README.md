@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Eon Protocol - DeFi Credit Scoring Frontend
 
-## Getting Started
+**Professional Next.js frontend for Phase 3B complete 5-factor credit scoring system**
 
-First, run the development server:
+## 🚀 Quick Deploy
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+vercel --prod
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Set these environment variables in Vercel:
+- `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+See `DEPLOY_NOW.md` for detailed instructions.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📱 Features
 
-To learn more about Next.js, take a look at the following resources:
+### Dashboard Components
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **CreditScoreCard** - Real-time 5-factor credit score breakdown
+2. **BorrowInterface** - Professional borrowing interface with LTV calculation
+3. **LoansList** - Complete loan management dashboard
+4. **StakingInterface** - EON token staking for score bonus
+5. **KYCVerification** - Didit KYC integration (+150 points)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### UI/UX Highlights
 
-## Deploy on Vercel
+✅ Clean, modern dark theme
+✅ Responsive design (mobile-first)
+✅ Real-time contract data updates
+✅ Transaction confirmation tracking
+✅ Loading states and error handling
+✅ Accessibility-compliant components
+✅ Color-coded tier system
+✅ Animated progress bars
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Styling**: Tailwind CSS v4
+- **Web3**: Wagmi v2 + Viem
+- **Wallet**: RainbowKit
+- **UI Components**: Radix UI
+- **Icons**: Lucide React
+- **Animations**: Framer Motion
+
+---
+
+## 📊 Credit Scoring
+
+### 5-Factor System
+
+- **S1 (40%)**: Repayment History - loan count, on-time payments, defaults
+- **S2 (20%)**: Collateral Utilization - over-collateralization, diversification
+- **S3 (20%)**: Sybil Resistance - KYC verification ±150, staking bonus, wallet age
+- **S4 (10%)**: Cross-Chain Reputation - multi-chain presence (CCIP-ready)
+- **S5 (10%)**: Governance Participation - voting, proposals
+
+### Credit Tiers
+
+| Tier | Score | Max LTV | APR |
+|------|-------|---------|-----|
+| Bronze | 0-59 | 50% | 15% |
+| Silver | 60-74 | 70% | 10% |
+| Gold | 75-89 | 80% | 7% |
+| Platinum | 90-100 | 90% | 4% |
+
+---
+
+## 🔗 Deployed Contracts (Arbitrum Sepolia)
+
+```
+CreditRegistryV3:     0x425d4DBD32e5B185C15ffAf7076bFc9c8aD04Fa9
+ScoreOraclePhase3B:   0x3460891EbdDeA80F44c56Cb97a239031C22B2b7e
+CreditVaultV3:        0x52F65D2A3BacE77F7dee738F439f2F106B0c5a4d
+```
+
+See `../PHASE3B_DEPLOYED.md` for full contract details.
+
+---
+
+## 🧪 Local Development
+
+```bash
+npm install
+npm run dev
+```
+
+Visit http://localhost:3000
+
+### Requirements
+
+- Node.js 20+
+- Arbitrum Sepolia testnet ETH
+- MetaMask or compatible wallet
+
+---
+
+## 📖 Documentation
+
+- `DEPLOY_NOW.md` - Quick deployment guide
+- `../PHASE3B_FRONTEND_COMPLETE.md` - Complete feature documentation
+- `../KYC_INTEGRATION_GUIDE.md` - KYC integration details
+- `../PHASE3B_DEPLOYED.md` - Contract deployment info
+
+---
+
+## 🔐 Security
+
+- Privacy-first KYC (only hash stored on-chain)
+- Signature verification for KYC proofs
+- ERC-20 approval safety checks
+- LTV enforcement
+- Grace period protection
+- Reentrancy protection
+
+---
+
+**Built with Next.js, Wagmi, and RainbowKit**

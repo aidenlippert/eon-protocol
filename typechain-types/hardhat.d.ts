@@ -50,6 +50,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SafeERC20__factory>;
     getContractFactory(
+      name: "ECDSA",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ECDSA__factory>;
+    getContractFactory(
       name: "MerkleProof",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.MerkleProof__factory>;
@@ -58,13 +62,53 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC165__factory>;
     getContractFactory(
+      name: "SafeCast",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.SafeCast__factory>;
+    getContractFactory(
+      name: "Pausable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Pausable__factory>;
+    getContractFactory(
       name: "ReentrancyGuard",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ReentrancyGuard__factory>;
     getContractFactory(
+      name: "Strings",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Strings__factory>;
+    getContractFactory(
       name: "CreditRegistryV1_1",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.CreditRegistryV1_1__factory>;
+    getContractFactory(
+      name: "CreditRegistryV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.CreditRegistryV2__factory>;
+    getContractFactory(
+      name: "CreditRegistryV3",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.CreditRegistryV3__factory>;
+    getContractFactory(
+      name: "CreditVault",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.CreditVault__factory>;
+    getContractFactory(
+      name: "IERC20Metadata",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20Metadata__factory>;
+    getContractFactory(
+      name: "CreditVaultV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.CreditVaultV2__factory>;
+    getContractFactory(
+      name: "IERC20Metadata",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20Metadata__factory>;
+    getContractFactory(
+      name: "CreditVaultV3",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.CreditVaultV3__factory>;
     getContractFactory(
       name: "DutchAuctionLiquidator",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -98,6 +142,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.InsuranceFund__factory>;
     getContractFactory(
+      name: "IAggregatorV3",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IAggregatorV3__factory>;
+    getContractFactory(
       name: "IZKVerifier",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IZKVerifier__factory>;
@@ -121,6 +169,18 @@ declare module "hardhat/types/runtime" {
       name: "ReputationScorer",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ReputationScorer__factory>;
+    getContractFactory(
+      name: "ScoreOraclePhase3",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ScoreOraclePhase3__factory>;
+    getContractFactory(
+      name: "ScoreOraclePhase3B",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ScoreOraclePhase3B__factory>;
+    getContractFactory(
+      name: "ScoreOracleSimple",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ScoreOracleSimple__factory>;
 
     getContractAt(
       name: "Ownable",
@@ -168,6 +228,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.SafeERC20>;
     getContractAt(
+      name: "ECDSA",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ECDSA>;
+    getContractAt(
       name: "MerkleProof",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -178,15 +243,65 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IERC165>;
     getContractAt(
+      name: "SafeCast",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.SafeCast>;
+    getContractAt(
+      name: "Pausable",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Pausable>;
+    getContractAt(
       name: "ReentrancyGuard",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.ReentrancyGuard>;
     getContractAt(
+      name: "Strings",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Strings>;
+    getContractAt(
       name: "CreditRegistryV1_1",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.CreditRegistryV1_1>;
+    getContractAt(
+      name: "CreditRegistryV2",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.CreditRegistryV2>;
+    getContractAt(
+      name: "CreditRegistryV3",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.CreditRegistryV3>;
+    getContractAt(
+      name: "CreditVault",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.CreditVault>;
+    getContractAt(
+      name: "IERC20Metadata",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20Metadata>;
+    getContractAt(
+      name: "CreditVaultV2",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.CreditVaultV2>;
+    getContractAt(
+      name: "IERC20Metadata",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20Metadata>;
+    getContractAt(
+      name: "CreditVaultV3",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.CreditVaultV3>;
     getContractAt(
       name: "DutchAuctionLiquidator",
       address: string | ethers.Addressable,
@@ -228,6 +343,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.InsuranceFund>;
     getContractAt(
+      name: "IAggregatorV3",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IAggregatorV3>;
+    getContractAt(
       name: "IZKVerifier",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -257,6 +377,21 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.ReputationScorer>;
+    getContractAt(
+      name: "ScoreOraclePhase3",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ScoreOraclePhase3>;
+    getContractAt(
+      name: "ScoreOraclePhase3B",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ScoreOraclePhase3B>;
+    getContractAt(
+      name: "ScoreOracleSimple",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ScoreOracleSimple>;
 
     deployContract(
       name: "Ownable",
@@ -295,6 +430,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.SafeERC20>;
     deployContract(
+      name: "ECDSA",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ECDSA>;
+    deployContract(
       name: "MerkleProof",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.MerkleProof>;
@@ -303,13 +442,53 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC165>;
     deployContract(
+      name: "SafeCast",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.SafeCast>;
+    deployContract(
+      name: "Pausable",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Pausable>;
+    deployContract(
       name: "ReentrancyGuard",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ReentrancyGuard>;
     deployContract(
+      name: "Strings",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Strings>;
+    deployContract(
       name: "CreditRegistryV1_1",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.CreditRegistryV1_1>;
+    deployContract(
+      name: "CreditRegistryV2",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.CreditRegistryV2>;
+    deployContract(
+      name: "CreditRegistryV3",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.CreditRegistryV3>;
+    deployContract(
+      name: "CreditVault",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.CreditVault>;
+    deployContract(
+      name: "IERC20Metadata",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC20Metadata>;
+    deployContract(
+      name: "CreditVaultV2",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.CreditVaultV2>;
+    deployContract(
+      name: "IERC20Metadata",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC20Metadata>;
+    deployContract(
+      name: "CreditVaultV3",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.CreditVaultV3>;
     deployContract(
       name: "DutchAuctionLiquidator",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -343,6 +522,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.InsuranceFund>;
     deployContract(
+      name: "IAggregatorV3",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IAggregatorV3>;
+    deployContract(
       name: "IZKVerifier",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IZKVerifier>;
@@ -366,6 +549,18 @@ declare module "hardhat/types/runtime" {
       name: "ReputationScorer",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ReputationScorer>;
+    deployContract(
+      name: "ScoreOraclePhase3",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ScoreOraclePhase3>;
+    deployContract(
+      name: "ScoreOraclePhase3B",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ScoreOraclePhase3B>;
+    deployContract(
+      name: "ScoreOracleSimple",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ScoreOracleSimple>;
 
     deployContract(
       name: "Ownable",
@@ -413,6 +608,11 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.SafeERC20>;
     deployContract(
+      name: "ECDSA",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ECDSA>;
+    deployContract(
       name: "MerkleProof",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -423,15 +623,65 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC165>;
     deployContract(
+      name: "SafeCast",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.SafeCast>;
+    deployContract(
+      name: "Pausable",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Pausable>;
+    deployContract(
       name: "ReentrancyGuard",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ReentrancyGuard>;
     deployContract(
+      name: "Strings",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Strings>;
+    deployContract(
       name: "CreditRegistryV1_1",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.CreditRegistryV1_1>;
+    deployContract(
+      name: "CreditRegistryV2",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.CreditRegistryV2>;
+    deployContract(
+      name: "CreditRegistryV3",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.CreditRegistryV3>;
+    deployContract(
+      name: "CreditVault",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.CreditVault>;
+    deployContract(
+      name: "IERC20Metadata",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC20Metadata>;
+    deployContract(
+      name: "CreditVaultV2",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.CreditVaultV2>;
+    deployContract(
+      name: "IERC20Metadata",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC20Metadata>;
+    deployContract(
+      name: "CreditVaultV3",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.CreditVaultV3>;
     deployContract(
       name: "DutchAuctionLiquidator",
       args: any[],
@@ -473,6 +723,11 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.InsuranceFund>;
     deployContract(
+      name: "IAggregatorV3",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IAggregatorV3>;
+    deployContract(
       name: "IZKVerifier",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -502,6 +757,21 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ReputationScorer>;
+    deployContract(
+      name: "ScoreOraclePhase3",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ScoreOraclePhase3>;
+    deployContract(
+      name: "ScoreOraclePhase3B",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ScoreOraclePhase3B>;
+    deployContract(
+      name: "ScoreOracleSimple",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ScoreOracleSimple>;
 
     // default types
     getContractFactory(
