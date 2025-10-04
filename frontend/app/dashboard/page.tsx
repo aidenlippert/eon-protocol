@@ -6,7 +6,7 @@ import { CreditScoreCard } from '@/components/dashboard/CreditScoreCard';
 import { BorrowInterface } from '@/components/borrow/BorrowInterface';
 import { LoansList } from '@/components/dashboard/LoansList';
 import { StakingInterface } from '@/components/staking/StakingInterface';
-import { DiditKYCIntegration } from '@/components/kyc/DiditKYCIntegration';
+import { DiditWidget } from '@/components/kyc/DiditWidget';
 
 export default function DashboardPage() {
   const { isConnected } = useAccount();
@@ -36,7 +36,7 @@ export default function DashboardPage() {
             <CreditScoreCard />
           </div>
           <div>
-            <DiditKYCIntegration />
+            <DiditWidget />
           </div>
         </div>
 
