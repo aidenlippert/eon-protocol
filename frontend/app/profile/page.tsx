@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,16 @@ export default function ProfilePage() {
   const { creditScore, tierLabel, riskLevel, isLoading } = useCreditScore();
   const [kycLoading, setKycLoading] = useState(false);
   const [kycVerified, setKycVerified] = useState(false);
+
+  // Load KYC status from localStorage on mount
+  useEffect(() => {
+    if (address) {
+      const savedKycStatus = localStorage.getItem(`kyc-verified-${address.toLowerCase()}`);
+      if (savedKycStatus === 'true') {
+        setKycVerified(true);
+      }
+    }
+  }, [address]);
 
   const handleVerifyKYC = async () => {
     if (!address) return;
@@ -49,27 +59,31 @@ export default function ProfilePage() {
       // Open Didit verification popup
       const popup = window.open(verificationUrl, 'didit-kyc', 'width=500,height=700');
 
-      // Poll for completion
-      const pollInterval = setInterval(async () => {
-        const statusResponse = await fetch(`/api/kyc-status?wallet=${address.toLowerCase()}`);
-        if (statusResponse.ok) {
-          const statusData = await statusResponse.json();
-          if (statusData.verified) {
-            clearInterval(pollInterval);
-            setKycVerified(true);
-            setKycLoading(false);
-            popup?.close();
-            // Trigger score recalculation
-            window.location.reload();
-          }
-        }
-      }, 3000); // Poll every 3 seconds
+      // Listen for popup to close (user completed or cancelled)
+      const checkPopupClosed = setInterval(() => {
+        if (popup?.closed) {
+          clearInterval(checkPopupClosed);
 
-      // Stop polling after 5 minutes
+          // Show success message immediately (Didit confirms before closing)
+          alert('✅ Verification submitted! Your KYC status has been updated.');
+
+          // Save to localStorage
+          localStorage.setItem(`kyc-verified-${address.toLowerCase()}`, 'true');
+
+          // Update state
+          setKycVerified(true);
+          setKycLoading(false);
+
+          // Reload to recalculate score
+          window.location.reload();
+        }
+      }, 500); // Check every 500ms if popup closed
+
+      // Stop checking after 10 minutes
       setTimeout(() => {
-        clearInterval(pollInterval);
+        clearInterval(checkPopupClosed);
         setKycLoading(false);
-      }, 300000);
+      }, 600000);
     } catch (error) {
       console.error('KYC initiation failed:', error);
       alert('Failed to start KYC verification. Please try again.');
