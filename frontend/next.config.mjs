@@ -26,7 +26,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https: https://*.didit.me",
               "font-src 'self' data:",
-              "connect-src 'self' https://verify.didit.me https://verification.didit.me https://*.didit.me https://*.arbitrum.io https://*.alchemy.com https://*.walletconnect.com wss://*.walletconnect.com",
+              "connect-src 'self' https://verify.didit.me https://verification.didit.me https://*.didit.me https://*.arbitrum.io https://*.alchemy.com https://*.walletconnect.com wss://*.walletconnect.com https://pulse.walletconnect.org https://api.web3modal.org https://rpc.walletconnect.com https://relay.walletconnect.com https://cca-lite.coinbase.com https://*.coinbase.com",
               "frame-src 'self' https://verify.didit.me https://verification.didit.me https://*.didit.me",
               "media-src 'self' blob: https://*.didit.me",
               "worker-src 'self' blob:",
