@@ -26,11 +26,25 @@ export default function ProfilePage() {
         body: JSON.stringify({ walletAddress: address }),
       });
 
+      const responseData = await response.json();
+
       if (!response.ok) {
-        throw new Error('Failed to initiate KYC');
+        console.error('KYC API error:', responseData);
+        alert(
+          `KYC Setup Required:\n\n${responseData.message || 'Failed to initiate KYC'}\n\n` +
+          `Go to https://dashboard.didit.me to create a workflow and set the DIDIT_WORKFLOW_ID environment variable in Vercel.`
+        );
+        setKycLoading(false);
+        return;
       }
 
-      const { verificationUrl, sessionId } = await response.json();
+      const { verificationUrl, sessionId } = responseData;
+
+      if (!verificationUrl) {
+        alert('No verification URL received. Please check your Didit configuration.');
+        setKycLoading(false);
+        return;
+      }
 
       // Open Didit verification popup
       const popup = window.open(verificationUrl, 'didit-kyc', 'width=500,height=700');
