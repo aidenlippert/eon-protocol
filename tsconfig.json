@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "backend", "indexer", "contracts", "scripts", "hardhat.config.ts"]
+  "include": ["frontend/**/*.ts", "frontend/**/*.tsx", "frontend/.next/types/**/*.ts"],
+  "exclude": ["node_modules", "backend", "indexer", "contracts", "scripts", "hardhat.config.ts", "typechain-types", "artifacts", "cache", "test"]
 }
