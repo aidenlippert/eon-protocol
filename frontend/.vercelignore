@@ -1,0 +1,7 @@
+../typechain-types
+../artifacts
+../cache
+../contracts
+../scripts
+../test
+../node_modules
