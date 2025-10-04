@@ -25,70 +25,14 @@ export default function ProfilePage() {
     }
   }, [address]);
 
-  const handleVerifyKYC = async () => {
+  const handleVerifyKYC = () => {
     if (!address) return;
 
-    setKycLoading(true);
-    try {
-      const response = await fetch('/api/kyc-initiate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ walletAddress: address }),
-      });
+    // Simply open Didit website in new tab
+    window.open('https://www.didit.me/', '_blank');
 
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        console.error('KYC API error:', responseData);
-        alert(
-          `KYC Setup Required:\n\n${responseData.message || 'Failed to initiate KYC'}\n\n` +
-          `Go to https://dashboard.didit.me to create a workflow and set the DIDIT_WORKFLOW_ID environment variable in Vercel.`
-        );
-        setKycLoading(false);
-        return;
-      }
-
-      const { verificationUrl, sessionId } = responseData;
-
-      if (!verificationUrl) {
-        alert('No verification URL received. Please check your Didit configuration.');
-        setKycLoading(false);
-        return;
-      }
-
-      // Open Didit verification popup
-      const popup = window.open(verificationUrl, 'didit-kyc', 'width=500,height=700');
-
-      // Listen for popup to close (user completed or cancelled)
-      const checkPopupClosed = setInterval(() => {
-        if (popup?.closed) {
-          clearInterval(checkPopupClosed);
-
-          // Show success message immediately (Didit confirms before closing)
-          alert('✅ Verification submitted! Your KYC status has been updated.');
-
-          // Save to localStorage
-          localStorage.setItem(`kyc-verified-${address.toLowerCase()}`, 'true');
-
-          // Update state
-          setKycVerified(true);
-          setKycLoading(false);
-
-          // Reload to recalculate score
-          window.location.reload();
-        }
-      }, 500); // Check every 500ms if popup closed
-
-      // Stop checking after 10 minutes
-      setTimeout(() => {
-        clearInterval(checkPopupClosed);
-        setKycLoading(false);
-      }, 600000);
-    } catch (error) {
-      console.error('KYC initiation failed:', error);
-      alert('Failed to start KYC verification. Please try again.');
-      setKycLoading(false);
-    }
+    // Show info about submitting proof on-chain
+    alert('Complete KYC on Didit, then return to submit your proof on-chain via the Dashboard.');
   };
 
   if (!isConnected) {
