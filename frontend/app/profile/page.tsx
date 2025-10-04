@@ -6,31 +6,12 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { analyzeWallet, calculateRealScore, type WalletAnalysis, type DeFiInteraction } from '@/lib/transaction-analyzer';
-import { Loader2, Award, TrendingUp, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import { Loader2, Award, TrendingUp, Shield, AlertTriangle } from 'lucide-react';
+import { useCreditScore } from '../../lib/hooks/useCreditScore';
 
 export default function ProfilePage() {
   const { address, isConnected } = useAccount();
-  const [loading, setLoading] = useState(false);
-  const [analysis, setAnalysis] = useState<WalletAnalysis | null>(null);
-  const [scoreData, setScoreData] = useState<ReturnType<typeof calculateRealScore> | null>(null);
-  const [expandedSection, setExpandedSection] = useState<string | null>(null);
-
-  const handleCalculateScore = async () => {
-    if (!address) return;
-
-    setLoading(true);
-    try {
-      const walletAnalysis = await analyzeWallet(address);
-      const score = calculateRealScore(walletAnalysis);
-      setAnalysis(walletAnalysis);
-      setScoreData(score);
-    } catch (error) {
-      console.error('Failed to calculate score:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { creditScore, tierLabel, riskLevel, isLoading } = useCreditScore();
 
   if (!isConnected) {
     return (
@@ -38,7 +19,7 @@ export default function ProfilePage() {
         <div className="max-w-2xl mx-auto text-center">
           <h1 className="text-4xl font-bold mb-4">Credit Profile</h1>
           <p className="text-neutral-400 mb-8">
-            Connect your wallet to calculate your on-chain credit score
+            Connect your wallet to view your on-chain credit score
           </p>
           <div className="text-violet-400">Please connect your wallet to continue</div>
         </div>
@@ -46,24 +27,36 @@ export default function ProfilePage() {
     );
   }
 
-  const getCreditTier = (score: number) => {
-    if (score >= 800) return 'Platinum';
-    if (score >= 650) return 'Gold';
-    if (score >= 500) return 'Silver';
-    return 'Bronze';
+  const score = creditScore?.score || 300;
+  const ltv = creditScore?.ltv || 50;
+  const interestMultiplier = creditScore?.interestRateMultiplier || 150;
+  const baseRate = 8;
+  const yourRate = (baseRate * interestMultiplier) / 100;
+
+  const getTierColor = (tier: string) => {
+    switch (tier) {
+      case 'Platinum': return 'text-violet-400 bg-violet-500/10 border-violet-500/20';
+      case 'Gold': return 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20';
+      case 'Silver': return 'text-gray-400 bg-gray-500/10 border-gray-500/20';
+      case 'Bronze': return 'text-orange-400 bg-orange-500/10 border-orange-500/20';
+      default: return 'text-neutral-400 bg-neutral-500/10 border-neutral-500/20';
+    }
   };
 
-  const tier = scoreData ? getCreditTier(scoreData.total) : 'Bronze';
-  const ltv = tier === 'Platinum' ? 90 : tier === 'Gold' ? 75 : tier === 'Silver' ? 65 : 50;
-
-  const toggleSection = (section: string) => {
-    setExpandedSection(expandedSection === section ? null : section);
+  const getScoreColor = (score: number) => {
+    if (score >= 800) return 'text-violet-400';
+    if (score >= 650) return 'text-green-400';
+    if (score >= 500) return 'text-yellow-400';
+    return 'text-red-400';
   };
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Your Credit Profile</h1>
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-4xl font-bold mb-2">Credit Profile</h1>
+        <p className="text-neutral-400 mb-8">
+          On-chain credit scoring powered by smart contracts
+        </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Score Card */}
@@ -71,203 +64,87 @@ export default function ProfilePage() {
             <div className="flex items-start justify-between mb-6">
               <div>
                 <h2 className="text-2xl font-bold mb-2">Credit Score</h2>
-                <p className="text-neutral-400">Based on REAL on-chain transaction history</p>
+                <p className="text-neutral-400 text-sm">
+                  Score range: 300-850 (FICO-style)
+                </p>
               </div>
-              <Badge className="bg-violet-500/10 text-violet-400 border-violet-500/20">
-                {tier}
-              </Badge>
-            </div>
-
-            <div className="mb-8">
-              <div className="flex items-baseline gap-4 mb-4">
-                <div className="text-6xl font-bold text-violet-400">
-                  {scoreData?.total ?? '---'}
-                </div>
-                <div className="text-neutral-400">/ 1000</div>
-              </div>
-              <Progress value={scoreData ? (scoreData.total / 1000) * 100 : 0} className="h-2" />
-            </div>
-
-            <Button
-              onClick={handleCalculateScore}
-              disabled={loading}
-              className="w-full bg-violet-600 hover:bg-violet-700"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Fetching Real Transaction Data from Arbiscan...
-                </>
-              ) : (
-                <>
-                  <TrendingUp className="mr-2 h-4 w-4" />
-                  Analyze My Wallet
-                </>
+              {tierLabel && (
+                <Badge className={getTierColor(tierLabel)}>
+                  {tierLabel}
+                </Badge>
               )}
-            </Button>
+            </div>
 
-            {analysis && scoreData && (
-              <div className="mt-8 space-y-3">
-                <h3 className="text-lg font-semibold mb-4">Score Breakdown (Click for Proof)</h3>
-
-                {/* Wallet Age */}
-                <div className="bg-neutral-950/50 rounded-lg border border-neutral-800 overflow-hidden">
-                  <button
-                    onClick={() => toggleSection('walletAge')}
-                    className="w-full p-4 flex items-center justify-between hover:bg-neutral-900/50 transition-colors"
-                  >
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-neutral-400">Wallet Age</span>
-                        <span className="text-sm font-medium">
-                          {scoreData.breakdown.walletAge.score} / {scoreData.breakdown.walletAge.max}
-                        </span>
-                      </div>
-                      <Progress value={(scoreData.breakdown.walletAge.score / scoreData.breakdown.walletAge.max) * 100} className="h-1" />
-                    </div>
-                    {expandedSection === 'walletAge' ? <ChevronUp className="ml-4 h-4 w-4" /> : <ChevronDown className="ml-4 h-4 w-4" />}
-                  </button>
-                  {expandedSection === 'walletAge' && (
-                    <div className="p-4 bg-neutral-950/70 border-t border-neutral-800 text-sm">
-                      <div className="text-neutral-300 mb-2">{scoreData.breakdown.walletAge.evidence}</div>
-                      <a
-                        href={`https://sepolia.arbiscan.io/address/${address}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-violet-400 hover:text-violet-300 flex items-center gap-1"
-                      >
-                        View on Arbiscan <ExternalLink className="h-3 w-3" />
-                      </a>
-                    </div>
-                  )}
-                </div>
-
-                {/* Transaction Volume */}
-                <div className="bg-neutral-950/50 rounded-lg border border-neutral-800 overflow-hidden">
-                  <button
-                    onClick={() => toggleSection('txVolume')}
-                    className="w-full p-4 flex items-center justify-between hover:bg-neutral-900/50 transition-colors"
-                  >
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-neutral-400">Transaction Volume</span>
-                        <span className="text-sm font-medium">
-                          {scoreData.breakdown.txVolume.score} / {scoreData.breakdown.txVolume.max}
-                        </span>
-                      </div>
-                      <Progress value={(scoreData.breakdown.txVolume.score / scoreData.breakdown.txVolume.max) * 100} className="h-1" />
-                    </div>
-                    {expandedSection === 'txVolume' ? <ChevronUp className="ml-4 h-4 w-4" /> : <ChevronDown className="ml-4 h-4 w-4" />}
-                  </button>
-                  {expandedSection === 'txVolume' && (
-                    <div className="p-4 bg-neutral-950/70 border-t border-neutral-800 text-sm">
-                      <div className="text-neutral-300 mb-2">{scoreData.breakdown.txVolume.evidence}</div>
-                      <a
-                        href={`https://sepolia.arbiscan.io/address/${address}#transactions`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-violet-400 hover:text-violet-300 flex items-center gap-1"
-                      >
-                        View all transactions <ExternalLink className="h-3 w-3" />
-                      </a>
-                    </div>
-                  )}
-                </div>
-
-                {/* DeFi Interactions */}
-                <div className="bg-neutral-950/50 rounded-lg border border-neutral-800 overflow-hidden">
-                  <button
-                    onClick={() => toggleSection('defi')}
-                    className="w-full p-4 flex items-center justify-between hover:bg-neutral-900/50 transition-colors"
-                  >
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-neutral-400">DeFi Interactions</span>
-                        <span className="text-sm font-medium">
-                          {scoreData.breakdown.defiInteractions.score} / {scoreData.breakdown.defiInteractions.max}
-                        </span>
-                      </div>
-                      <Progress value={(scoreData.breakdown.defiInteractions.score / scoreData.breakdown.defiInteractions.max) * 100} className="h-1" />
-                    </div>
-                    {expandedSection === 'defi' ? <ChevronUp className="ml-4 h-4 w-4" /> : <ChevronDown className="ml-4 h-4 w-4" />}
-                  </button>
-                  {expandedSection === 'defi' && (
-                    <div className="p-4 bg-neutral-950/70 border-t border-neutral-800 text-sm">
-                      <div className="text-neutral-300 mb-3">{scoreData.breakdown.defiInteractions.evidence}</div>
-                      {analysis.defiInteractions.length > 0 ? (
-                        <div className="space-y-2 max-h-64 overflow-y-auto">
-                          {analysis.defiInteractions.slice(0, 10).map((interaction, i) => (
-                            <div key={i} className="flex items-center justify-between p-2 bg-neutral-900/50 rounded">
-                              <div>
-                                <div className="font-medium">{interaction.protocol}</div>
-                                <div className="text-xs text-neutral-400">{new Date(interaction.timestamp * 1000).toLocaleDateString()}</div>
-                              </div>
-                              <a
-                                href={`https://sepolia.arbiscan.io/tx/${interaction.hash}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-violet-400 hover:text-violet-300"
-                              >
-                                <ExternalLink className="h-3 w-3" />
-                              </a>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="text-neutral-400">No DeFi interactions found</div>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                {/* Liquidation History */}
-                <div className="bg-neutral-950/50 rounded-lg border border-neutral-800 overflow-hidden">
-                  <button
-                    onClick={() => toggleSection('liquidation')}
-                    className="w-full p-4 flex items-center justify-between hover:bg-neutral-900/50 transition-colors"
-                  >
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-neutral-400">Liquidation History</span>
-                        <span className="text-sm font-medium">
-                          {scoreData.breakdown.liquidationHistory.score} / {scoreData.breakdown.liquidationHistory.max}
-                        </span>
-                      </div>
-                      <Progress value={(scoreData.breakdown.liquidationHistory.score / scoreData.breakdown.liquidationHistory.max) * 100} className="h-1" />
-                    </div>
-                    {expandedSection === 'liquidation' ? <ChevronUp className="ml-4 h-4 w-4" /> : <ChevronDown className="ml-4 h-4 w-4" />}
-                  </button>
-                  {expandedSection === 'liquidation' && (
-                    <div className="p-4 bg-neutral-950/70 border-t border-neutral-800 text-sm">
-                      <div className="text-neutral-300">{scoreData.breakdown.liquidationHistory.evidence}</div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Repayment History */}
-                <div className="bg-neutral-950/50 rounded-lg border border-neutral-800 overflow-hidden">
-                  <button
-                    onClick={() => toggleSection('repayment')}
-                    className="w-full p-4 flex items-center justify-between hover:bg-neutral-900/50 transition-colors"
-                  >
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-neutral-400">Repayment History</span>
-                        <span className="text-sm font-medium">
-                          {scoreData.breakdown.repaymentHistory.score} / {scoreData.breakdown.repaymentHistory.max}
-                        </span>
-                      </div>
-                      <Progress value={(scoreData.breakdown.repaymentHistory.score / scoreData.breakdown.repaymentHistory.max) * 100} className="h-1" />
-                    </div>
-                    {expandedSection === 'repayment' ? <ChevronUp className="ml-4 h-4 w-4" /> : <ChevronDown className="ml-4 h-4 w-4" />}
-                  </button>
-                  {expandedSection === 'repayment' && (
-                    <div className="p-4 bg-neutral-950/70 border-t border-neutral-800 text-sm">
-                      <div className="text-neutral-300">{scoreData.breakdown.repaymentHistory.evidence}</div>
-                    </div>
-                  )}
-                </div>
+            {isLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-violet-400" />
               </div>
+            ) : (
+              <>
+                <div className="mb-8">
+                  <div className="flex items-baseline gap-4 mb-4">
+                    <div className={`text-6xl font-bold ${getScoreColor(score)}`}>
+                      {score}
+                    </div>
+                    <div className="text-neutral-400">/ 850</div>
+                  </div>
+                  <Progress
+                    value={((score - 300) / 550) * 100}
+                    className="h-2"
+                  />
+                  <div className="flex justify-between text-xs text-neutral-500 mt-2">
+                    <span>300</span>
+                    <span>500</span>
+                    <span>670</span>
+                    <span>850</span>
+                  </div>
+                </div>
+
+                {score === 300 && (
+                  <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mb-6">
+                    <div className="flex items-start gap-2">
+                      <AlertTriangle className="h-4 w-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+                      <div className="text-sm text-yellow-100">
+                        <div className="font-medium mb-1">No Credit History</div>
+                        <div className="text-yellow-200/80">
+                          Your wallet has no credit history on our platform. Start by depositing collateral and taking a small loan to build your score.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Score Breakdown</h3>
+
+                  <div className="bg-neutral-950/50 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">Tier Level</span>
+                      <Badge className={getTierColor(tierLabel || 'No Score')}>
+                        {tierLabel || 'No Score'}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div className="bg-neutral-950/50 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">Max LTV</span>
+                      <span className="text-lg font-bold text-violet-400">{ltv}%</span>
+                    </div>
+                    <p className="text-xs text-neutral-400">Maximum loan-to-value ratio for borrowing</p>
+                  </div>
+
+                  <div className="bg-neutral-950/50 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">Interest Rate Multiplier</span>
+                      <span className="text-lg font-bold">{interestMultiplier}%</span>
+                    </div>
+                    <p className="text-xs text-neutral-400">
+                      Your rate: {yourRate.toFixed(1)}% (Base: {baseRate}%)
+                    </p>
+                  </div>
+                </div>
+              </>
             )}
           </Card>
 
@@ -278,25 +155,27 @@ export default function ProfilePage() {
                 <div className="w-10 h-10 rounded-lg bg-violet-500/10 flex items-center justify-center">
                   <Award className="h-5 w-5 text-violet-400" />
                 </div>
-                <h3 className="text-lg font-semibold">Current Tier</h3>
+                <h3 className="text-lg font-semibold">Your Benefits</h3>
               </div>
-              <div className="text-3xl font-bold text-violet-400 mb-2">{tier}</div>
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-neutral-400">Max LTV</span>
-                  <span className="font-medium">{ltv}%</span>
+
+              <div className="space-y-4">
+                <div>
+                  <div className="text-sm text-neutral-400 mb-1">Max LTV</div>
+                  <div className="text-2xl font-bold text-violet-400">{ltv}%</div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-neutral-400">Grace Period</span>
-                  <span className="font-medium">
-                    {tier === 'Platinum' ? '72h' : tier === 'Gold' ? '60h' : tier === 'Silver' ? '48h' : '24h'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-neutral-400">Interest Rate</span>
-                  <span className="font-medium">
-                    {tier === 'Platinum' ? '3%' : tier === 'Gold' ? '5%' : tier === 'Silver' ? '7%' : '10%'}
-                  </span>
+                <div>
+                  <div className="text-sm text-neutral-400 mb-1">Interest Rate</div>
+                  <div className="text-2xl font-bold">{yourRate.toFixed(1)}%</div>
+                  {interestMultiplier < 100 && (
+                    <div className="text-xs text-green-400 mt-1">
+                      {100 - interestMultiplier}% discount!
+                    </div>
+                  )}
+                  {interestMultiplier > 100 && (
+                    <div className="text-xs text-red-400 mt-1">
+                      {interestMultiplier - 100}% premium
+                    </div>
+                  )}
                 </div>
               </div>
             </Card>
@@ -305,18 +184,40 @@ export default function ProfilePage() {
               <h3 className="text-lg font-semibold mb-4">How to Improve</h3>
               <ul className="space-y-3 text-sm text-neutral-400">
                 <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-violet-400 mt-2" />
-                  <span>Increase transaction volume on Arbitrum</span>
+                  <TrendingUp className="h-4 w-4 text-violet-400 mt-0.5 flex-shrink-0" />
+                  <span>Borrow and repay loans on time</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-violet-400 mt-2" />
-                  <span>Interact with DeFi protocols (Aave, Uniswap, GMX)</span>
+                  <Shield className="h-4 w-4 text-violet-400 mt-0.5 flex-shrink-0" />
+                  <span>Keep your health factor above 1.5</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-violet-400 mt-2" />
-                  <span>Avoid failed transactions (100% success rate is best)</span>
+                  <Award className="h-4 w-4 text-violet-400 mt-0.5 flex-shrink-0" />
+                  <span>Build a history of successful transactions</span>
                 </li>
               </ul>
+            </Card>
+
+            <Card className="bg-violet-500/10 border-violet-500/20 p-6">
+              <h3 className="text-lg font-semibold mb-2 text-violet-400">Tier System</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-violet-300">Platinum:</span>
+                  <span className="text-neutral-400">800-850 (90% LTV)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-yellow-300">Gold:</span>
+                  <span className="text-neutral-400">650-799 (80% LTV)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Silver:</span>
+                  <span className="text-neutral-400">500-649 (70% LTV)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-orange-300">Bronze:</span>
+                  <span className="text-neutral-400">300-499 (50% LTV)</span>
+                </div>
+              </div>
             </Card>
           </div>
         </div>
