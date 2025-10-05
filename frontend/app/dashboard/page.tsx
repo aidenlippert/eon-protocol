@@ -7,6 +7,7 @@ import { BorrowInterface } from '@/components/borrow/BorrowInterface';
 import { LoanHistory } from '@/components/loans/LoanHistory';
 import { StakingInterface } from '@/components/staking/StakingInterface';
 import { DiditWidget } from '@/components/kyc/DiditWidget';
+import { ScoreSimulator } from '@/components/credit/ScoreSimulator';
 
 export default function DashboardPage() {
   const { isConnected } = useAccount();
@@ -38,6 +39,11 @@ export default function DashboardPage() {
           <div>
             <DiditWidget />
           </div>
+        </div>
+
+        {/* Score Simulator */}
+        <div className="mb-8">
+          <ScoreSimulator />
         </div>
 
         {/* Main Tabs */}
