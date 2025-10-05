@@ -5,10 +5,10 @@
 
 export async function calculateCreditScore(address: string, transactions: any[]) {
   // TODO: Implement full credit score calculation
-  // For now, return mock data matching FactorBreakdown component structure
+  // For now, return 0 score if no activity (realistic)
 
   return {
-    score: 75,
+    score: 0,
     breakdown: {
       paymentHistory: {
         score: 80,

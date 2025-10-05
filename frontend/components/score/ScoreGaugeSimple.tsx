@@ -60,9 +60,9 @@ export function ScoreGauge({ score, tier, animated = true }: ScoreGaugeProps) {
           className="text-8xl font-bold mb-2 tabular-nums"
           style={{ color: colors.primary }}
         >
-          {Math.round(displayScore)}
+          {Math.round(displayScore * 10)}
         </div>
-        <div className="text-neutral-400 text-lg">out of 100</div>
+        <div className="text-neutral-400 text-lg">out of 1000</div>
       </div>
 
       {/* Vertical Progress Bar */}
@@ -86,13 +86,13 @@ export function ScoreGauge({ score, tier, animated = true }: ScoreGaugeProps) {
         </div>
 
         {/* Score markers */}
-        {[0, 25, 50, 75, 100].map((mark) => (
+        {[0, 250, 500, 750, 1000].map((mark) => (
           <div
             key={mark}
             className="absolute left-0 right-0 h-0.5 bg-neutral-600"
-            style={{ bottom: `${mark}%` }}
+            style={{ bottom: `${(mark / 1000) * 100}%` }}
           >
-            <span className="absolute -left-10 -top-2 text-xs text-neutral-500">
+            <span className="absolute -left-12 -top-2 text-xs text-neutral-500">
               {mark}
             </span>
           </div>

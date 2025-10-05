@@ -241,9 +241,9 @@ async function getLinkedWallets(address: string): Promise<any[]> {
 }
 
 function getScoreTier(score: number): string {
-  if (score >= 90) return 'Platinum';
-  if (score >= 75) return 'Gold';
-  if (score >= 60) return 'Silver';
+  if (score >= 900) return 'Platinum';
+  if (score >= 750) return 'Gold';
+  if (score >= 600) return 'Silver';
   return 'Bronze';
 }
 
