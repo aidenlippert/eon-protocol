@@ -171,8 +171,19 @@ function formatEvidenceKey(key: string): string {
 }
 
 function formatEvidenceValue(key: string, value: any): string {
+  // Handle null/undefined
+  if (value === null || value === undefined) {
+    return '0';
+  }
+
+  // Handle numbers
   if (typeof value === 'number') {
-    if (key.includes('Ratio') || key.includes('Factor')) {
+    // Handle NaN
+    if (isNaN(value)) {
+      return '0%';
+    }
+
+    if (key.includes('Ratio') || key.includes('Factor') || key.includes('Utilization')) {
       return `${(value * 100).toFixed(1)}%`;
     }
     if (key.includes('Days')) {
@@ -180,9 +191,19 @@ function formatEvidenceValue(key: string, value: any): string {
     }
     return value.toLocaleString();
   }
+
+  // Handle arrays
   if (Array.isArray(value)) {
-    return value.length.toString();
+    return value.length > 0 ? value.join(', ') : 'None';
   }
+
+  // Handle objects (like protocol trust scores)
+  if (typeof value === 'object') {
+    const entries = Object.entries(value);
+    if (entries.length === 0) return 'None';
+    return entries.map(([k, v]) => `${k}: ${v}`).join(', ');
+  }
+
   return String(value);
 }
 
