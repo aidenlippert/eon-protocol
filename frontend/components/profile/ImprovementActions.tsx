@@ -1,7 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { SmartButton } from '@/components/ui/SmartButton';
+import { KYCModal } from '@/components/modals/KYCModal';
+import { BorrowModal } from '@/components/modals/BorrowModal';
 import { colors } from '@/lib/design-tokens';
 import {
   Shield,
@@ -39,6 +42,9 @@ export function ImprovementActions({
   tier,
   kycVerified = false,
 }: ImprovementActionsProps) {
+  const [kycModalOpen, setKycModalOpen] = useState(false);
+  const [borrowModalOpen, setBorrowModalOpen] = useState(false);
+
   const actions: ActionCard[] = [
     {
       title: 'Complete KYC Verification',
@@ -49,8 +55,7 @@ export function ImprovementActions({
       priority: kycVerified ? 'low' : 'high',
       action: kycVerified ? '✓ Verified' : 'Verify Identity (Free)',
       onClick: async () => {
-        // Trigger KYC modal
-        console.log('Opening KYC modal...');
+        setKycModalOpen(true);
       },
     },
     {
@@ -62,8 +67,7 @@ export function ImprovementActions({
       priority: 'high',
       action: 'Borrow $100',
       onClick: async () => {
-        // Trigger borrow modal
-        console.log('Opening borrow modal...');
+        setBorrowModalOpen(true);
       },
     },
     {
@@ -230,6 +234,10 @@ export function ImprovementActions({
           );
         })}
       </div>
+
+      {/* Modals */}
+      <KYCModal isOpen={kycModalOpen} onClose={() => setKycModalOpen(false)} />
+      <BorrowModal isOpen={borrowModalOpen} onClose={() => setBorrowModalOpen(false)} />
     </div>
   );
 }
