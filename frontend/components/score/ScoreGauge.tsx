@@ -22,11 +22,11 @@ export function ScoreGauge({ score, tier, animated = true }: ScoreGaugeProps) {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
-  // Score is 0-100, gauge shows 0-270 degrees (3/4 circle)
+  // Score is 0-100, gauge shows 0-180 degrees (semicircle filling upward)
   // Add safety check for undefined/null score
   const safeScore = score ?? 0;
   const percentage = Math.min(Math.max(safeScore, 0), 100);
-  const offset = circumference - (percentage / 100) * (circumference * 0.75);
+  const offset = circumference - (percentage / 100) * (circumference * 0.5);
 
   // Get tier colors
   const getTierColor = (tier: string) => {
@@ -71,7 +71,7 @@ export function ScoreGauge({ score, tier, animated = true }: ScoreGaugeProps) {
         width={size}
         height={size}
         viewBox={`0 0 ${size} ${size}`}
-        className="transform -rotate-[135deg]"
+        className="transform -rotate-90"
       >
         {/* Background circle (track) */}
         <circle
@@ -82,7 +82,7 @@ export function ScoreGauge({ score, tier, animated = true }: ScoreGaugeProps) {
           stroke="#262626"
           strokeWidth={strokeWidth}
           strokeLinecap="round"
-          strokeDasharray={`${circumference * 0.75} ${circumference * 0.25}`}
+          strokeDasharray={`${circumference * 0.5} ${circumference * 0.5}`}
         />
 
         {/* Progress circle */}
@@ -95,7 +95,7 @@ export function ScoreGauge({ score, tier, animated = true }: ScoreGaugeProps) {
           stroke={`url(#gradient-${tier})`}
           strokeWidth={strokeWidth}
           strokeLinecap="round"
-          strokeDasharray={`${circumference * 0.75} ${circumference * 0.25}`}
+          strokeDasharray={`${circumference * 0.5} ${circumference * 0.5}`}
           strokeDashoffset={animated ? circumference : offset}
           style={{
             filter: `drop-shadow(0 0 8px ${colors.glow})`
@@ -112,7 +112,7 @@ export function ScoreGauge({ score, tier, animated = true }: ScoreGaugeProps) {
 
         {/* Tick marks */}
         {[0, 25, 50, 75, 100].map((tick) => {
-          const angle = -135 + (tick / 100) * 270;
+          const angle = -90 + (tick / 100) * 180;
           const radians = (angle * Math.PI) / 180;
           const x1 = size / 2 + (radius - strokeWidth / 2 - 5) * Math.cos(radians);
           const y1 = size / 2 + (radius - strokeWidth / 2 - 5) * Math.sin(radians);
