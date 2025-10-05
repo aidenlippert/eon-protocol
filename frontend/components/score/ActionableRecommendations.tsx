@@ -197,7 +197,7 @@ function generateRecommendations(
 
   // Payment History recommendations
   if (breakdown.paymentHistory.score < 70) {
-    const liquidations = breakdown.paymentHistory.evidence.liquidations || 0;
+    const liquidations = breakdown.paymentHistory.evidence?.liquidations || 0;
     if (liquidations > 0) {
       recommendations.push({
         id: 'reduce-liquidations',
@@ -212,7 +212,7 @@ function generateRecommendations(
       });
     }
 
-    if (breakdown.paymentHistory.evidence.totalLoans === 0) {
+    if (breakdown.paymentHistory.evidence?.totalLoans === 0) {
       recommendations.push({
         id: 'first-loan',
         priority: 'high',
@@ -229,7 +229,7 @@ function generateRecommendations(
 
   // Credit Utilization recommendations
   if (breakdown.creditUtilization.score < 70) {
-    const utilization = breakdown.creditUtilization.evidence.currentUtilization || 0;
+    const utilization = breakdown.creditUtilization.evidence?.rate || 0;
 
     if (utilization > 0.5) {
       recommendations.push({
@@ -278,7 +278,7 @@ function generateRecommendations(
 
   // Credit Mix recommendations
   if (breakdown.creditMix.score < 60) {
-    const protocols = breakdown.creditMix.evidence.protocolsUsed?.length || 0;
+    const protocols = breakdown.creditMix.evidence?.uniqueProtocols?.length || 0;
 
     if (protocols < 2) {
       recommendations.push({
@@ -312,7 +312,7 @@ function generateRecommendations(
 
   // New Credit recommendations
   if (breakdown.newCredit.score < 50) {
-    const recentLoans = breakdown.newCredit.evidence.recentLoans || 0;
+    const recentLoans = breakdown.newCredit.evidence?.totalTransactions || 0;
 
     if (recentLoans > 5) {
       recommendations.push({
