@@ -8,7 +8,7 @@ import { colors } from '@/lib/design-tokens';
  * @notice Interactive showcase of SmartButton component variants
  */
 export default function DemoPage() {
-  const simulateAsync = () => {
+  const simulateAsync = (): Promise<void> => {
     return new Promise((resolve) => setTimeout(resolve, 2000));
   };
 
