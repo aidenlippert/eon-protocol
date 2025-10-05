@@ -45,6 +45,7 @@ export function BorrowModal({ isOpen, onClose, initialAmount = 100 }: BorrowModa
   const { address } = useAccount();
 
   const [amount, setAmount] = useState(initialAmount);
+  const [debouncedAmount, setDebouncedAmount] = useState(initialAmount);
   const [estimate, setEstimate] = useState<EstimateData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,12 +53,21 @@ export function BorrowModal({ isOpen, onClose, initialAmount = 100 }: BorrowModa
   const [showStepper, setShowStepper] = useState(false);
   const [transactions, setTransactions] = useState<any>(null);
 
-  // Fetch estimate when amount changes
+  // Debounce amount changes (wait 500ms after user stops typing)
   useEffect(() => {
-    if (isOpen && address && amount > 0) {
+    const timer = setTimeout(() => {
+      setDebouncedAmount(amount);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [amount]);
+
+  // Fetch estimate when debounced amount changes
+  useEffect(() => {
+    if (isOpen && address && debouncedAmount > 0) {
       fetchEstimate();
     }
-  }, [isOpen, address, amount]);
+  }, [isOpen, address, debouncedAmount]);
 
   const fetchEstimate = async () => {
     if (!address) return;
@@ -88,6 +98,12 @@ export function BorrowModal({ isOpen, onClose, initialAmount = 100 }: BorrowModa
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setAmount(value);
+    setLoading(true); // Show loading while debouncing
   };
 
   const handleBorrow = async () => {
@@ -157,14 +173,14 @@ export function BorrowModal({ isOpen, onClose, initialAmount = 100 }: BorrowModa
 
           {/* Modal */}
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ type: 'spring', damping: 20 }}
           >
             <div
-              className="w-full max-w-lg rounded-2xl border p-8 relative"
+              className="w-full max-w-lg rounded-2xl border p-8 relative my-8 max-h-[90vh] overflow-y-auto"
               style={{
                 background: colors.bg.card,
                 borderColor: 'rgba(255, 255, 255, 0.1)',
@@ -205,11 +221,10 @@ export function BorrowModal({ isOpen, onClose, initialAmount = 100 }: BorrowModa
                   <input
                     type="number"
                     value={amount}
-                    onChange={(e) => setAmount(Number(e.target.value))}
+                    onChange={handleAmountChange}
                     className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-purple-500"
                     min={10}
                     max={1000}
-                    disabled={loading}
                   />
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 text-sm">
                     USDC
