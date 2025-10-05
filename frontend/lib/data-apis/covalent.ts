@@ -386,8 +386,7 @@ function extractProtocolName(address: string): string | null {
     '0x7a250d5630b4cf539739df2c5dacb4c659f2488d': 'uniswap',
     '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48': 'usdc', // Not a protocol but useful
     '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984': 'uniswap',
-    '0x';
-  // Add more as needed
+    // Add more protocol addresses as needed
   };
 
   const lowerAddress = address.toLowerCase();
