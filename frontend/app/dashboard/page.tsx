@@ -4,7 +4,7 @@ import { useAccount } from 'wagmi';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CreditScoreCardNew as CreditScoreCard } from '@/components/dashboard/CreditScoreCardNew';
 import { BorrowInterface } from '@/components/borrow/BorrowInterface';
-import { LoansList } from '@/components/dashboard/LoansList';
+import { LoanHistory } from '@/components/loans/LoanHistory';
 import { StakingInterface } from '@/components/staking/StakingInterface';
 import { DiditWidget } from '@/components/kyc/DiditWidget';
 
@@ -53,7 +53,7 @@ export default function DashboardPage() {
           </TabsContent>
 
           <TabsContent value="loans" className="mt-6">
-            <LoansList />
+            <LoanHistory />
           </TabsContent>
 
           <TabsContent value="staking" className="mt-6">
