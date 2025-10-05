@@ -21,8 +21,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user's credit score to determine LTV
-    const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+    // Use VERCEL_URL (server-side) or fallback to localhost
+    const baseUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
       : 'http://localhost:3000';
 
     const scoreResponse = await fetch(`${baseUrl}/api/score/${wallet}`);
