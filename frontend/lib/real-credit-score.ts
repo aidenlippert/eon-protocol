@@ -22,6 +22,7 @@ import {
   type DeFiMixData,
   type ActivityData,
 } from './score-normalizers';
+import { getPortfolioValue, getDeFiProtocols } from './data-apis/covalent';
 
 // ============================================
 // TYPES
@@ -79,15 +80,17 @@ export async function calculateCreditScore(
 
   try {
     // ========================================
-    // PHASE 1: PARALLEL DATA COLLECTION
+    // PHASE 1: PARALLEL DATA COLLECTION (Multi-Chain)
     // ========================================
 
-    const [balance, accountAgeDays, vaultData, txCount, firstTxDate] = await Promise.all([
+    const [balance, accountAgeDays, vaultData, txCount, firstTxDate, portfolio, protocols] = await Promise.all([
       getWalletBalance(address),
       getAccountAgeDays(address),
       getUserVaultData(address),
       getTransactionCount(address),
       getFirstTransactionDate(address),
+      getPortfolioValue(address), // NEW: Multi-chain portfolio data
+      getDeFiProtocols(address), // NEW: DeFi protocol history
     ]);
 
     console.log('[Credit Engine V2] Raw data collected:', {
@@ -130,24 +133,31 @@ export async function calculateCreditScore(
       hasSocialProof: false, // TODO: Check Gitcoin Passport
     };
 
-    // S5: Asset Diversity (Portfolio Analysis)
+    // S5: Asset Diversity (Multi-Chain Portfolio Analysis)
     const balanceUSD = parseFloat(balance) * 2500; // Rough ETH price estimate
     const assetData: AssetData = {
-      totalValueUSD: balanceUSD + totalCollateralUSD,
-      uniqueTokenCount: 1, // TODO: Fetch from token API (Covalent/Zapper)
-      stablecoinRatio: 0, // TODO: Calculate from token balances
-      topTokenConcentration: 1.0, // TODO: Calculate from holdings
+      totalValueUSD: portfolio.totalValueUSD + totalCollateralUSD, // Multi-chain + vault
+      uniqueTokenCount: portfolio.uniqueTokenCount,
+      stablecoinRatio: portfolio.stablecoinRatio,
+      topTokenConcentration: portfolio.topTokenConcentration,
     };
 
-    // S6: DeFi Protocol Mix
+    // S6: DeFi Protocol Mix (Multi-Chain Protocol History)
+    const allProtocols = [...new Set([...protocols, 'eon-protocol'])]; // Include EON + discovered protocols
+    const protocolTrustScores: Record<string, number> = {
+      'eon-protocol': 0.8,
+      aave: 1.0,
+      compound: 1.0,
+      uniswap: 0.9,
+      curve: 0.9,
+      sushiswap: 0.85,
+      balancer: 0.85,
+      '1inch': 0.8,
+    };
+
     const deFiMixData: DeFiMixData = {
-      uniqueProtocols: ['eon-protocol'], // TODO: Extract from transaction history
-      protocolTrustScores: {
-        'eon-protocol': 0.8,
-        aave: 1.0,
-        uniswap: 0.9,
-        curve: 0.9,
-      },
+      uniqueProtocols: allProtocols,
+      protocolTrustScores,
     };
 
     // S7: Activity Control
