@@ -1,170 +1,146 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { parseEther, parseUnits, isAddress } from 'viem';
+import { createPublicClient, http, isAddress, parseEther, encodeFunctionData } from 'viem';
+import { arbitrumSepolia } from 'viem/chains';
+import { CONTRACT_ADDRESSES } from '@/lib/contracts/addresses';
 
 /**
- * @title Borrow Prepare API
- * @notice Prepares transaction data for 3-step borrowing flow
- * @dev Returns encoded function calls for approve → deposit → borrow
- *
- * **3-Step Borrowing Flow**:
- * 1. Approve: User approves CreditVault to spend their collateral (ETH/WETH)
- * 2. Deposit: User deposits collateral into CreditVault
- * 3. Borrow: User borrows USDC against their collateral
- *
- * **Security**:
- * - Validates collateral amount > 0
- * - Validates principal amount > 0
- * - Checks wallet address validity
- * - Returns read-only transaction data (no private keys)
+ * @title Transaction Prep API
+ * @notice Prepares encoded calldata for multi-step borrow flow
+ * @dev Returns array of transaction steps (approve → borrow)
  */
 
-// Contract addresses on Arbitrum Sepolia
-const CREDIT_VAULT = '0xB1E54fDCf400FB25203801013dfeaD737fBBbd61';
-const WETH_ADDRESS = '0x980B62Da83eff3D4576C647993b0c1D7faf17c73'; // Arbitrum Sepolia WETH
-const USDC_ADDRESS = '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d'; // Arbitrum Sepolia USDC
-
-// ABIs for function encoding
-const ERC20_ABI = [
-  'function approve(address spender, uint256 amount) external returns (bool)',
+const WETH_ABI = [
+  {
+    inputs: [
+      { name: 'spender', type: 'address' },
+      { name: 'amount', type: 'uint256' },
+    ],
+    name: 'approve',
+    outputs: [{ name: '', type: 'bool' }],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { name: 'owner', type: 'address' },
+      { name: 'spender', type: 'address' },
+    ],
+    name: 'allowance',
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
 ] as const;
 
 const VAULT_ABI = [
-  'function depositCollateral(uint256 amount) external payable',
-  'function borrow(uint256 amount) external',
+  {
+    inputs: [
+      { name: 'collateralToken', type: 'address' },
+      { name: 'collateralAmount', type: 'uint256' },
+      { name: 'principalUsd18', type: 'uint256' },
+    ],
+    name: 'borrow',
+    outputs: [{ name: 'loanId', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
 ] as const;
 
-interface PrepareRequest {
-  wallet: string;
-  collateralETH: number; // Amount in ETH
-  principalUSD: number; // Amount in USD
+interface TransactionStep {
+  type: 'approve' | 'borrow';
+  to: string;
+  data: string;
+  value: string;
+  description: string;
+  estimatedGas: number;
 }
 
-/**
- * POST /api/borrow/prepare
- * Prepares transaction data for borrowing flow
- */
 export async function POST(request: NextRequest) {
   try {
-    const body: PrepareRequest = await request.json();
-    const { wallet, collateralETH, principalUSD } = body;
-
-    // ==================== VALIDATION ====================
+    const body = await request.json();
+    const { wallet, collateralAmount, principalUSD, collateralToken = 'WETH' } = body;
 
     if (!wallet || !isAddress(wallet)) {
-      return NextResponse.json(
-        { error: 'Invalid wallet address' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid wallet address' }, { status: 400 });
     }
 
-    if (typeof collateralETH !== 'number' || collateralETH <= 0) {
-      return NextResponse.json(
-        { error: 'Invalid collateral amount (must be > 0)' },
-        { status: 400 }
-      );
+    if (!collateralAmount || collateralAmount <= 0) {
+      return NextResponse.json({ error: 'Invalid collateral amount' }, { status: 400 });
     }
 
-    if (typeof principalUSD !== 'number' || principalUSD <= 0) {
-      return NextResponse.json(
-        { error: 'Invalid principal amount (must be > 0)' },
-        { status: 400 }
-      );
+    if (!principalUSD || principalUSD <= 0) {
+      return NextResponse.json({ error: 'Invalid principal amount' }, { status: 400 });
     }
 
-    // ==================== ENCODE TRANSACTIONS ====================
+    const steps: TransactionStep[] = [];
+    const vaultAddress = CONTRACT_ADDRESSES[421614].CreditVaultV3;
+    const wethAddress = CONTRACT_ADDRESSES[421614].MockWETH;
+    const collateralAmountWei = parseEther(collateralAmount.toString());
+    const principalUsd18 = parseEther(principalUSD.toString());
 
-    // Convert amounts to wei/smallest units
-    const collateralWei = parseEther(collateralETH.toString());
-    const principalWei = parseUnits(principalUSD.toString(), 6); // USDC has 6 decimals
-
-    // Step 1: Approve WETH spending
-    // Note: For native ETH, we skip this step (handled by depositCollateral with msg.value)
-    // This is here for future WETH support
-    const approveData = {
-      to: WETH_ADDRESS,
-      data: encodeFunctionData({
-        abi: ERC20_ABI,
-        functionName: 'approve',
-        args: [CREDIT_VAULT as `0x${string}`, collateralWei],
-      }),
-      value: '0x0',
-      description: `Approve ${collateralETH} ETH for CreditVault`,
-    };
-
-    // Step 2: Deposit collateral
-    const depositData = {
-      to: CREDIT_VAULT,
-      data: encodeFunctionData({
-        abi: VAULT_ABI,
-        functionName: 'depositCollateral',
-        args: [collateralWei],
-      }),
-      value: collateralWei.toString(), // Send ETH with transaction
-      description: `Deposit ${collateralETH} ETH as collateral`,
-    };
-
-    // Step 3: Borrow USDC
-    const borrowData = {
-      to: CREDIT_VAULT,
-      data: encodeFunctionData({
-        abi: VAULT_ABI,
-        functionName: 'borrow',
-        args: [principalWei],
-      }),
-      value: '0x0',
-      description: `Borrow $${principalUSD} USDC`,
-    };
-
-    // ==================== RESPONSE ====================
-
-    return NextResponse.json({
-      success: true,
-      transactions: {
-        // Step 1: Approve (optional for native ETH, required for WETH)
-        approve: {
-          ...approveData,
-          required: false, // Skip for native ETH deposits
-          gasEstimate: 50000,
-        },
-        // Step 2: Deposit collateral
-        deposit: {
-          ...depositData,
-          required: true,
-          gasEstimate: 150000,
-        },
-        // Step 3: Borrow
-        borrow: {
-          ...borrowData,
-          required: true,
-          gasEstimate: 200000,
-        },
-      },
-      summary: {
-        collateralETH,
-        principalUSD,
-        vaultAddress: CREDIT_VAULT,
-        estimatedTotalGas: 400000, // ~$1.50 on Arbitrum L2
-      },
-      timestamp: new Date().toISOString(),
+    // Create viem client for reading allowance
+    const client = createPublicClient({
+      chain: arbitrumSepolia,
+      transport: http(),
     });
 
-  } catch (error: any) {
-    console.error('[Borrow Prepare API] Error:', error);
+    // Check current allowance
+    const currentAllowance = (await client.readContract({
+      address: wethAddress as `0x${string}`,
+      abi: WETH_ABI,
+      functionName: 'allowance',
+      args: [wallet as `0x${string}`, vaultAddress as `0x${string}`],
+    })) as bigint;
 
+    // Step 1: Approve (if needed)
+    if (currentAllowance < collateralAmountWei) {
+      const approveData = encodeFunctionData({
+        abi: WETH_ABI,
+        functionName: 'approve',
+        args: [vaultAddress as `0x${string}`, collateralAmountWei],
+      });
+
+      steps.push({
+        type: 'approve',
+        to: wethAddress,
+        data: approveData,
+        value: '0',
+        description: `Approve ${collateralAmount} WETH for vault`,
+        estimatedGas: 50000,
+      });
+    }
+
+    // Step 2: Borrow
+    const borrowData = encodeFunctionData({
+      abi: VAULT_ABI,
+      functionName: 'borrow',
+      args: [wethAddress as `0x${string}`, collateralAmountWei, principalUsd18],
+    });
+
+    steps.push({
+      type: 'borrow',
+      to: vaultAddress,
+      data: borrowData,
+      value: '0',
+      description: `Borrow $${principalUSD} USDC with ${collateralAmount} WETH collateral`,
+      estimatedGas: 350000,
+    });
+
+    const totalGas = steps.reduce((sum, step) => sum + step.estimatedGas, 0);
+
+    return NextResponse.json({
+      steps,
+      needsApproval: currentAllowance < collateralAmountWei,
+      totalSteps: steps.length,
+      estimatedGas: totalGas,
+      collateralToken: wethAddress,
+      vaultAddress,
+    });
+  } catch (error: any) {
+    console.error('[Transaction Prep API] Error:', error);
     return NextResponse.json(
-      {
-        error: 'Failed to prepare borrow transactions',
-        message: error.message || 'Internal server error',
-      },
+      { error: 'Failed to prepare transactions', message: error.message },
       { status: 500 }
     );
   }
-}
-
-// Helper to encode function data (viem-compatible)
-function encodeFunctionData({ abi, functionName, args }: any): string {
-  // For simplicity, we'll use a basic encoding approach
-  // In production, use viem's encodeFunctionData
-  const { encodeFunctionData: encode } = require('viem');
-  return encode({ abi, functionName, args });
 }
