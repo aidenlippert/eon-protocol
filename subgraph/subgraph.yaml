@@ -1,0 +1,89 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  # CreditRegistryV3 - Loan tracking
+  - kind: ethereum
+    name: CreditRegistry
+    network: arbitrum-sepolia
+    source:
+      address: "0x425d4DBD32e5B185C15ffAf7076bFc9c8aD04Fa9"
+      abi: CreditRegistry
+      startBlock: 82000000 # Deploy block
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - Loan
+        - Repayment
+        - Liquidation
+        - ProtocolStats
+      abis:
+        - name: CreditRegistry
+          file: ./abis/CreditRegistryV3.json
+      eventHandlers:
+        - event: LoanRegistered(indexed address,indexed uint256,uint256,uint256,indexed address)
+          handler: handleLoanRegistered
+        - event: RepaymentRegistered(indexed address,indexed uint256,uint256,uint256,indexed address)
+          handler: handleRepaymentRegistered
+        - event: LiquidationRegistered(indexed address,indexed uint256,uint256,uint256,indexed address)
+          handler: handleLiquidationRegistered
+        - event: CollateralDataRecorded(indexed uint256,indexed address,uint256,uint16)
+          handler: handleCollateralDataRecorded
+        - event: KYCVerified(indexed address,bytes32,uint256)
+          handler: handleKYCVerified
+      file: ./src/mappings/CreditRegistry.ts
+
+  # CreditVaultV3 - Vault operations
+  - kind: ethereum
+    name: CreditVault
+    network: arbitrum-sepolia
+    source:
+      address: "0x52F65D2A3BacE77F7dee738F439f2F106B0c5a4d"
+      abi: CreditVault
+      startBlock: 82000000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Loan
+        - Liquidation
+      abis:
+        - name: CreditVault
+          file: ./abis/CreditVaultV3.json
+      eventHandlers:
+        - event: LoanCreated(indexed uint256,indexed address,uint256,uint256)
+          handler: handleLoanCreated
+        - event: LoanRepaid(indexed uint256,indexed address,uint256)
+          handler: handleLoanRepaid
+        - event: LoanLiquidated(indexed uint256,indexed address,indexed address,uint256)
+          handler: handleLoanLiquidated
+        - event: GracePeriodStarted(indexed uint256,uint256)
+          handler: handleGracePeriodStarted
+      file: ./src/mappings/CreditVault.ts
+
+  # ScoreOraclePhase3B - Score updates
+  - kind: ethereum
+    name: ScoreOracle
+    network: arbitrum-sepolia
+    source:
+      address: "0x3460891EbdDeA80F44c56Cb97a239031C22B2b7e"
+      abi: ScoreOracle
+      startBlock: 82000000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - ScoreSnapshot
+      abis:
+        - name: ScoreOracle
+          file: ./abis/ScoreOraclePhase3B.json
+      eventHandlers:
+        - event: ScoreComputed(indexed address,uint16,string)
+          handler: handleScoreComputed
+      file: ./src/mappings/ScoreOracle.ts

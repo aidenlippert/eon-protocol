@@ -1,0 +1,22 @@
+{
+  "name": "eon-protocol-subgraph",
+  "version": "1.0.0",
+  "description": "The Graph subgraph for EON Protocol credit bureau and lending",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --studio eon-protocol",
+    "deploy:hosted": "graph deploy --product hosted-service eon-protocol/eon-credit-bureau",
+    "create-local": "graph create --node http://localhost:8020/ eon-protocol",
+    "remove-local": "graph remove --node http://localhost:8020/ eon-protocol",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 eon-protocol",
+    "test": "graph test"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.56.0",
+    "@graphprotocol/graph-ts": "^0.31.0"
+  },
+  "devDependencies": {
+    "matchstick-as": "^0.6.0"
+  }
+}

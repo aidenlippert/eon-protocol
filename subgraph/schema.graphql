@@ -1,0 +1,134 @@
+# EON Protocol - The Graph Schema
+# Indexes all credit bureau and lending events
+
+type User @entity {
+  id: ID! # wallet address
+  firstSeen: BigInt!
+  lastSeen: BigInt!
+  totalLoans: Int!
+  activeLoans: Int!
+  repaidLoans: Int!
+  liquidatedLoans: Int!
+  totalBorrowed: BigInt! # USD18 format
+  totalRepaid: BigInt! # USD18 format
+  totalCollateral: BigInt! # USD18 format
+  currentScore: Int # Latest score
+  currentTier: String # Bronze, Silver, Gold, Platinum
+  loans: [Loan!]! @derivedFrom(field: "borrower")
+  scoreSnapshots: [ScoreSnapshot!]! @derivedFrom(field: "user")
+  kycStatus: KYCStatus
+}
+
+type Loan @entity {
+  id: ID! # loanId
+  borrower: User!
+  lender: Bytes! # address
+  principalUsd18: BigInt!
+  collateralUsd18: BigInt!
+  collateralToken: Bytes! # address
+  collateralAmount: BigInt!
+  repaidUsd18: BigInt!
+  status: LoanStatus!
+  aprBps: Int! # basis points (e.g., 750 = 7.5%)
+  borrowerScore: Int! # score at time of borrow
+  borrowerTier: String! # tier at time of borrow
+  createdAt: BigInt!
+  createdAtBlock: BigInt!
+  updatedAt: BigInt!
+  repaidAt: BigInt
+  liquidatedAt: BigInt
+  liquidator: Bytes
+  recoveredUsd18: BigInt
+  healthFactor: BigDecimal # current health factor
+  graceStart: BigInt # grace period start timestamp
+  repayments: [Repayment!]! @derivedFrom(field: "loan")
+}
+
+enum LoanStatus {
+  Active
+  Repaid
+  Liquidated
+}
+
+type Repayment @entity {
+  id: ID! # txHash-logIndex
+  loan: Loan!
+  payer: Bytes!
+  amountUsd18: BigInt!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+}
+
+type ScoreSnapshot @entity {
+  id: ID! # address-timestamp
+  user: User!
+  score: Int!
+  tier: String!
+  s1PaymentHistory: Int!
+  s2CreditUtilization: Int!
+  s3AccountAge: Int!
+  s4IdentityTrust: Int!
+  s5AssetDiversity: Int!
+  s6ProtocolMix: Int!
+  s7ActivityControl: Int!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+}
+
+type Liquidation @entity {
+  id: ID! # loanId-timestamp
+  loan: Loan!
+  borrower: Bytes!
+  liquidator: Bytes!
+  collateralAmount: BigInt!
+  recoveredUsd18: BigInt!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+}
+
+type KYCStatus @entity {
+  id: ID! # wallet address
+  user: User!
+  verified: Boolean!
+  credentialHash: Bytes
+  verifiedAt: BigInt
+  expiresAt: BigInt
+}
+
+type CollateralData @entity {
+  id: ID! # loanId
+  loan: Loan!
+  collateralToken: Bytes!
+  collateralValueUsd18: BigInt!
+  userScoreAtBorrow: Int!
+  timestamp: BigInt!
+}
+
+# Global protocol statistics
+type ProtocolStats @entity {
+  id: ID! # "global"
+  totalUsers: Int!
+  totalLoans: Int!
+  totalBorrowed: BigInt!
+  totalRepaid: BigInt!
+  totalCollateral: BigInt!
+  activeLoans: Int!
+  averageScore: Int!
+  updatedAt: BigInt!
+}
+
+# Daily snapshot for analytics
+type DailySnapshot @entity {
+  id: ID! # timestamp-dayId
+  date: BigInt!
+  totalLoans: Int!
+  newLoans: Int!
+  totalBorrowed: BigInt!
+  totalRepaid: BigInt!
+  activeLoans: Int!
+  liquidations: Int!
+  averageScore: Int!
+}
