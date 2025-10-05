@@ -50,7 +50,8 @@ export function ScoreGauge({ score, tier, animated = true }: ScoreGaugeProps) {
   };
 
   const colors = getTierColor(tier);
-  const percentage = Math.min(Math.max(displayScore, 0), 100);
+  // Convert 0-1000 score to 0-100 percentage for gauge bar
+  const percentage = Math.min(Math.max(displayScore / 10, 0), 100);
 
   return (
     <div className="flex flex-col items-center justify-center space-y-8 py-8">
@@ -60,7 +61,7 @@ export function ScoreGauge({ score, tier, animated = true }: ScoreGaugeProps) {
           className="text-8xl font-bold mb-2 tabular-nums"
           style={{ color: colors.primary }}
         >
-          {Math.round(displayScore * 10)}
+          {Math.round(displayScore)}
         </div>
         <div className="text-neutral-400 text-lg">out of 1000</div>
       </div>
