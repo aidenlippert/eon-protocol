@@ -26,10 +26,21 @@ export async function POST(request: NextRequest) {
       ? `https://${process.env.VERCEL_URL}`
       : 'http://localhost:3000';
 
+    console.log('[Estimate API] Fetching score from:', `${baseUrl}/api/score/${wallet}`);
+    console.log('[Estimate API] VERCEL_URL:', process.env.VERCEL_URL);
+
     const scoreResponse = await fetch(`${baseUrl}/api/score/${wallet}`);
 
+    console.log('[Estimate API] Score response status:', scoreResponse.status);
+
     if (!scoreResponse.ok) {
-      return NextResponse.json({ error: 'Failed to fetch credit score' }, { status: 500 });
+      const errorText = await scoreResponse.text();
+      console.error('[Estimate API] Score fetch failed:', errorText);
+      return NextResponse.json({
+        error: 'Failed to fetch credit score',
+        details: errorText,
+        url: `${baseUrl}/api/score/${wallet}`
+      }, { status: 500 });
     }
 
     const scoreData = await scoreResponse.json();
