@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2, RefreshCw, ExternalLink, Shield, Award } from 'lucide-react';
-import { ScoreGauge } from '@/components/score/ScoreGauge';
+import { ScoreGauge } from '@/components/score/ScoreGaugeSimple';
 import { FactorBreakdown } from '@/components/score/FactorBreakdown';
 import { ActionableRecommendations } from '@/components/score/ActionableRecommendations';
 import { ScoreHistoryChart } from '@/components/score/ScoreHistoryChart';

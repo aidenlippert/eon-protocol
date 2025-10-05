@@ -46,7 +46,9 @@ export async function calculateCreditScore(address: string, transactions: any[])
         details: 'No credit mix data available',
         evidence: {
           uniqueProtocols: 0,
-          protocolTypes: []
+          protocolTypes: [],
+          protocolsUsed: [],
+          assetTypes: []
         }
       },
       newCredit: {
