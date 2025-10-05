@@ -283,7 +283,9 @@ function getHistoryInsights(data: FactorData) {
 }
 
 function getMixInsights(data: FactorData) {
-  const { protocolsUsed, assetTypes } = data.evidence;
+  // V2 structure uses uniqueProtocols, legacy uses protocolsUsed
+  const protocolsUsed = data.evidence?.uniqueProtocols || data.evidence?.protocolsUsed || [];
+  const assetTypes = data.evidence?.assetTypes || [];
 
   if (protocolsUsed.length === 0) {
     return {
@@ -309,7 +311,8 @@ function getMixInsights(data: FactorData) {
 }
 
 function getNewCreditInsights(data: FactorData) {
-  const { recentLoans, hardInquiries } = data.evidence;
+  const recentLoans = data.evidence?.totalTransactions || data.evidence?.recentLoans || 0;
+  const hardInquiries = data.evidence?.hardInquiries || 0;
 
   if (recentLoans === 0) {
     return {
