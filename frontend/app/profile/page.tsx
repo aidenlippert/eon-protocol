@@ -235,8 +235,8 @@ export default function ProfilePage() {
               <Card className="bg-neutral-900/50 border-neutral-800 p-8">
                 <h2 className="text-2xl font-bold mb-6 text-center">Your Credit Score</h2>
                 <ScoreGauge
-                  score={scoreData.score}
-                  tier={scoreData.tier}
+                  score={scoreData.score ?? 0}
+                  tier={scoreData.tier ?? 'Bronze'}
                   animated={true}
                 />
                 <div className="mt-6 text-center text-sm text-neutral-400">
@@ -250,30 +250,30 @@ export default function ProfilePage() {
               {/* Actionable Recommendations */}
               <div>
                 <ActionableRecommendations
-                  currentScore={scoreData.score}
-                  tier={scoreData.tier}
-                  breakdown={scoreData.breakdown}
-                  sybilData={scoreData.sybilResistance}
+                  currentScore={scoreData.score ?? 0}
+                  tier={scoreData.tier ?? 'Bronze'}
+                  breakdown={scoreData.breakdown ?? {}}
+                  sybilData={scoreData.sybilResistance ?? null}
                 />
               </div>
             </div>
 
             {/* Score History Preview */}
             {scoreHistory.length > 0 && (
-              <ScoreHistoryChart data={scoreHistory} currentScore={scoreData.score} />
+              <ScoreHistoryChart data={scoreHistory} currentScore={scoreData.score ?? 0} />
             )}
           </TabsContent>
 
           {/* Factors Tab */}
           <TabsContent value="factors">
-            <FactorBreakdown breakdown={scoreData.breakdown} />
+            <FactorBreakdown breakdown={scoreData.breakdown ?? {}} />
           </TabsContent>
 
           {/* History Tab */}
           <TabsContent value="history" className="space-y-6">
             {scoreHistory.length > 0 ? (
               <>
-                <ScoreHistoryChart data={scoreHistory} currentScore={scoreData.score} />
+                <ScoreHistoryChart data={scoreHistory} currentScore={scoreData.score ?? 0} />
 
                 {/* Detailed History Table */}
                 <Card className="bg-neutral-900/50 border-neutral-800 p-6">
