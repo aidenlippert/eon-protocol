@@ -21,9 +21,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user's credit score to determine LTV
-    const scoreResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_VERCEL_URL || 'http://localhost:3000'}/api/score/${wallet}`
-    );
+    const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
+      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+      : 'http://localhost:3000';
+
+    const scoreResponse = await fetch(`${baseUrl}/api/score/${wallet}`);
 
     if (!scoreResponse.ok) {
       return NextResponse.json({ error: 'Failed to fetch credit score' }, { status: 500 });
