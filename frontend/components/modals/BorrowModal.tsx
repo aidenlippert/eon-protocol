@@ -254,6 +254,33 @@ export function BorrowModal({ isOpen, onClose, initialAmount = 100 }: BorrowModa
               {/* Estimate Display */}
               {estimate && !loading && (
                 <>
+                  {/* Collateral Tier Bands */}
+                  <div className="mb-6 p-4 rounded-xl bg-white/5 border border-white/10">
+                    <div className="text-sm font-semibold text-white/80 mb-3">Your Tier: {estimate.loanTerms.tier}</div>
+                    <div className="grid grid-cols-4 gap-2 mb-3">
+                      <div className={`p-2 rounded-lg text-center ${estimate.loanTerms.tier === 'Bronze' ? 'bg-orange-500/20 border border-orange-500/50' : 'bg-white/5'}`}>
+                        <div className="text-xs text-white/60">Bronze</div>
+                        <div className="text-sm font-bold text-white">50% LTV</div>
+                        <div className="text-xs text-white/50">200% collateral</div>
+                      </div>
+                      <div className={`p-2 rounded-lg text-center ${estimate.loanTerms.tier === 'Silver' ? 'bg-gray-500/20 border border-gray-400/50' : 'bg-white/5'}`}>
+                        <div className="text-xs text-white/60">Silver</div>
+                        <div className="text-sm font-bold text-white">60% LTV</div>
+                        <div className="text-xs text-white/50">167% collateral</div>
+                      </div>
+                      <div className={`p-2 rounded-lg text-center ${estimate.loanTerms.tier === 'Gold' ? 'bg-yellow-500/20 border border-yellow-500/50' : 'bg-white/5'}`}>
+                        <div className="text-xs text-white/60">Gold</div>
+                        <div className="text-sm font-bold text-white">70% LTV</div>
+                        <div className="text-xs text-white/50">143% collateral</div>
+                      </div>
+                      <div className={`p-2 rounded-lg text-center ${estimate.loanTerms.tier === 'Platinum' ? 'bg-purple-500/20 border border-purple-500/50' : 'bg-white/5'}`}>
+                        <div className="text-xs text-white/60">Platinum</div>
+                        <div className="text-sm font-bold text-white">80% LTV</div>
+                        <div className="text-xs text-white/50">125% collateral</div>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Required Collateral */}
                   <div className="mb-6 p-4 rounded-xl bg-white/5 border border-white/10">
                     <div className="flex justify-between items-center mb-3">

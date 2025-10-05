@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Loader2, AlertCircle, ExternalLink } from 'lucide-react';
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi';
 import { colors } from '@/lib/design-tokens';
-import confetti from 'canvas-confetti';
 
 interface Transaction {
   to: string;
@@ -154,12 +153,8 @@ export function TransactionStepper({
   };
 
   const celebrateSuccess = () => {
-    confetti({
-      particleCount: 150,
-      spread: 80,
-      origin: { y: 0.6 },
-      colors: [colors.accent.purple, colors.accent.blue, '#FFFFFF'],
-    });
+    // Success celebration removed - clean UI
+    console.log('[TransactionStepper] All transactions completed successfully!');
   };
 
   return (
