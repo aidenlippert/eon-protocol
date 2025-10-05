@@ -79,6 +79,28 @@ export interface TransactionSummary {
 export async function getPortfolioValue(address: string): Promise<PortfolioData> {
   console.log(`[Covalent] Fetching portfolio for ${address}`);
 
+  // Check if API key is available
+  if (!COVALENT_API_KEY || COVALENT_API_KEY === 'cqt_rQkg4KBX8C9WKcWvwhjbkfYJhJVR') {
+    console.warn('[Covalent] No valid API key - using fallback data provider');
+    const { getFallbackPortfolio } = await import('./fallback-portfolio');
+    const fallback = await getFallbackPortfolio(address);
+    return {
+      totalValueUSD: fallback.totalValueUSD,
+      tokens: fallback.tokens.map(t => ({
+        contractAddress: '',
+        symbol: t.symbol,
+        balance: t.balance,
+        quote: t.quote,
+        decimals: 18,
+        type: 'cryptocurrency' as const,
+      })),
+      uniqueTokenCount: fallback.uniqueTokenCount,
+      stablecoinRatio: fallback.stablecoinRatio,
+      topTokenConcentration: fallback.topTokenConcentration,
+      chainDistribution: {},
+    };
+  }
+
   try {
     // Fetch balances from all supported chains in parallel
     const balancePromises = Object.values(SUPPORTED_CHAINS).map((chainId) =>
