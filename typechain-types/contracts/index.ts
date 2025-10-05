@@ -11,6 +11,8 @@ import type * as dutchAuctionLiquidatorSol from "./DutchAuctionLiquidator.sol";
 export type { dutchAuctionLiquidatorSol };
 import type * as healthFactorMonitorSol from "./HealthFactorMonitor.sol";
 export type { healthFactorMonitorSol };
+import type * as scoreAttestorSol from "./ScoreAttestor.sol";
+export type { scoreAttestorSol };
 import type * as interfaces from "./interfaces";
 export type { interfaces };
 import type * as mocks from "./mocks";

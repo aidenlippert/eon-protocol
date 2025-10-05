@@ -1998,6 +1998,48 @@
       "artifacts": [
         "MockV3Aggregator"
       ]
+    },
+    "/home/rocz/eon-protocol/contracts/ScoreAttestor.sol": {
+      "lastModificationDate": 1759651819491,
+      "contentHash": "b2c00266f51c04f4e47fefb132ce1ad1",
+      "sourceName": "contracts/ScoreAttestor.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol",
+        "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
+        "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IEAS",
+        "ScoreAttestor"
+      ]
     }
   }
 }

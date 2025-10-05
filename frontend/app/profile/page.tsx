@@ -8,6 +8,7 @@ import { SmartButton } from '@/components/ui/SmartButton';
 import { CreditScoreCard } from '@/components/profile/CreditScoreCard';
 import { TierProgressBar } from '@/components/profile/TierProgressBar';
 import { ImprovementActions } from '@/components/profile/ImprovementActions';
+import { AttestationBadge } from '@/components/attestation/AttestationBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FactorBreakdown } from '@/components/score/FactorBreakdown';
 import { ScoreHistoryChart } from '@/components/score/ScoreHistoryChart';
@@ -276,12 +277,29 @@ export default function ProfilePage() {
           </motion.div>
         </div>
 
-        {/* Improvement Actions */}
+        {/* EAS Attestation Badge */}
         <motion.div
           className="mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
+        >
+          <AttestationBadge
+            wallet={address || ''}
+            score={scoreData.score}
+            tier={scoreData.tier}
+            onAttest={() => {
+              console.log('[Profile] Attestation created');
+            }}
+          />
+        </motion.div>
+
+        {/* Improvement Actions */}
+        <motion.div
+          className="mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
         >
           <ImprovementActions
             currentScore={scoreData.score ?? 0}

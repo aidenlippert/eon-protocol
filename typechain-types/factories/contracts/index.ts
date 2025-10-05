@@ -6,6 +6,7 @@ export * as creditVaultSol from "./CreditVault.sol";
 export * as creditVaultV2Sol from "./CreditVaultV2.sol";
 export * as dutchAuctionLiquidatorSol from "./DutchAuctionLiquidator.sol";
 export * as healthFactorMonitorSol from "./HealthFactorMonitor.sol";
+export * as scoreAttestorSol from "./ScoreAttestor.sol";
 export * as interfaces from "./interfaces";
 export * as mocks from "./mocks";
 export * as upgradeable from "./upgradeable";

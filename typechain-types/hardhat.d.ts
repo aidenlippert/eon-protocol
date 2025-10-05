@@ -214,6 +214,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ReputationScorer__factory>;
     getContractFactory(
+      name: "IEAS",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IEAS__factory>;
+    getContractFactory(
+      name: "ScoreAttestor",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ScoreAttestor__factory>;
+    getContractFactory(
       name: "ScoreOraclePhase3",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ScoreOraclePhase3__factory>;
@@ -489,6 +497,16 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ReputationScorer>;
     getContractAt(
+      name: "IEAS",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IEAS>;
+    getContractAt(
+      name: "ScoreAttestor",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ScoreAttestor>;
+    getContractAt(
       name: "ScoreOraclePhase3",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -720,6 +738,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ReputationScorer>;
     deployContract(
+      name: "IEAS",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IEAS>;
+    deployContract(
+      name: "ScoreAttestor",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ScoreAttestor>;
+    deployContract(
       name: "ScoreOraclePhase3",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ScoreOraclePhase3>;
@@ -994,6 +1020,16 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ReputationScorer>;
+    deployContract(
+      name: "IEAS",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IEAS>;
+    deployContract(
+      name: "ScoreAttestor",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ScoreAttestor>;
     deployContract(
       name: "ScoreOraclePhase3",
       args: any[],
