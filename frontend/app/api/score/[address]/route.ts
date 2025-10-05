@@ -202,12 +202,43 @@ async function calculateCreditScore(address: string) {
     console.warn('[Score API] Cross-chain aggregation failed:', error);
   }
 
+  // Map V2 breakdown to legacy format for backward compatibility
+  const legacyBreakdown = {
+    paymentHistory: {
+      score: baseScore.factors.s1_paymentHistory,
+      weight: 30,
+      evidence: baseScore.breakdown.paymentHistory,
+    },
+    creditUtilization: {
+      score: baseScore.factors.s2_utilization,
+      weight: 20,
+      evidence: baseScore.breakdown.utilization,
+    },
+    creditHistoryLength: {
+      score: baseScore.factors.s3_accountAge,
+      weight: 10,
+      evidence: baseScore.breakdown.accountAge,
+    },
+    creditMix: {
+      score: baseScore.factors.s6_deFiMix,
+      weight: 10,
+      evidence: baseScore.breakdown.deFiMix,
+    },
+    newCredit: {
+      score: baseScore.factors.s7_activityControl,
+      weight: 5,
+      evidence: baseScore.breakdown.activity,
+    },
+  };
+
   return {
     address,
     score: sybilData.finalScore,
     tier: getScoreTier(sybilData.finalScore),
     baseScore: baseScore.score,
-    breakdown: baseScore.breakdown,
+    breakdown: legacyBreakdown, // Legacy format
+    factors: baseScore.factors, // V2 format (all 7 factors)
+    breakdownV2: baseScore.breakdown, // V2 detailed breakdown
     sybilResistance: sybilData,
     crossChain: crossChainData,
     calculatedAt: new Date().toISOString(),
