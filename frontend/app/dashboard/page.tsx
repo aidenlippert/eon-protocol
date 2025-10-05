@@ -2,7 +2,7 @@
 
 import { useAccount } from 'wagmi';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CreditScoreCard } from '@/components/dashboard/CreditScoreCard';
+import { CreditScoreCardNew as CreditScoreCard } from '@/components/dashboard/CreditScoreCardNew';
 import { BorrowInterface } from '@/components/borrow/BorrowInterface';
 import { LoansList } from '@/components/dashboard/LoansList';
 import { StakingInterface } from '@/components/staking/StakingInterface';
