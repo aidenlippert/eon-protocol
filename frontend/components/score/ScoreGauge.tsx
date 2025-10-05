@@ -23,7 +23,9 @@ export function ScoreGauge({ score, tier, animated = true }: ScoreGaugeProps) {
   const circumference = 2 * Math.PI * radius;
 
   // Score is 0-100, gauge shows 0-270 degrees (3/4 circle)
-  const percentage = Math.min(Math.max(score, 0), 100);
+  // Add safety check for undefined/null score
+  const safeScore = score ?? 0;
+  const percentage = Math.min(Math.max(safeScore, 0), 100);
   const offset = circumference - (percentage / 100) * (circumference * 0.75);
 
   // Get tier colors
@@ -138,7 +140,7 @@ export function ScoreGauge({ score, tier, animated = true }: ScoreGaugeProps) {
           className="text-7xl font-bold mb-1 transition-all duration-1000"
           style={{ color: colors.primary }}
         >
-          {score}
+          {safeScore}
         </div>
         <div className="text-sm text-neutral-400 mb-2">/ 100</div>
         <div
