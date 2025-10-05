@@ -97,26 +97,18 @@ contract ScoreOraclePhase3B is Ownable {
 
     // ==================== S1: REPAYMENT HISTORY (40%) ====================
 
+    /**
+     * @notice GAS OPTIMIZED - O(1) instead of O(n) loops
+     * @dev Uses aggregate data from CreditRegistryV3
+     */
     function _scoreRepaymentHistory(address subject) internal view returns (uint8) {
-        uint256[] memory loanIds = registry.getLoanIdsByBorrower(subject);
-        if (loanIds.length == 0) return 50; // Neutral for no history
+        CreditRegistryV3.AggregateCreditData memory agg = registry.getAggregateCreditData(subject);
 
-        uint256 totalLoans = loanIds.length;
-        uint256 repaidCount = 0;
-        uint256 liquidatedCount = 0;
-
-        for (uint256 i = 0; i < loanIds.length; i++) {
-            CreditRegistryV3.LoanRecord memory loan = registry.getLoan(loanIds[i]);
-            if (loan.status == CreditRegistryV3.LoanStatus.Repaid) {
-                repaidCount++;
-            } else if (loan.status == CreditRegistryV3.LoanStatus.Liquidated) {
-                liquidatedCount++;
-            }
-        }
+        if (agg.totalLoans == 0) return 50; // Neutral for no history
 
         // Formula: (repaid/total * 100) - (liquidations * 20)
-        uint256 repaymentRate = (repaidCount * 100) / totalLoans;
-        int256 score = int256(repaymentRate) - int256(liquidatedCount * 20);
+        uint256 repaymentRate = (agg.repaidLoans * 100) / agg.totalLoans;
+        int256 score = int256(repaymentRate) - int256(agg.liquidatedLoans * 20);
 
         if (score < 0) return 0;
         if (score > 100) return 100;
@@ -125,36 +117,18 @@ contract ScoreOraclePhase3B is Ownable {
 
     // ==================== S2: COLLATERAL UTILIZATION (20%) ====================
 
+    /**
+     * @notice GAS OPTIMIZED - O(1) instead of O(n) loops
+     * @dev Uses aggregate collateral data from CreditRegistryV3
+     */
     function _scoreCollateralUtilization(address subject) internal view returns (uint8) {
-        uint256[] memory loanIds = registry.getLoanIdsByBorrower(subject);
-        if (loanIds.length == 0) return 50; // Neutral for no history
+        CreditRegistryV3.AggregateCreditData memory agg = registry.getAggregateCreditData(subject);
 
-        uint256 totalCollateral = 0;
-        uint256 totalBorrowed = 0;
-        uint256 maxLtvCount = 0;
-        uint256 totalLoans = loanIds.length;
-
-        for (uint256 i = 0; i < loanIds.length; i++) {
-            CreditRegistryV3.CollateralData memory colData = registry.getCollateralData(loanIds[i]);
-
-            if (colData.collateralValueUsd18 > 0) {
-                totalCollateral += colData.collateralValueUsd18;
-                totalBorrowed += colData.principalUsd18;
-
-                // Check if borrowed at max LTV (within 5%)
-                uint256 actualLtv = (colData.principalUsd18 * 100) / colData.collateralValueUsd18;
-                uint256 maxLtv = _maxLtvForScore(colData.userScoreAtBorrow);
-
-                if (actualLtv >= (maxLtv * 95) / 100) {
-                    maxLtvCount++;
-                }
-            }
-        }
-
-        if (totalBorrowed == 0) return 50; // No active borrows
+        if (agg.totalLoans == 0) return 50; // Neutral for no history
+        if (agg.totalBorrowedUsd18 == 0) return 50; // No active borrows
 
         // Calculate average collateralization ratio
-        uint256 avgRatio = (totalCollateral * 100) / totalBorrowed; // In percentage (200 = 200%)
+        uint256 avgRatio = (agg.totalCollateralUsd18 * 100) / agg.totalBorrowedUsd18; // In percentage (200 = 200%)
 
         // Base score from collateralization ratio
         uint256 baseScore;
@@ -165,7 +139,7 @@ contract ScoreOraclePhase3B is Ownable {
         else baseScore = 0;                        // Underwater
 
         // Penalty for max LTV borrowing
-        uint256 maxLtvPct = (maxLtvCount * 100) / totalLoans;
+        uint256 maxLtvPct = (agg.maxLtvBorrowCount * 100) / agg.totalLoans;
         uint256 penalty = 0;
         if (maxLtvPct > 75) penalty = 40;
         else if (maxLtvPct > 50) penalty = 20;
@@ -185,22 +159,26 @@ contract ScoreOraclePhase3B is Ownable {
 
     // ==================== S3: SYBIL RESISTANCE (20%) ====================
 
+    /**
+     * @notice GAS OPTIMIZED - O(1) instead of O(n) loops
+     * @dev Uses aggregate data from CreditRegistryV3
+     */
     function _scoreSybilResistance(address subject) internal view returns (int16) {
+        CreditRegistryV3.AggregateCreditData memory agg = registry.getAggregateCreditData(subject);
         int256 score = 0;
 
         // 1. KYC Verification (+150 or -150)
-        if (registry.isKYCVerified(subject)) {
+        if (agg.kyc.verifiedAt > 0 && agg.kyc.expiresAt > block.timestamp) {
             score += 150;
         } else {
             score -= 150;
         }
 
         // 2. Wallet Age
-        uint256 firstSeen = registry.getFirstSeen(subject);
-        if (firstSeen == 0) {
+        if (agg.firstSeen == 0) {
             score -= 300; // New wallet
         } else {
-            uint256 age = block.timestamp - firstSeen;
+            uint256 age = block.timestamp - agg.firstSeen;
             if (age < 30 days) score -= 300;
             else if (age < 90 days) score -= 200;
             else if (age < 180 days) score -= 100;
@@ -209,17 +187,14 @@ contract ScoreOraclePhase3B is Ownable {
         }
 
         // 3. Staking Bonus
-        CreditRegistryV3.StakeInfo memory stake = registry.getStakeInfo(subject);
-        if (stake.amount >= 1000 ether) score += 75;
-        else if (stake.amount >= 500 ether) score += 50;
-        else if (stake.amount >= 100 ether) score += 25;
+        if (agg.stake.amount >= 1000 ether) score += 75;
+        else if (agg.stake.amount >= 500 ether) score += 50;
+        else if (agg.stake.amount >= 100 ether) score += 25;
 
-        // 4. On-chain Activity (simplified - could integrate Trusta Labs for real tx count)
-        // For now, use loan count as proxy for activity
-        uint256 loanCount = registry.getLoanIdsByBorrower(subject).length;
-        if (loanCount >= 10) score += 50;
-        else if (loanCount >= 5) score += 30;
-        else if (loanCount >= 3) score += 15;
+        // 4. On-chain Activity (use aggregate loan count)
+        if (agg.totalLoans >= 10) score += 50;
+        else if (agg.totalLoans >= 5) score += 30;
+        else if (agg.totalLoans >= 3) score += 15;
 
         // Range: -450 to +295 (KYC-150 + WalletAge-300 + Staking75 + Activity50)
         return int16(score);

@@ -1,0 +1,15 @@
+{
+  "network": "arbitrum-sepolia",
+  "chainId": 421614,
+  "deployer": "0x1AF3c73eB17f38bC645faE487942e57C5B9F4FE3",
+  "timestamp": "2025-10-05T04:59:00.000Z",
+  "contracts": {
+    "ChainlinkPriceOracle": "0x69290E5d866C29fcD36339e21F547CC0280f7514",
+    "CreditRegistryProxy": "0xad1e41e347E527BA5F8009582ee6cb499D1157D7",
+    "CreditRegistryImpl": "0x1b7d29a1e00A27C2B39E1C1D157EFF9128d2057B",
+    "ScoreOracleProxy": "0x4E5D1f581BCAE0CEfCd7c32d9Fcde283a786dc62",
+    "ScoreOracleImpl": "0x72aF093fDBA19Af6f612c5001Af1C1BBe4341267",
+    "CreditVaultProxy": "0xB1E54fDCf400FB25203801013dfeaD737fBBbd61",
+    "CreditVaultImpl": "0xc1629E0321fD0eCb1b31491aDc90a477C7D5e6Fd"
+  }
+}

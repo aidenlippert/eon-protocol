@@ -8,11 +8,12 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "./CreditRegistryV3.sol";
 import "./ScoreOraclePhase3B.sol";
+import "./ChainlinkPriceOracle.sol";
 
 /**
  * @title CreditVaultV3
  * @notice Lending vault with complete Phase 3B integration
- * @dev Integrates with 5-factor credit scoring system
+ * @dev Integrates with 5-factor credit scoring system and Chainlink price feeds
  */
 contract CreditVaultV3 is Ownable, ReentrancyGuard, Pausable {
     using SafeERC20 for IERC20;
@@ -37,6 +38,7 @@ contract CreditVaultV3 is Ownable, ReentrancyGuard, Pausable {
 
     CreditRegistryV3 public registry;
     ScoreOraclePhase3B public oracle;
+    ChainlinkPriceOracle public priceOracle;
 
     mapping(address => Asset) public assets;
     mapping(uint256 => VaultLoanData) public vaultLoans;
@@ -62,10 +64,12 @@ contract CreditVaultV3 is Ownable, ReentrancyGuard, Pausable {
 
     constructor(
         address payable _registry,
-        address _oracle
+        address _oracle,
+        address _priceOracle
     ) Ownable(msg.sender) {
         registry = CreditRegistryV3(_registry);
         oracle = ScoreOraclePhase3B(_oracle);
+        priceOracle = ChainlinkPriceOracle(_priceOracle);
     }
 
     // ==================== BORROW FUNCTION ====================
@@ -242,33 +246,13 @@ contract CreditVaultV3 is Ownable, ReentrancyGuard, Pausable {
 
     // ==================== INTERNAL HELPERS ====================
 
+    /**
+     * @notice SECURITY UPGRADE - Uses Chainlink price oracle with stale price detection
+     * @dev Replaces old unsafe price feed implementation
+     */
     function _tokenAmountToUsd18(address token, uint256 amount) internal view returns (uint256) {
-        // For testnet, use mock price feeds
-        // In production, use Chainlink price feeds
-        address priceFeed = assets[token].priceFeed;
-        require(priceFeed != address(0), "No price feed");
-
-        // Simplified: assume price feed returns price with 8 decimals (Chainlink standard)
-        (bool success, bytes memory data) = priceFeed.staticcall(
-            abi.encodeWithSignature("latestAnswer()")
-        );
-        require(success, "Price feed call failed");
-        int256 price = abi.decode(data, (int256));
-        require(price > 0, "Invalid price");
-
-        // Convert token amount to USD with 18 decimals
-        uint256 decimals = _getTokenDecimals(token);
-        uint256 valueUsd18 = (amount * uint256(price) * 1e18) / (10 ** decimals * 1e8);
-
-        return valueUsd18;
-    }
-
-    function _getTokenDecimals(address token) internal view returns (uint256) {
-        (bool success, bytes memory data) = token.staticcall(
-            abi.encodeWithSignature("decimals()")
-        );
-        require(success, "Decimals call failed");
-        return abi.decode(data, (uint256));
+        // Use Chainlink oracle with built-in staleness checks and fallback support
+        return priceOracle.tokenToUsd(token, amount);
     }
 
     function _maxLtvForScore(uint16 overall) internal pure returns (uint16) {

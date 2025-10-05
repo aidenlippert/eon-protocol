@@ -67,6 +67,25 @@ contract CreditRegistryV3 is Ownable, ReentrancyGuard {
         address lender;
     }
 
+    // GAS OPTIMIZED - Aggregate Credit Data (no loops needed)
+    struct AggregateCreditData {
+        // S1 - Repayment History Aggregates
+        uint256 totalLoans;
+        uint256 repaidLoans;
+        uint256 liquidatedLoans;
+        uint256 activeLoans;
+
+        // S2 - Collateral Utilization Aggregates
+        uint256 totalCollateralUsd18;
+        uint256 totalBorrowedUsd18;
+        uint256 maxLtvBorrowCount; // Count of loans borrowed at max LTV
+
+        // S3 - Sybil Resistance
+        uint256 firstSeen;
+        KYCProof kyc;
+        StakeInfo stake;
+    }
+
     // S2 - Collateral Utilization
     struct CollateralData {
         address collateralToken;
@@ -105,7 +124,10 @@ contract CreditRegistryV3 is Ownable, ReentrancyGuard {
 
     // ==================== STATE ====================
 
-    // S1 - Repayment History
+    // GAS OPTIMIZED - Aggregate data per user (O(1) lookups, no loops)
+    mapping(address => AggregateCreditData) public aggregateCreditData;
+
+    // S1 - Repayment History (kept for loan detail queries)
     mapping(uint256 => LoanRecord) private _loansById;
     mapping(address => uint256[]) private _loanIdsByBorrower;
     uint256 private _nextLoanId = 1;
@@ -115,9 +137,6 @@ contract CreditRegistryV3 is Ownable, ReentrancyGuard {
     mapping(address => address[]) private _userCollateralAssets; // User => unique collateral tokens
 
     // S3 - Sybil Resistance
-    mapping(address => uint256) public walletFirstSeen;
-    mapping(address => KYCProof) public kycProofs;
-    mapping(address => StakeInfo) public stakes;
     IERC20 public stakingToken;
     address public kycIssuer; // Didit issuer address
 
@@ -173,9 +192,14 @@ contract CreditRegistryV3 is Ownable, ReentrancyGuard {
 
         _loanIdsByBorrower[borrower].push(loanId);
 
+        // GAS OPTIMIZED - Update aggregate data
+        AggregateCreditData storage agg = aggregateCreditData[borrower];
+        agg.totalLoans++;
+        agg.activeLoans++;
+
         // Record first seen if new user
-        if (walletFirstSeen[borrower] == 0) {
-            walletFirstSeen[borrower] = block.timestamp;
+        if (agg.firstSeen == 0) {
+            agg.firstSeen = block.timestamp;
             emit FirstSeenRecorded(borrower, block.timestamp);
         }
 
@@ -192,6 +216,11 @@ contract CreditRegistryV3 is Ownable, ReentrancyGuard {
 
         if (loan.repaidUsd18 >= loan.principalUsd18) {
             loan.status = LoanStatus.Repaid;
+
+            // GAS OPTIMIZED - Update aggregate data
+            AggregateCreditData storage agg = aggregateCreditData[loan.borrower];
+            agg.repaidLoans++;
+            agg.activeLoans--;
         }
 
         emit RepaymentRegistered(loan.borrower, loanId, amountUsd18, block.timestamp, msg.sender);
@@ -204,6 +233,11 @@ contract CreditRegistryV3 is Ownable, ReentrancyGuard {
 
         loan.status = LoanStatus.Liquidated;
         loan.repaidUsd18 += recoveredUsd18;
+
+        // GAS OPTIMIZED - Update aggregate data
+        AggregateCreditData storage agg = aggregateCreditData[loan.borrower];
+        agg.liquidatedLoans++;
+        agg.activeLoans--;
 
         emit LiquidationRegistered(loan.borrower, loanId, recoveredUsd18, block.timestamp, msg.sender);
     }
@@ -218,20 +252,40 @@ contract CreditRegistryV3 is Ownable, ReentrancyGuard {
     ) external onlyLender {
         require(_loansById[loanId].status == LoanStatus.Active, "Loan not active");
 
+        LoanRecord memory loan = _loansById[loanId];
+
         loanCollateralData[loanId] = CollateralData({
             collateralToken: collateralToken,
             collateralValueUsd18: collateralValueUsd18,
-            principalUsd18: _loansById[loanId].principalUsd18,
+            principalUsd18: loan.principalUsd18,
             userScoreAtBorrow: userScore
         });
 
+        // GAS OPTIMIZED - Update aggregate collateral data
+        AggregateCreditData storage agg = aggregateCreditData[loan.borrower];
+        agg.totalCollateralUsd18 += collateralValueUsd18;
+        agg.totalBorrowedUsd18 += loan.principalUsd18;
+
+        // Check if borrowed at max LTV (within 5%)
+        uint256 actualLtv = (loan.principalUsd18 * 100) / collateralValueUsd18;
+        uint256 maxLtv = _maxLtvForScore(userScore);
+        if (actualLtv >= (maxLtv * 95) / 100) {
+            agg.maxLtvBorrowCount++;
+        }
+
         // Track unique collateral assets
-        address borrower = _loansById[loanId].borrower;
-        if (!_hasCollateralAsset(borrower, collateralToken)) {
-            _userCollateralAssets[borrower].push(collateralToken);
+        if (!_hasCollateralAsset(loan.borrower, collateralToken)) {
+            _userCollateralAssets[loan.borrower].push(collateralToken);
         }
 
         emit CollateralDataRecorded(loanId, collateralToken, collateralValueUsd18, userScore);
+    }
+
+    function _maxLtvForScore(uint16 overall) internal pure returns (uint16) {
+        if (overall >= 90) return 90; // Platinum
+        if (overall >= 75) return 80; // Gold
+        if (overall >= 60) return 70; // Silver
+        return 50; // Bronze
     }
 
     function _hasCollateralAsset(address user, address token) private view returns (bool) {
@@ -257,7 +311,9 @@ contract CreditRegistryV3 is Ownable, ReentrancyGuard {
         require(signer == kycIssuer, "Invalid KYC signature");
         require(expiresAt > block.timestamp, "KYC proof expired");
 
-        kycProofs[msg.sender] = KYCProof({
+        // GAS OPTIMIZED - Store in aggregate struct
+        AggregateCreditData storage agg = aggregateCreditData[msg.sender];
+        agg.kyc = KYCProof({
             credentialHash: credentialHash,
             verifiedAt: block.timestamp,
             expiresAt: expiresAt
@@ -277,18 +333,22 @@ contract CreditRegistryV3 is Ownable, ReentrancyGuard {
 
         stakingToken.transferFrom(msg.sender, address(this), amount);
 
-        stakes[msg.sender].amount += amount;
-        stakes[msg.sender].lockUntil = block.timestamp + 30 days;
+        // GAS OPTIMIZED - Store in aggregate struct
+        AggregateCreditData storage agg = aggregateCreditData[msg.sender];
+        agg.stake.amount += amount;
+        agg.stake.lockUntil = block.timestamp + 30 days;
 
-        emit StakeDeposited(msg.sender, amount, stakes[msg.sender].lockUntil);
+        emit StakeDeposited(msg.sender, amount, agg.stake.lockUntil);
     }
 
     function unstake(uint256 amount) external nonReentrant {
         require(amount > 0, "Zero amount");
-        require(stakes[msg.sender].amount >= amount, "Insufficient stake");
-        require(block.timestamp >= stakes[msg.sender].lockUntil, "Stake locked");
 
-        stakes[msg.sender].amount -= amount;
+        AggregateCreditData storage agg = aggregateCreditData[msg.sender];
+        require(agg.stake.amount >= amount, "Insufficient stake");
+        require(block.timestamp >= agg.stake.lockUntil, "Stake locked");
+
+        agg.stake.amount -= amount;
         stakingToken.transfer(msg.sender, amount);
 
         emit StakeWithdrawn(msg.sender, amount);
@@ -348,6 +408,11 @@ contract CreditRegistryV3 is Ownable, ReentrancyGuard {
 
     // ==================== VIEW FUNCTIONS ====================
 
+    // GAS OPTIMIZED - O(1) aggregate data access (no loops!)
+    function getAggregateCreditData(address user) external view returns (AggregateCreditData memory) {
+        return aggregateCreditData[user];
+    }
+
     // S1 - Repayment History
     function getLoan(uint256 loanId) external view returns (LoanRecord memory) {
         return _loansById[loanId];
@@ -358,11 +423,11 @@ contract CreditRegistryV3 is Ownable, ReentrancyGuard {
     }
 
     function getFirstSeen(address wallet) external view returns (uint256) {
-        return walletFirstSeen[wallet];
+        return aggregateCreditData[wallet].firstSeen;
     }
 
     function getStakeInfo(address user) external view returns (StakeInfo memory) {
-        return stakes[user];
+        return aggregateCreditData[user].stake;
     }
 
     // S2 - Collateral Utilization
@@ -376,11 +441,11 @@ contract CreditRegistryV3 is Ownable, ReentrancyGuard {
 
     // S3 - Sybil Resistance
     function getKYCProof(address user) external view returns (KYCProof memory) {
-        return kycProofs[user];
+        return aggregateCreditData[user].kyc;
     }
 
     function isKYCVerified(address user) external view returns (bool) {
-        KYCProof memory proof = kycProofs[user];
+        KYCProof memory proof = aggregateCreditData[user].kyc;
         return proof.verifiedAt > 0 && proof.expiresAt > block.timestamp;
     }
 

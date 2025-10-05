@@ -24,6 +24,65 @@ import type {
 } from "../common";
 
 export declare namespace CreditRegistryV3 {
+  export type KYCProofStruct = {
+    credentialHash: BytesLike;
+    verifiedAt: BigNumberish;
+    expiresAt: BigNumberish;
+  };
+
+  export type KYCProofStructOutput = [
+    credentialHash: string,
+    verifiedAt: bigint,
+    expiresAt: bigint
+  ] & { credentialHash: string; verifiedAt: bigint; expiresAt: bigint };
+
+  export type StakeInfoStruct = {
+    amount: BigNumberish;
+    lockUntil: BigNumberish;
+  };
+
+  export type StakeInfoStructOutput = [amount: bigint, lockUntil: bigint] & {
+    amount: bigint;
+    lockUntil: bigint;
+  };
+
+  export type AggregateCreditDataStruct = {
+    totalLoans: BigNumberish;
+    repaidLoans: BigNumberish;
+    liquidatedLoans: BigNumberish;
+    activeLoans: BigNumberish;
+    totalCollateralUsd18: BigNumberish;
+    totalBorrowedUsd18: BigNumberish;
+    maxLtvBorrowCount: BigNumberish;
+    firstSeen: BigNumberish;
+    kyc: CreditRegistryV3.KYCProofStruct;
+    stake: CreditRegistryV3.StakeInfoStruct;
+  };
+
+  export type AggregateCreditDataStructOutput = [
+    totalLoans: bigint,
+    repaidLoans: bigint,
+    liquidatedLoans: bigint,
+    activeLoans: bigint,
+    totalCollateralUsd18: bigint,
+    totalBorrowedUsd18: bigint,
+    maxLtvBorrowCount: bigint,
+    firstSeen: bigint,
+    kyc: CreditRegistryV3.KYCProofStructOutput,
+    stake: CreditRegistryV3.StakeInfoStructOutput
+  ] & {
+    totalLoans: bigint;
+    repaidLoans: bigint;
+    liquidatedLoans: bigint;
+    activeLoans: bigint;
+    totalCollateralUsd18: bigint;
+    totalBorrowedUsd18: bigint;
+    maxLtvBorrowCount: bigint;
+    firstSeen: bigint;
+    kyc: CreditRegistryV3.KYCProofStructOutput;
+    stake: CreditRegistryV3.StakeInfoStructOutput;
+  };
+
   export type CollateralDataStruct = {
     collateralToken: AddressLike;
     collateralValueUsd18: BigNumberish;
@@ -81,18 +140,6 @@ export declare namespace CreditRegistryV3 {
     lastProposalTimestamp: bigint;
   };
 
-  export type KYCProofStruct = {
-    credentialHash: BytesLike;
-    verifiedAt: BigNumberish;
-    expiresAt: BigNumberish;
-  };
-
-  export type KYCProofStructOutput = [
-    credentialHash: string,
-    verifiedAt: bigint,
-    expiresAt: bigint
-  ] & { credentialHash: string; verifiedAt: bigint; expiresAt: bigint };
-
   export type LoanRecordStruct = {
     loanId: BigNumberish;
     borrower: AddressLike;
@@ -120,25 +167,17 @@ export declare namespace CreditRegistryV3 {
     status: bigint;
     lender: string;
   };
-
-  export type StakeInfoStruct = {
-    amount: BigNumberish;
-    lockUntil: BigNumberish;
-  };
-
-  export type StakeInfoStructOutput = [amount: bigint, lockUntil: bigint] & {
-    amount: bigint;
-    lockUntil: bigint;
-  };
 }
 
 export interface CreditRegistryV3Interface extends Interface {
   getFunction(
     nameOrSignature:
+      | "aggregateCreditData"
       | "authorizedCCIPSenders"
       | "authorizedGovernance"
       | "authorizedLenders"
       | "crossChainScores"
+      | "getAggregateCreditData"
       | "getCollateralData"
       | "getCrossChainScore"
       | "getFirstSeen"
@@ -151,7 +190,6 @@ export interface CreditRegistryV3Interface extends Interface {
       | "governanceActivity"
       | "isKYCVerified"
       | "kycIssuer"
-      | "kycProofs"
       | "loanCollateralData"
       | "owner"
       | "receiveCrossChainReputation"
@@ -167,12 +205,10 @@ export interface CreditRegistryV3Interface extends Interface {
       | "setAuthorizedLender"
       | "setKYCIssuer"
       | "stake"
-      | "stakes"
       | "stakingToken"
       | "submitKYCProof"
       | "transferOwnership"
       | "unstake"
-      | "walletFirstSeen"
   ): FunctionFragment;
 
   getEvent(
@@ -195,6 +231,10 @@ export interface CreditRegistryV3Interface extends Interface {
   ): EventFragment;
 
   encodeFunctionData(
+    functionFragment: "aggregateCreditData",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "authorizedCCIPSenders",
     values: [AddressLike]
   ): string;
@@ -209,6 +249,10 @@ export interface CreditRegistryV3Interface extends Interface {
   encodeFunctionData(
     functionFragment: "crossChainScores",
     values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getAggregateCreditData",
+    values: [AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "getCollateralData",
@@ -255,10 +299,6 @@ export interface CreditRegistryV3Interface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(functionFragment: "kycIssuer", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "kycProofs",
-    values: [AddressLike]
-  ): string;
   encodeFunctionData(
     functionFragment: "loanCollateralData",
     values: [BigNumberish]
@@ -319,7 +359,6 @@ export interface CreditRegistryV3Interface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(functionFragment: "stake", values: [BigNumberish]): string;
-  encodeFunctionData(functionFragment: "stakes", values: [AddressLike]): string;
   encodeFunctionData(
     functionFragment: "stakingToken",
     values?: undefined
@@ -336,11 +375,11 @@ export interface CreditRegistryV3Interface extends Interface {
     functionFragment: "unstake",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "walletFirstSeen",
-    values: [AddressLike]
-  ): string;
 
+  decodeFunctionResult(
+    functionFragment: "aggregateCreditData",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "authorizedCCIPSenders",
     data: BytesLike
@@ -355,6 +394,10 @@ export interface CreditRegistryV3Interface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "crossChainScores",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getAggregateCreditData",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -399,7 +442,6 @@ export interface CreditRegistryV3Interface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "kycIssuer", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "kycProofs", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "loanCollateralData",
     data: BytesLike
@@ -451,7 +493,6 @@ export interface CreditRegistryV3Interface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "stake", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "stakes", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "stakingToken",
     data: BytesLike
@@ -465,10 +506,6 @@ export interface CreditRegistryV3Interface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "unstake", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "walletFirstSeen",
-    data: BytesLike
-  ): Result;
 }
 
 export namespace CCIPSenderAuthorizedEvent {
@@ -810,6 +847,36 @@ export interface CreditRegistryV3 extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  aggregateCreditData: TypedContractMethod<
+    [arg0: AddressLike],
+    [
+      [
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        CreditRegistryV3.KYCProofStructOutput,
+        CreditRegistryV3.StakeInfoStructOutput
+      ] & {
+        totalLoans: bigint;
+        repaidLoans: bigint;
+        liquidatedLoans: bigint;
+        activeLoans: bigint;
+        totalCollateralUsd18: bigint;
+        totalBorrowedUsd18: bigint;
+        maxLtvBorrowCount: bigint;
+        firstSeen: bigint;
+        kyc: CreditRegistryV3.KYCProofStructOutput;
+        stake: CreditRegistryV3.StakeInfoStructOutput;
+      }
+    ],
+    "view"
+  >;
+
   authorizedCCIPSenders: TypedContractMethod<
     [arg0: AddressLike],
     [boolean],
@@ -838,6 +905,12 @@ export interface CreditRegistryV3 extends BaseContract {
         updatedAt: bigint;
       }
     ],
+    "view"
+  >;
+
+  getAggregateCreditData: TypedContractMethod<
+    [user: AddressLike],
+    [CreditRegistryV3.AggregateCreditDataStructOutput],
     "view"
   >;
 
@@ -907,18 +980,6 @@ export interface CreditRegistryV3 extends BaseContract {
   isKYCVerified: TypedContractMethod<[user: AddressLike], [boolean], "view">;
 
   kycIssuer: TypedContractMethod<[], [string], "view">;
-
-  kycProofs: TypedContractMethod<
-    [arg0: AddressLike],
-    [
-      [string, bigint, bigint] & {
-        credentialHash: string;
-        verifiedAt: bigint;
-        expiresAt: bigint;
-      }
-    ],
-    "view"
-  >;
 
   loanCollateralData: TypedContractMethod<
     [arg0: BigNumberish],
@@ -1016,12 +1077,6 @@ export interface CreditRegistryV3 extends BaseContract {
 
   stake: TypedContractMethod<[amount: BigNumberish], [void], "nonpayable">;
 
-  stakes: TypedContractMethod<
-    [arg0: AddressLike],
-    [[bigint, bigint] & { amount: bigint; lockUntil: bigint }],
-    "view"
-  >;
-
   stakingToken: TypedContractMethod<[], [string], "view">;
 
   submitKYCProof: TypedContractMethod<
@@ -1038,12 +1093,41 @@ export interface CreditRegistryV3 extends BaseContract {
 
   unstake: TypedContractMethod<[amount: BigNumberish], [void], "nonpayable">;
 
-  walletFirstSeen: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
-
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
 
+  getFunction(
+    nameOrSignature: "aggregateCreditData"
+  ): TypedContractMethod<
+    [arg0: AddressLike],
+    [
+      [
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        CreditRegistryV3.KYCProofStructOutput,
+        CreditRegistryV3.StakeInfoStructOutput
+      ] & {
+        totalLoans: bigint;
+        repaidLoans: bigint;
+        liquidatedLoans: bigint;
+        activeLoans: bigint;
+        totalCollateralUsd18: bigint;
+        totalBorrowedUsd18: bigint;
+        maxLtvBorrowCount: bigint;
+        firstSeen: bigint;
+        kyc: CreditRegistryV3.KYCProofStructOutput;
+        stake: CreditRegistryV3.StakeInfoStructOutput;
+      }
+    ],
+    "view"
+  >;
   getFunction(
     nameOrSignature: "authorizedCCIPSenders"
   ): TypedContractMethod<[arg0: AddressLike], [boolean], "view">;
@@ -1065,6 +1149,13 @@ export interface CreditRegistryV3 extends BaseContract {
         updatedAt: bigint;
       }
     ],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "getAggregateCreditData"
+  ): TypedContractMethod<
+    [user: AddressLike],
+    [CreditRegistryV3.AggregateCreditDataStructOutput],
     "view"
   >;
   getFunction(
@@ -1138,19 +1229,6 @@ export interface CreditRegistryV3 extends BaseContract {
   getFunction(
     nameOrSignature: "kycIssuer"
   ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "kycProofs"
-  ): TypedContractMethod<
-    [arg0: AddressLike],
-    [
-      [string, bigint, bigint] & {
-        credentialHash: string;
-        verifiedAt: bigint;
-        expiresAt: bigint;
-      }
-    ],
-    "view"
-  >;
   getFunction(
     nameOrSignature: "loanCollateralData"
   ): TypedContractMethod<
@@ -1259,13 +1337,6 @@ export interface CreditRegistryV3 extends BaseContract {
     nameOrSignature: "stake"
   ): TypedContractMethod<[amount: BigNumberish], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "stakes"
-  ): TypedContractMethod<
-    [arg0: AddressLike],
-    [[bigint, bigint] & { amount: bigint; lockUntil: bigint }],
-    "view"
-  >;
-  getFunction(
     nameOrSignature: "stakingToken"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
@@ -1281,9 +1352,6 @@ export interface CreditRegistryV3 extends BaseContract {
   getFunction(
     nameOrSignature: "unstake"
   ): TypedContractMethod<[amount: BigNumberish], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "walletFirstSeen"
-  ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
 
   getEvent(
     key: "CCIPSenderAuthorized"

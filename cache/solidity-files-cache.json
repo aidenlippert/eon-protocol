@@ -1,10 +1,10 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/tmp/eon-protocol/contracts/DutchAuctionLiquidator.sol": {
-      "lastModificationDate": 1759463605831,
-      "contentHash": "03b7b4972a23fabbe59944999fc0faa5",
-      "sourceName": "contracts/DutchAuctionLiquidator.sol",
+    "/home/rocz/eon-protocol/contracts/ChainlinkPriceOracle.sol": {
+      "lastModificationDate": 1759640117271,
+      "contentHash": "06ddb6edee3c044b8692ad72057c9727",
+      "sourceName": "contracts/ChainlinkPriceOracle.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -20,7 +20,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -30,21 +31,18 @@
         }
       },
       "imports": [
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+        "@openzeppelin/contracts/access/Ownable.sol"
       ],
       "versionPragmas": [
-        "^0.8.20"
+        "0.8.20"
       ],
       "artifacts": [
-        "DutchAuctionLiquidator",
-        "ILendingPool",
-        "IReputationScorer"
+        "AggregatorV3Interface",
+        "ChainlinkPriceOracle"
       ]
     },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
-      "lastModificationDate": 1759463419516,
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
+      "lastModificationDate": 1759640125611,
       "contentHash": "d3c790edc9ccf808a17c5a6cd13614fd",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
       "solcConfig": {
@@ -62,7 +60,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -81,81 +80,9 @@
         "Ownable"
       ]
     },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/utils/ReentrancyGuard.sol": {
-      "lastModificationDate": 1759463419549,
-      "contentHash": "190613e556d509d9e9a0ea43dc5d891d",
-      "sourceName": "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "ReentrancyGuard"
-      ]
-    },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
-      "lastModificationDate": 1759463419381,
-      "contentHash": "9261adf6457863de3e9892f51317ec89",
-      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.4.16"
-      ],
-      "artifacts": [
-        "IERC20"
-      ]
-    },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/utils/Context.sol": {
-      "lastModificationDate": 1759463405521,
-      "contentHash": "67bfbc07588eb8683b3fd8f6f909563e",
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/utils/Context.sol": {
+      "lastModificationDate": 1759640125480,
+      "contentHash": "01c847e2af51f468cb66d9ed83bc3cec",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -172,7 +99,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -189,10 +117,10 @@
         "Context"
       ]
     },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/interfaces/IERC20.sol": {
-      "lastModificationDate": 1759463419373,
-      "contentHash": "68620db2da7583d9a4919096ac77f577",
-      "sourceName": "@openzeppelin/contracts/interfaces/IERC20.sol",
+    "/home/rocz/eon-protocol/contracts/upgradeable/CreditVaultV3Upgradeable.sol": {
+      "lastModificationDate": 1759640117237,
+      "contentHash": "fd06d2b124788093b0c3e344fb070390",
+      "sourceName": "contracts/upgradeable/CreditVaultV3Upgradeable.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -208,7 +136,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -218,56 +147,28 @@
         }
       },
       "imports": [
-        "../token/ERC20/IERC20.sol"
+        "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
+        "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol",
+        "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol",
+        "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
+        "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+        "./CreditRegistryV3Upgradeable.sol",
+        "./ScoreOraclePhase3BUpgradeable.sol",
+        "../ChainlinkPriceOracle.sol"
       ],
       "versionPragmas": [
-        ">=0.4.16"
-      ],
-      "artifacts": []
-    },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/interfaces/IERC1363.sol": {
-      "lastModificationDate": 1759463419336,
-      "contentHash": "a7fd0f05e36b0d0a21c75340c9c639ec",
-      "sourceName": "@openzeppelin/contracts/interfaces/IERC1363.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./IERC20.sol",
-        "./IERC165.sol"
-      ],
-      "versionPragmas": [
-        ">=0.6.2"
+        "0.8.20"
       ],
       "artifacts": [
-        "IERC1363"
+        "CreditVaultV3Upgradeable"
       ]
     },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/interfaces/IERC165.sol": {
-      "lastModificationDate": 1759463419336,
-      "contentHash": "947853028399b7de34bcc3704ee06e99",
-      "sourceName": "@openzeppelin/contracts/interfaces/IERC165.sol",
+    "/home/rocz/eon-protocol/contracts/upgradeable/CreditRegistryV3Upgradeable.sol": {
+      "lastModificationDate": 1759640117241,
+      "contentHash": "b955642f7ccc40fe74eaa0b014429241",
+      "sourceName": "contracts/upgradeable/CreditRegistryV3Upgradeable.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -283,7 +184,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -293,17 +195,25 @@
         }
       },
       "imports": [
-        "../utils/introspection/IERC165.sol"
+        "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
+        "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol",
+        "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
+        "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol",
+        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
+        "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
       ],
       "versionPragmas": [
-        ">=0.4.16"
+        "0.8.20"
       ],
-      "artifacts": []
+      "artifacts": [
+        "CreditRegistryV3Upgradeable"
+      ]
     },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
-      "lastModificationDate": 1759463419344,
-      "contentHash": "7074c93b1ea0a122063f26ddd1db1032",
-      "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
+    "/home/rocz/eon-protocol/contracts/upgradeable/ScoreOraclePhase3BUpgradeable.sol": {
+      "lastModificationDate": 1759640117246,
+      "contentHash": "53cb39edcba69b7d5a4065efc4b4b96f",
+      "sourceName": "contracts/upgradeable/ScoreOraclePhase3BUpgradeable.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -319,7 +229,210 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
+        "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
+        "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol",
+        "./CreditRegistryV3Upgradeable.sol"
+      ],
+      "versionPragmas": [
+        "0.8.20"
+      ],
+      "artifacts": [
+        "ScoreOraclePhase3BUpgradeable"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol": {
+      "lastModificationDate": 1759640125615,
+      "contentHash": "77d30f3cd93f46b80b6f8f1ebc574ee4",
+      "sourceName": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/ContextUpgradeable.sol",
+        "../proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "OwnableUpgradeable"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol": {
+      "lastModificationDate": 1759640125615,
+      "contentHash": "ef20fd32f5bdcc50bd466abc8fc7f181",
+      "sourceName": "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/ContextUpgradeable.sol",
+        "../proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "PausableUpgradeable"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol": {
+      "lastModificationDate": 1759640125619,
+      "contentHash": "a5bcbeef155f4b5dfb458e420afbaca6",
+      "sourceName": "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ReentrancyGuardUpgradeable"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol": {
+      "lastModificationDate": 1759640125619,
+      "contentHash": "0488cb927068c0c94b864ea40a34d1ea",
+      "sourceName": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/interfaces/draft-IERC1822.sol",
+        "@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.sol",
+        "./Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "UUPSUpgradeable"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+      "lastModificationDate": 1759640125581,
+      "contentHash": "5517c8678c18eb1a8ba58810e7ca39ca",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -330,15 +443,52 @@
       },
       "imports": [],
       "versionPragmas": [
-        ">=0.4.16"
+        "^0.8.20"
       ],
       "artifacts": [
-        "IERC165"
+        "IERC20"
       ]
     },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": {
-      "lastModificationDate": 1759463419557,
-      "contentHash": "1fb9edee1d763745a62d0b1954998792",
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol": {
+      "lastModificationDate": 1759640125611,
+      "contentHash": "f0cedd674b4863ee90d1521a92ab82df",
+      "sourceName": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Initializable"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": {
+      "lastModificationDate": 1759640125624,
+      "contentHash": "697fd27924863e77c17dace2179018b2",
       "sourceName": "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -355,7 +505,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -366,7 +517,8 @@
       },
       "imports": [
         "../IERC20.sol",
-        "../../../interfaces/IERC1363.sol"
+        "../extensions/IERC20Permit.sol",
+        "../../../utils/Address.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
@@ -375,10 +527,10 @@
         "SafeERC20"
       ]
     },
-    "/tmp/eon-protocol/contracts/InsuranceFund.sol": {
-      "lastModificationDate": 1759464849290,
-      "contentHash": "1c7d216b3f13eec1d26749ea93430d11",
-      "sourceName": "contracts/InsuranceFund.sol",
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol": {
+      "lastModificationDate": 1759640125611,
+      "contentHash": "9e5eec59eaffa554d6cca561dcb914eb",
+      "sourceName": "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -394,7 +546,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -404,22 +557,19 @@
         }
       },
       "imports": [
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol"
+        "../Strings.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
       ],
       "artifacts": [
-        "InsuranceFund"
+        "MessageHashUtils"
       ]
     },
-    "/tmp/eon-protocol/contracts/ReputationScorer.sol": {
-      "lastModificationDate": 1759464768087,
-      "contentHash": "6b1ac6fb42a405279762b42fc93b1dd6",
-      "sourceName": "contracts/ReputationScorer.sol",
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol": {
+      "lastModificationDate": 1759640125488,
+      "contentHash": "b96e0d7a3c2b185342c7d083d765b61f",
+      "sourceName": "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -435,7 +585,45 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ECDSA"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol": {
+      "lastModificationDate": 1759640125552,
+      "contentHash": "0c3c7a637fd6a91b3f5eb94fb6e9fc1f",
+      "sourceName": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -445,19 +633,397 @@
         }
       },
       "imports": [
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/utils/ReentrancyGuard.sol"
+        "../proxy/utils/Initializable.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
       ],
       "artifacts": [
-        "ReputationScorer"
+        "ContextUpgradeable"
       ]
     },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
-      "lastModificationDate": 1759463411565,
-      "contentHash": "59dfce11284f2636db261df9b6a18f81",
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
+      "lastModificationDate": 1759640125628,
+      "contentHash": "ba57ff4ddf1d9cae9d2009792795b7f6",
+      "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./math/Math.sol",
+        "./math/SignedMath.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Strings"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/utils/math/Math.sol": {
+      "lastModificationDate": 1759640125607,
+      "contentHash": "718fa8ba0ff269c92e364c1429d9de57",
+      "sourceName": "@openzeppelin/contracts/utils/math/Math.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Math"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol": {
+      "lastModificationDate": 1759640125628,
+      "contentHash": "b6c6bdc7aaca4fe5b680760a72e09d3e",
+      "sourceName": "@openzeppelin/contracts/utils/math/SignedMath.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "SignedMath"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/interfaces/draft-IERC1822.sol": {
+      "lastModificationDate": 1759640125488,
+      "contentHash": "5a6f0412127636d802db818a7d6ac404",
+      "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC1822.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC1822Proxiable"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.sol": {
+      "lastModificationDate": 1759640125509,
+      "contentHash": "838bc3ef3bcf0376af7d9b2041989b6a",
+      "sourceName": "@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../beacon/IBeacon.sol",
+        "../../utils/Address.sol",
+        "../../utils/StorageSlot.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ERC1967Utils"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/utils/Address.sol": {
+      "lastModificationDate": 1759640125467,
+      "contentHash": "79c699f80eb8a9b168cb34e37816f894",
+      "sourceName": "@openzeppelin/contracts/utils/Address.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Address"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/utils/StorageSlot.sol": {
+      "lastModificationDate": 1759640125628,
+      "contentHash": "08cbccfefa284405c12b4bfa8c8c9c2b",
+      "sourceName": "@openzeppelin/contracts/utils/StorageSlot.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "StorageSlot"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/proxy/beacon/IBeacon.sol": {
+      "lastModificationDate": 1759640125569,
+      "contentHash": "0a5c323fd908535580597848b8e550fb",
+      "sourceName": "@openzeppelin/contracts/proxy/beacon/IBeacon.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IBeacon"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol": {
+      "lastModificationDate": 1759640125581,
+      "contentHash": "da291753fa4641f2c5837bfc4aa4c01b",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC20Permit"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+      "lastModificationDate": 1759640125581,
+      "contentHash": "4c02fa6f7ae7b6c289cef80424f0c875",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC20Metadata"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
+      "lastModificationDate": 1759640125514,
+      "contentHash": "c6375ef25e84c90b3d15f9ec4eef218f",
       "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -474,7 +1040,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -496,9 +1063,9 @@
         "ERC20"
       ]
     },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
-      "lastModificationDate": 1759463405805,
-      "contentHash": "5041977bbe908de2e6ed0270447f79ad",
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
+      "lastModificationDate": 1759640125488,
+      "contentHash": "4aefc698f77ecbace7f401257dfe182d",
       "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC6093.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -515,7 +1082,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -526,7 +1094,7 @@
       },
       "imports": [],
       "versionPragmas": [
-        ">=0.8.4"
+        "^0.8.20"
       ],
       "artifacts": [
         "IERC1155Errors",
@@ -534,10 +1102,10 @@
         "IERC721Errors"
       ]
     },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
-      "lastModificationDate": 1759463419385,
-      "contentHash": "513778b30d2750f5d2b9b19bbcf748a5",
-      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/utils/Pausable.sol": {
+      "lastModificationDate": 1759640125615,
+      "contentHash": "24e52f6ef3868e6fca664a423140bee9",
+      "sourceName": "@openzeppelin/contracts/utils/Pausable.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -553,7 +1121,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -563,57 +1132,19 @@
         }
       },
       "imports": [
-        "../IERC20.sol"
-      ],
-      "versionPragmas": [
-        ">=0.6.2"
-      ],
-      "artifacts": [
-        "IERC20Metadata"
-      ]
-    },
-    "/tmp/eon-protocol/contracts/mocks/MockERC20.sol": {
-      "lastModificationDate": 1759531135429,
-      "contentHash": "f2045a7a34483c1a86cef5483776887c",
-      "sourceName": "contracts/mocks/MockERC20.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+        "../utils/Context.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
       ],
       "artifacts": [
-        "MockERC20"
+        "Pausable"
       ]
     },
-    "/tmp/eon-protocol/contracts/HealthFactorMonitor.sol": {
-      "lastModificationDate": 1759463960248,
-      "contentHash": "68bcb633d0251f8ec143e224ba5f45f0",
-      "sourceName": "contracts/HealthFactorMonitor.sol",
+    "/home/rocz/eon-protocol/contracts/CreditVaultV3.sol": {
+      "lastModificationDate": 1759640117326,
+      "contentHash": "27357d5bb483522bf04c27162fa12af6",
+      "sourceName": "contracts/CreditVaultV3.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -629,7 +1160,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -639,22 +1171,26 @@
         }
       },
       "imports": [
-        "@openzeppelin/contracts/access/Ownable.sol"
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
+        "@openzeppelin/contracts/utils/Pausable.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+        "./CreditRegistryV3.sol",
+        "./ScoreOraclePhase3B.sol",
+        "./ChainlinkPriceOracle.sol"
       ],
       "versionPragmas": [
-        "^0.8.20"
+        "0.8.20"
       ],
       "artifacts": [
-        "HealthFactorMonitor",
-        "ILendingPool",
-        "IPriceOracle",
-        "IReputationScorer"
+        "CreditVaultV3"
       ]
     },
-    "/tmp/eon-protocol/contracts/interfaces/IZKVerifier.sol": {
-      "lastModificationDate": 1759463639098,
-      "contentHash": "84f5ff4f20021d136cefa07933f0db90",
-      "sourceName": "contracts/interfaces/IZKVerifier.sol",
+    "/home/rocz/eon-protocol/contracts/CreditRegistryV3.sol": {
+      "lastModificationDate": 1759640117267,
+      "contentHash": "7d9d010af6be9c1dd1d1822141c49ea6",
+      "sourceName": "contracts/CreditRegistryV3.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -670,7 +1206,91 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
+        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
+        "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "0.8.20"
+      ],
+      "artifacts": [
+        "CreditRegistryV3"
+      ]
+    },
+    "/home/rocz/eon-protocol/contracts/ScoreOraclePhase3B.sol": {
+      "lastModificationDate": 1759640117339,
+      "contentHash": "a58e57f96632c424997bd8a198424520",
+      "sourceName": "contracts/ScoreOraclePhase3B.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "./CreditRegistryV3.sol"
+      ],
+      "versionPragmas": [
+        "0.8.20"
+      ],
+      "artifacts": [
+        "ScoreOraclePhase3B"
+      ]
+    },
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/utils/ReentrancyGuard.sol": {
+      "lastModificationDate": 1759640125619,
+      "contentHash": "a92331adac11b453a4de0323fc948119",
+      "sourceName": "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -684,13 +1304,13 @@
         "^0.8.20"
       ],
       "artifacts": [
-        "IZKVerifier"
+        "ReentrancyGuard"
       ]
     },
-    "/tmp/eon-protocol/contracts/mocks/MockLendingPool.sol": {
-      "lastModificationDate": 1759464044110,
-      "contentHash": "1cd015e6b961da814b410103e8b79380",
-      "sourceName": "contracts/mocks/MockLendingPool.sol",
+    "/home/rocz/eon-protocol/contracts/ScoreOracleSimple.sol": {
+      "lastModificationDate": 1759640117275,
+      "contentHash": "d76c8f451d4817aa2c5a4e4b639fdcf1",
+      "sourceName": "contracts/ScoreOracleSimple.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -706,7 +1326,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -715,16 +1336,19 @@
           }
         }
       },
-      "imports": [],
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "./CreditRegistryV1_1.sol"
+      ],
       "versionPragmas": [
-        "^0.8.20"
+        "0.8.20"
       ],
       "artifacts": [
-        "MockLendingPool"
+        "ScoreOracleSimple"
       ]
     },
-    "/tmp/eon-protocol/contracts/CreditRegistryV1_1.sol": {
-      "lastModificationDate": 1759530088409,
+    "/home/rocz/eon-protocol/contracts/CreditRegistryV1_1.sol": {
+      "lastModificationDate": 1759640117313,
       "contentHash": "3ccd02f0fd137d9140a492f16e42f4d9",
       "sourceName": "contracts/CreditRegistryV1_1.sol",
       "solcConfig": {
@@ -742,7 +1366,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -763,9 +1388,9 @@
         "CreditRegistryV1_1"
       ]
     },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/utils/cryptography/MerkleProof.sol": {
-      "lastModificationDate": 1759463419483,
-      "contentHash": "d57b0dba03e8cc7942bf797fc9fe1d29",
+    "/home/rocz/eon-protocol/node_modules/@openzeppelin/contracts/utils/cryptography/MerkleProof.sol": {
+      "lastModificationDate": 1759640125607,
+      "contentHash": "aa87c17aff0d584703d5d046b9979f1d",
       "sourceName": "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -782,45 +1407,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./Hashes.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "MerkleProof"
-      ]
-    },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/utils/cryptography/Hashes.sol": {
-      "lastModificationDate": 1759463414828,
-      "contentHash": "073b9c3ce7bc358a876ed2b3479db88c",
-      "sourceName": "@openzeppelin/contracts/utils/cryptography/Hashes.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -834,11 +1422,11 @@
         "^0.8.20"
       ],
       "artifacts": [
-        "Hashes"
+        "MerkleProof"
       ]
     },
-    "/tmp/eon-protocol/contracts/LendingPoolV1.sol": {
-      "lastModificationDate": 1759531006781,
+    "/home/rocz/eon-protocol/contracts/LendingPoolV1.sol": {
+      "lastModificationDate": 1759640117292,
       "contentHash": "249f5e44b1846cf6431b06fa09812997",
       "sourceName": "contracts/LendingPoolV1.sol",
       "solcConfig": {
@@ -856,7 +1444,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -879,10 +1468,10 @@
         "LendingPoolV1"
       ]
     },
-    "/tmp/eon-protocol/contracts/mocks/MockV3Aggregator.sol": {
-      "lastModificationDate": 1759530852501,
-      "contentHash": "1d3019137bb29e28f792b2b9a6c81d03",
-      "sourceName": "contracts/mocks/MockV3Aggregator.sol",
+    "/home/rocz/eon-protocol/contracts/ReputationScorer.sol": {
+      "lastModificationDate": 1759640117229,
+      "contentHash": "6b1ac6fb42a405279762b42fc93b1dd6",
+      "sourceName": "contracts/ReputationScorer.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -898,43 +1487,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.8.20"
-      ],
-      "artifacts": [
-        "MockV3Aggregator"
-      ]
-    },
-    "/tmp/eon-protocol/contracts/ScoreOracleSimple.sol": {
-      "lastModificationDate": 1759542099975,
-      "contentHash": "d76c8f451d4817aa2c5a4e4b639fdcf1",
-      "sourceName": "contracts/ScoreOracleSimple.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -945,137 +1499,102 @@
       },
       "imports": [
         "@openzeppelin/contracts/access/Ownable.sol",
-        "./CreditRegistryV1_1.sol"
-      ],
-      "versionPragmas": [
-        "0.8.20"
-      ],
-      "artifacts": [
-        "ScoreOracleSimple"
-      ]
-    },
-    "/tmp/eon-protocol/contracts/CreditVault.sol": {
-      "lastModificationDate": 1759542089303,
-      "contentHash": "ab3bc5d90af695013098c9eb2fc8746d",
-      "sourceName": "contracts/CreditVault.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
-        "@openzeppelin/contracts/utils/Pausable.sol",
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
-        "./CreditRegistryV1_1.sol",
-        "./ScoreOracleSimple.sol",
-        "./interfaces/IAggregatorV3.sol"
-      ],
-      "versionPragmas": [
-        "0.8.20"
-      ],
-      "artifacts": [
-        "CreditVault",
-        "IERC20Metadata"
-      ]
-    },
-    "/tmp/eon-protocol/contracts/interfaces/IAggregatorV3.sol": {
-      "lastModificationDate": 1759541543732,
-      "contentHash": "cab5a2b5281bff86870113953ada2953",
-      "sourceName": "contracts/interfaces/IAggregatorV3.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.8.20"
-      ],
-      "artifacts": [
-        "IAggregatorV3"
-      ]
-    },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/utils/Pausable.sol": {
-      "lastModificationDate": 1759463419541,
-      "contentHash": "0d47b53e10b1985efbb396f937626279",
-      "sourceName": "@openzeppelin/contracts/utils/Pausable.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../utils/Context.sol"
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
       ],
       "artifacts": [
-        "Pausable"
+        "ReputationScorer"
       ]
     },
-    "/tmp/eon-protocol/contracts/CreditVaultV2.sol": {
-      "lastModificationDate": 1759543567619,
+    "/home/rocz/eon-protocol/contracts/InsuranceFund.sol": {
+      "lastModificationDate": 1759640117258,
+      "contentHash": "1c7d216b3f13eec1d26749ea93430d11",
+      "sourceName": "contracts/InsuranceFund.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "InsuranceFund"
+      ]
+    },
+    "/home/rocz/eon-protocol/contracts/DutchAuctionLiquidator.sol": {
+      "lastModificationDate": 1759640117254,
+      "contentHash": "03b7b4972a23fabbe59944999fc0faa5",
+      "sourceName": "contracts/DutchAuctionLiquidator.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "DutchAuctionLiquidator",
+        "ILendingPool",
+        "IReputationScorer"
+      ]
+    },
+    "/home/rocz/eon-protocol/contracts/CreditVaultV2.sol": {
+      "lastModificationDate": 1759640117301,
       "contentHash": "02bf1d0c5f531bae8c9609f10e63068e",
       "sourceName": "contracts/CreditVaultV2.sol",
       "solcConfig": {
@@ -1093,7 +1612,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -1120,8 +1640,45 @@
         "IERC20Metadata"
       ]
     },
-    "/tmp/eon-protocol/contracts/ScoreOraclePhase3.sol": {
-      "lastModificationDate": 1759543123093,
+    "/home/rocz/eon-protocol/contracts/interfaces/IAggregatorV3.sol": {
+      "lastModificationDate": 1759640117288,
+      "contentHash": "cab5a2b5281bff86870113953ada2953",
+      "sourceName": "contracts/interfaces/IAggregatorV3.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.20"
+      ],
+      "artifacts": [
+        "IAggregatorV3"
+      ]
+    },
+    "/home/rocz/eon-protocol/contracts/ScoreOraclePhase3.sol": {
+      "lastModificationDate": 1759640117305,
       "contentHash": "5b56bbbeadf0ac58a4817b2f403e6770",
       "sourceName": "contracts/ScoreOraclePhase3.sol",
       "solcConfig": {
@@ -1139,7 +1696,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -1159,8 +1717,8 @@
         "ScoreOraclePhase3"
       ]
     },
-    "/tmp/eon-protocol/contracts/CreditRegistryV2.sol": {
-      "lastModificationDate": 1759543075263,
+    "/home/rocz/eon-protocol/contracts/CreditRegistryV2.sol": {
+      "lastModificationDate": 1759640117334,
       "contentHash": "4e26c4af1c6b93eb892cc7cc8de6b33f",
       "sourceName": "contracts/CreditRegistryV2.sol",
       "solcConfig": {
@@ -1178,7 +1736,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -1201,10 +1760,10 @@
         "CreditRegistryV2"
       ]
     },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol": {
-      "lastModificationDate": 1759463407166,
-      "contentHash": "81de029d56aa803972be03c5d277cb6c",
-      "sourceName": "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
+    "/home/rocz/eon-protocol/contracts/CreditVault.sol": {
+      "lastModificationDate": 1759640117225,
+      "contentHash": "ab3bc5d90af695013098c9eb2fc8746d",
+      "sourceName": "contracts/CreditVault.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -1220,43 +1779,8 @@
                 "evm.bytecode",
                 "evm.deployedBytecode",
                 "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "ECDSA"
-      ]
-    },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol": {
-      "lastModificationDate": 1759463419496,
-      "contentHash": "260f3968eefa3bbd30520cff5384cd93",
-      "sourceName": "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
+                "metadata",
+                "storageLayout"
               ],
               "": [
                 "ast"
@@ -1266,327 +1790,213 @@
         }
       },
       "imports": [
-        "../Strings.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "MessageHashUtils"
-      ]
-    },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
-      "lastModificationDate": 1759463419590,
-      "contentHash": "d8f70caf0e0c77dc908176ed44812fb7",
-      "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./math/Math.sol",
-        "./math/SafeCast.sol",
-        "./math/SignedMath.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "Strings"
-      ]
-    },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/utils/math/Math.sol": {
-      "lastModificationDate": 1759463419475,
-      "contentHash": "5ec781e33d3a9ac91ffdc83d94420412",
-      "sourceName": "@openzeppelin/contracts/utils/math/Math.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../Panic.sol",
-        "./SafeCast.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "Math"
-      ]
-    },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol": {
-      "lastModificationDate": 1759463419553,
-      "contentHash": "2adca1150f58fc6f3d1f0a0f22ee7cca",
-      "sourceName": "@openzeppelin/contracts/utils/math/SafeCast.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "SafeCast"
-      ]
-    },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol": {
-      "lastModificationDate": 1759463419565,
-      "contentHash": "ae3528afb8bdb0a7dcfba5b115ee8074",
-      "sourceName": "@openzeppelin/contracts/utils/math/SignedMath.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./SafeCast.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "SignedMath"
-      ]
-    },
-    "/tmp/eon-protocol/node_modules/@openzeppelin/contracts/utils/Panic.sol": {
-      "lastModificationDate": 1759463419541,
-      "contentHash": "2133dc13536b4a6a98131e431fac59e1",
-      "sourceName": "@openzeppelin/contracts/utils/Panic.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "Panic"
-      ]
-    },
-    "/tmp/eon-protocol/contracts/CreditRegistryV3.sol": {
-      "lastModificationDate": 1759544139104,
-      "contentHash": "946b90fb4c08dfb391c2464dcb6a7f1d",
-      "sourceName": "contracts/CreditRegistryV3.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
-        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
-        "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol",
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
-      ],
-      "versionPragmas": [
-        "0.8.20"
-      ],
-      "artifacts": [
-        "CreditRegistryV3"
-      ]
-    },
-    "/tmp/eon-protocol/contracts/ScoreOraclePhase3B.sol": {
-      "lastModificationDate": 1759544207386,
-      "contentHash": "fdf71cd22d521cbade984fda0d4500e3",
-      "sourceName": "contracts/ScoreOraclePhase3B.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "./CreditRegistryV3.sol"
-      ],
-      "versionPragmas": [
-        "0.8.20"
-      ],
-      "artifacts": [
-        "ScoreOraclePhase3B"
-      ]
-    },
-    "/tmp/eon-protocol/contracts/CreditVaultV3.sol": {
-      "lastModificationDate": 1759544273250,
-      "contentHash": "7c6e728cb4e14e86e89e156297ea85a5",
-      "sourceName": "contracts/CreditVaultV3.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/access/Ownable.sol",
         "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
         "@openzeppelin/contracts/utils/Pausable.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
         "@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
-        "./CreditRegistryV3.sol",
-        "./ScoreOraclePhase3B.sol"
+        "./CreditRegistryV1_1.sol",
+        "./ScoreOracleSimple.sol",
+        "./interfaces/IAggregatorV3.sol"
       ],
       "versionPragmas": [
         "0.8.20"
       ],
       "artifacts": [
-        "CreditVaultV3"
+        "CreditVault",
+        "IERC20Metadata"
+      ]
+    },
+    "/home/rocz/eon-protocol/contracts/HealthFactorMonitor.sol": {
+      "lastModificationDate": 1759640117233,
+      "contentHash": "68bcb633d0251f8ec143e224ba5f45f0",
+      "sourceName": "contracts/HealthFactorMonitor.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "HealthFactorMonitor",
+        "ILendingPool",
+        "IPriceOracle",
+        "IReputationScorer"
+      ]
+    },
+    "/home/rocz/eon-protocol/contracts/mocks/MockERC20.sol": {
+      "lastModificationDate": 1759640117322,
+      "contentHash": "f2045a7a34483c1a86cef5483776887c",
+      "sourceName": "contracts/mocks/MockERC20.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MockERC20"
+      ]
+    },
+    "/home/rocz/eon-protocol/contracts/interfaces/IZKVerifier.sol": {
+      "lastModificationDate": 1759640117284,
+      "contentHash": "84f5ff4f20021d136cefa07933f0db90",
+      "sourceName": "contracts/interfaces/IZKVerifier.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IZKVerifier"
+      ]
+    },
+    "/home/rocz/eon-protocol/contracts/mocks/MockLendingPool.sol": {
+      "lastModificationDate": 1759640117317,
+      "contentHash": "1cd015e6b961da814b410103e8b79380",
+      "sourceName": "contracts/mocks/MockLendingPool.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MockLendingPool"
+      ]
+    },
+    "/home/rocz/eon-protocol/contracts/mocks/MockV3Aggregator.sol": {
+      "lastModificationDate": 1759640117317,
+      "contentHash": "1d3019137bb29e28f792b2b9a6c81d03",
+      "sourceName": "contracts/mocks/MockV3Aggregator.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.20"
+      ],
+      "artifacts": [
+        "MockV3Aggregator"
       ]
     }
   }

@@ -1,0 +1,899 @@
+{
+  "manifestVersion": "3.2",
+  "proxies": [
+    {
+      "address": "0xad1e41e347E527BA5F8009582ee6cb499D1157D7",
+      "txHash": "0x805eecb67aec9057670601ad7cb71d7c843f3231e7087bcaba85c1db86f9249d",
+      "kind": "uups"
+    },
+    {
+      "address": "0x4E5D1f581BCAE0CEfCd7c32d9Fcde283a786dc62",
+      "txHash": "0xe230f7be0e0c2b5062ebedb78ce281d75c086a41167fbf769fa6711ad0bc8906",
+      "kind": "uups"
+    },
+    {
+      "address": "0xB1E54fDCf400FB25203801013dfeaD737fBBbd61",
+      "txHash": "0x33cba4759946979cee20ec8f0a46a8e16f9bda8eb08da0c9cd4a19c4cfdd92db",
+      "kind": "uups"
+    }
+  ],
+  "impls": {
+    "f4d018e6eba99d8353324d722b313f15b9fa995c2cbd2f3b473d505774e4ad30": {
+      "address": "0x1b7d29a1e00A27C2B39E1C1D157EFF9128d2057B",
+      "txHash": "0xd9c303a5a9f81505f8f1605e98663b3cf0f00ece27c18c76f60b6ba4be886efa",
+      "layout": {
+        "solcVersion": "0.8.20",
+        "storage": [
+          {
+            "label": "nextLoanId",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256",
+            "contract": "CreditRegistryV3Upgradeable",
+            "src": "contracts/upgradeable/CreditRegistryV3Upgradeable.sol:139"
+          },
+          {
+            "label": "loans",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_uint256,t_struct(LoanRecord)19831_storage)",
+            "contract": "CreditRegistryV3Upgradeable",
+            "src": "contracts/upgradeable/CreditRegistryV3Upgradeable.sol:140"
+          },
+          {
+            "label": "userLoanIds",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_address,t_array(t_uint256)dyn_storage)",
+            "contract": "CreditRegistryV3Upgradeable",
+            "src": "contracts/upgradeable/CreditRegistryV3Upgradeable.sol:141"
+          },
+          {
+            "label": "collateralData",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_uint256,t_struct(CollateralData)19863_storage)",
+            "contract": "CreditRegistryV3Upgradeable",
+            "src": "contracts/upgradeable/CreditRegistryV3Upgradeable.sol:144"
+          },
+          {
+            "label": "userCollateralAssets",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CreditRegistryV3Upgradeable",
+            "src": "contracts/upgradeable/CreditRegistryV3Upgradeable.sol:145"
+          },
+          {
+            "label": "stakeToken",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_address",
+            "contract": "CreditRegistryV3Upgradeable",
+            "src": "contracts/upgradeable/CreditRegistryV3Upgradeable.sol:148"
+          },
+          {
+            "label": "crossChainScores",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_mapping(t_uint64,t_struct(CrossChainScore)19880_storage))",
+            "contract": "CreditRegistryV3Upgradeable",
+            "src": "contracts/upgradeable/CreditRegistryV3Upgradeable.sol:151"
+          },
+          {
+            "label": "governanceActivity",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_struct(GovernanceActivity)19887_storage)",
+            "contract": "CreditRegistryV3Upgradeable",
+            "src": "contracts/upgradeable/CreditRegistryV3Upgradeable.sol:154"
+          },
+          {
+            "label": "aggregateCreditData",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_struct(AggregateCreditData)19854_storage)",
+            "contract": "CreditRegistryV3Upgradeable",
+            "src": "contracts/upgradeable/CreditRegistryV3Upgradeable.sol:157"
+          },
+          {
+            "label": "authorizedLenders",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "CreditRegistryV3Upgradeable",
+            "src": "contracts/upgradeable/CreditRegistryV3Upgradeable.sol:160"
+          },
+          {
+            "label": "authorizedCCIPSenders",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "CreditRegistryV3Upgradeable",
+            "src": "contracts/upgradeable/CreditRegistryV3Upgradeable.sol:161"
+          },
+          {
+            "label": "authorizedGovernance",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "CreditRegistryV3Upgradeable",
+            "src": "contracts/upgradeable/CreditRegistryV3Upgradeable.sol:162"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)86_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)14_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ReentrancyGuardStorage)330_storage": {
+            "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
+            "members": [
+              {
+                "label": "_status",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_enum(LoanStatus)19815": {
+            "label": "enum CreditRegistryV3Upgradeable.LoanStatus",
+            "members": [
+              "Unknown",
+              "Active",
+              "Repaid",
+              "Liquidated"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_array(t_uint256)dyn_storage)": {
+            "label": "mapping(address => uint256[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint64,t_struct(CrossChainScore)19880_storage))": {
+            "label": "mapping(address => mapping(uint64 => struct CreditRegistryV3Upgradeable.CrossChainScore))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(AggregateCreditData)19854_storage)": {
+            "label": "mapping(address => struct CreditRegistryV3Upgradeable.AggregateCreditData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(GovernanceActivity)19887_storage)": {
+            "label": "mapping(address => struct CreditRegistryV3Upgradeable.GovernanceActivity)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(CollateralData)19863_storage)": {
+            "label": "mapping(uint256 => struct CreditRegistryV3Upgradeable.CollateralData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(LoanRecord)19831_storage)": {
+            "label": "mapping(uint256 => struct CreditRegistryV3Upgradeable.LoanRecord)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_struct(CrossChainScore)19880_storage)": {
+            "label": "mapping(uint64 => struct CreditRegistryV3Upgradeable.CrossChainScore)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(AggregateCreditData)19854_storage": {
+            "label": "struct CreditRegistryV3Upgradeable.AggregateCreditData",
+            "members": [
+              {
+                "label": "totalLoans",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "repaidLoans",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "liquidatedLoans",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "activeLoans",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "totalCollateralUsd18",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "totalBorrowedUsd18",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "maxLtvBorrowCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "firstSeen",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "kyc",
+                "type": "t_struct(KYCProof)19870_storage",
+                "offset": 0,
+                "slot": "8"
+              },
+              {
+                "label": "stake",
+                "type": "t_struct(StakeInfo)19875_storage",
+                "offset": 0,
+                "slot": "11"
+              }
+            ],
+            "numberOfBytes": "416"
+          },
+          "t_struct(CollateralData)19863_storage": {
+            "label": "struct CreditRegistryV3Upgradeable.CollateralData",
+            "members": [
+              {
+                "label": "collateralToken",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "collateralValueUsd18",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "principalUsd18",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "userScoreAtBorrow",
+                "type": "t_uint16",
+                "offset": 0,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_struct(CrossChainScore)19880_storage": {
+            "label": "struct CreditRegistryV3Upgradeable.CrossChainScore",
+            "members": [
+              {
+                "label": "overallScore",
+                "type": "t_uint16",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "updatedAt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_struct(GovernanceActivity)19887_storage": {
+            "label": "struct CreditRegistryV3Upgradeable.GovernanceActivity",
+            "members": [
+              {
+                "label": "voteCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "proposalCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "lastVoteTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(KYCProof)19870_storage": {
+            "label": "struct CreditRegistryV3Upgradeable.KYCProof",
+            "members": [
+              {
+                "label": "credentialHash",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "verifiedAt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "expiresAt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(LoanRecord)19831_storage": {
+            "label": "struct CreditRegistryV3Upgradeable.LoanRecord",
+            "members": [
+              {
+                "label": "loanId",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "borrower",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "principalUsd18",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "repaidUsd18",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "status",
+                "type": "t_enum(LoanStatus)19815",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "lender",
+                "type": "t_address",
+                "offset": 1,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(StakeInfo)19875_storage": {
+            "label": "struct CreditRegistryV3Upgradeable.StakeInfo",
+            "members": [
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "lockUntil",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint16": {
+            "label": "uint16",
+            "numberOfBytes": "2"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.ReentrancyGuard": [
+            {
+              "contract": "ReentrancyGuardUpgradeable",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol:40",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "29573bc348ebf9f3083e0fbad16fec05c889673505a34f427f48a0ca76290e02": {
+      "address": "0x72aF093fDBA19Af6f612c5001Af1C1BBe4341267",
+      "txHash": "0x5217fe32d3cabca571a5afe675faa91832576a58cb11230da7c9bcf4698b8481",
+      "layout": {
+        "solcVersion": "0.8.20",
+        "storage": [
+          {
+            "label": "registry",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_contract(CreditRegistryV3Upgradeable)20890",
+            "contract": "ScoreOraclePhase3BUpgradeable",
+            "src": "contracts/upgradeable/ScoreOraclePhase3BUpgradeable.sol:31"
+          },
+          {
+            "label": "supportedChainSelectors",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint64)dyn_storage",
+            "contract": "ScoreOraclePhase3BUpgradeable",
+            "src": "contracts/upgradeable/ScoreOraclePhase3BUpgradeable.sol:34"
+          },
+          {
+            "label": "isSupportedChain",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint64,t_bool)",
+            "contract": "ScoreOraclePhase3BUpgradeable",
+            "src": "contracts/upgradeable/ScoreOraclePhase3BUpgradeable.sol:35"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)86_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)14_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_uint64)dyn_storage": {
+            "label": "uint64[]",
+            "numberOfBytes": "32"
+          },
+          "t_contract(CreditRegistryV3Upgradeable)20890": {
+            "label": "contract CreditRegistryV3Upgradeable",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_uint64,t_bool)": {
+            "label": "mapping(uint64 => bool)",
+            "numberOfBytes": "32"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "fd6ac83253eb5e6e1d840f2e5fbc66923118d6caf4ac791dee3a17cd0de829d2": {
+      "address": "0xc1629E0321fD0eCb1b31491aDc90a477C7D5e6Fd",
+      "txHash": "0x83359636383608bb2060d683dd3a8e477ec6447d287a53c12bfe260437e69b3d",
+      "layout": {
+        "solcVersion": "0.8.20",
+        "storage": [
+          {
+            "label": "registry",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_contract(CreditRegistryV3Upgradeable)20890",
+            "contract": "CreditVaultV3Upgradeable",
+            "src": "contracts/upgradeable/CreditVaultV3Upgradeable.sol:59"
+          },
+          {
+            "label": "oracle",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(ScoreOraclePhase3BUpgradeable)23003",
+            "contract": "CreditVaultV3Upgradeable",
+            "src": "contracts/upgradeable/CreditVaultV3Upgradeable.sol:60"
+          },
+          {
+            "label": "priceOracle",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_contract(ChainlinkPriceOracle)6164",
+            "contract": "CreditVaultV3Upgradeable",
+            "src": "contracts/upgradeable/CreditVaultV3Upgradeable.sol:61"
+          },
+          {
+            "label": "assets",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_struct(Asset)20935_storage)",
+            "contract": "CreditVaultV3Upgradeable",
+            "src": "contracts/upgradeable/CreditVaultV3Upgradeable.sol:63"
+          },
+          {
+            "label": "vaultLoans",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(VaultLoanData)20930_storage)",
+            "contract": "CreditVaultV3Upgradeable",
+            "src": "contracts/upgradeable/CreditVaultV3Upgradeable.sol:64"
+          },
+          {
+            "label": "insurancePool",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_address",
+            "contract": "CreditVaultV3Upgradeable",
+            "src": "contracts/upgradeable/CreditVaultV3Upgradeable.sol:65"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)86_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)14_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(PausableStorage)253_storage": {
+            "label": "struct PausableUpgradeable.PausableStorage",
+            "members": [
+              {
+                "label": "_paused",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ReentrancyGuardStorage)330_storage": {
+            "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
+            "members": [
+              {
+                "label": "_status",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_contract(ChainlinkPriceOracle)6164": {
+            "label": "contract ChainlinkPriceOracle",
+            "numberOfBytes": "20"
+          },
+          "t_contract(CreditRegistryV3Upgradeable)20890": {
+            "label": "contract CreditRegistryV3Upgradeable",
+            "numberOfBytes": "20"
+          },
+          "t_contract(ScoreOraclePhase3BUpgradeable)23003": {
+            "label": "contract ScoreOraclePhase3BUpgradeable",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_struct(Asset)20935_storage)": {
+            "label": "mapping(address => struct CreditVaultV3Upgradeable.Asset)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(VaultLoanData)20930_storage)": {
+            "label": "mapping(uint256 => struct CreditVaultV3Upgradeable.VaultLoanData)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Asset)20935_storage": {
+            "label": "struct CreditVaultV3Upgradeable.Asset",
+            "members": [
+              {
+                "label": "allowed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "priceFeed",
+                "type": "t_address",
+                "offset": 1,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(VaultLoanData)20930_storage": {
+            "label": "struct CreditVaultV3Upgradeable.VaultLoanData",
+            "members": [
+              {
+                "label": "collateralToken",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "collateralAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "aprBps",
+                "type": "t_uint16",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "startTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "graceStart",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "exists",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_uint16": {
+            "label": "uint16",
+            "numberOfBytes": "2"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Pausable": [
+            {
+              "contract": "PausableUpgradeable",
+              "label": "_paused",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol:21",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.ReentrancyGuard": [
+            {
+              "contract": "ReentrancyGuardUpgradeable",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol:40",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

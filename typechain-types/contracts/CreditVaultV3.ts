@@ -42,6 +42,7 @@ export interface CreditVaultV3Interface extends Interface {
       | "owner"
       | "pause"
       | "paused"
+      | "priceOracle"
       | "registry"
       | "renounceOwnership"
       | "repay"
@@ -112,6 +113,10 @@ export interface CreditVaultV3Interface extends Interface {
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "priceOracle",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "registry", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -179,6 +184,10 @@ export interface CreditVaultV3Interface extends Interface {
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "priceOracle",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "registry", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
@@ -407,6 +416,8 @@ export interface CreditVaultV3 extends BaseContract {
 
   paused: TypedContractMethod<[], [boolean], "view">;
 
+  priceOracle: TypedContractMethod<[], [string], "view">;
+
   registry: TypedContractMethod<[], [string], "view">;
 
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
@@ -516,6 +527,9 @@ export interface CreditVaultV3 extends BaseContract {
   getFunction(
     nameOrSignature: "paused"
   ): TypedContractMethod<[], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "priceOracle"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "registry"
   ): TypedContractMethod<[], [string], "view">;
