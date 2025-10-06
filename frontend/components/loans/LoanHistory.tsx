@@ -6,8 +6,9 @@ import { parseUnits } from 'viem';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Loader2, ExternalLink, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
+import { Loader2, ExternalLink, AlertTriangle, CheckCircle, Clock, Sparkles } from 'lucide-react';
 import { CONTRACT_ADDRESSES } from '@/lib/contracts/addresses';
+import { RefinanceModal } from './RefinanceModal';
 
 const VAULT_ABI = [
   {
@@ -42,6 +43,8 @@ export function LoanHistory() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState<LoanData | null>(null);
   const [showRepayModal, setShowRepayModal] = useState(false);
+  const [showRefinanceModal, setShowRefinanceModal] = useState(false);
+  const [refinanceLoanId, setRefinanceLoanId] = useState<string | null>(null);
 
   // Fetch user's loans from API
   useEffect(() => {
@@ -194,6 +197,17 @@ export function LoanHistory() {
                       >
                         Repay Loan
                       </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setRefinanceLoanId(loan.id);
+                          setShowRefinanceModal(true);
+                        }}
+                        className="flex items-center gap-2"
+                      >
+                        <Sparkles className="w-4 h-4" />
+                        Refinance
+                      </Button>
                       <Button variant="outline" size="icon" asChild>
                         <a
                           href={`https://sepolia.arbiscan.io/address/${CONTRACT_ADDRESSES[421614].CreditVaultV3}`}
@@ -266,6 +280,18 @@ export function LoanHistory() {
             setShowRepayModal(false);
             setSelectedLoan(null);
           }}
+        />
+      )}
+
+      {/* Refinance Modal */}
+      {showRefinanceModal && refinanceLoanId && (
+        <RefinanceModal
+          isOpen={showRefinanceModal}
+          onClose={() => {
+            setShowRefinanceModal(false);
+            setRefinanceLoanId(null);
+          }}
+          loanId={refinanceLoanId}
         />
       )}
     </div>

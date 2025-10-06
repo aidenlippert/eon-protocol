@@ -12,7 +12,9 @@ import { AttestationBadge } from '@/components/attestation/AttestationBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FactorBreakdown } from '@/components/score/FactorBreakdown';
 import { ScoreHistoryChart } from '@/components/score/ScoreHistoryChart';
+import { CreditTimeline } from '@/components/credit/CreditTimeline';
 import { DiditWidget } from '@/components/kyc/DiditWidget';
+import { ExportCreditReport } from '@/components/credit/ExportCreditReport';
 import { getScoreHistory, isKYCVerified } from '@/lib/supabase';
 import { colors } from '@/lib/design-tokens';
 
@@ -245,6 +247,16 @@ export default function ProfilePage() {
               <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
               Refresh
             </SmartButton>
+
+            <ExportCreditReport
+              scoreData={{
+                score: scoreData.score ?? 0,
+                tier: scoreData.tier ?? 'Bronze',
+                breakdown: scoreData.breakdown ?? {},
+                easAttestation: scoreData.sybilResistance?.easAttestation,
+              }}
+              kycVerified={kycVerified}
+            />
           </div>
         </motion.div>
 
@@ -306,6 +318,16 @@ export default function ProfilePage() {
             tier={scoreData.tier ?? 'Bronze'}
             kycVerified={kycVerified}
           />
+        </motion.div>
+
+        {/* Credit History Timeline */}
+        <motion.div
+          className="mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <CreditTimeline />
         </motion.div>
 
         {/* Tabs */}
