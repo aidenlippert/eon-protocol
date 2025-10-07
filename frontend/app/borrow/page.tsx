@@ -179,12 +179,119 @@ export default function BorrowPage() {
           </div>
         </motion.div>
 
+        {/* Tier Comparison */}
+        <motion.div
+          className="mt-16 mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <h2 className="text-3xl font-bold text-white mb-4 text-center">Credit Score Tiers</h2>
+          <p className="text-white/60 text-center mb-8">Compare benefits across all credit tiers</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {/* Bronze */}
+            <div className={`p-6 rounded-2xl border-2 ${tier === 'Bronze' ? 'border-orange-500 bg-orange-500/10' : 'border-white/10 bg-white/5'}`}>
+              <div className="text-center mb-4">
+                <div className="text-2xl font-bold text-orange-400 mb-1">Bronze</div>
+                <div className="text-sm text-white/60">Score: 0-59</div>
+                {tier === 'Bronze' && <div className="text-xs text-orange-400 mt-2 font-semibold">YOU ARE HERE</div>}
+              </div>
+              <div className="space-y-3">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white">15%</div>
+                  <div className="text-xs text-white/60">APR</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white">50%</div>
+                  <div className="text-xs text-white/60">Max LTV</div>
+                </div>
+                <div className="text-xs text-white/40 text-center mt-4">
+                  Basic lending terms for new users
+                </div>
+              </div>
+            </div>
+
+            {/* Silver */}
+            <div className={`p-6 rounded-2xl border-2 ${tier === 'Silver' ? 'border-gray-400 bg-gray-400/10' : 'border-white/10 bg-white/5'}`}>
+              <div className="text-center mb-4">
+                <div className="text-2xl font-bold text-gray-300 mb-1">Silver</div>
+                <div className="text-sm text-white/60">Score: 60-74</div>
+                {tier === 'Silver' && <div className="text-xs text-gray-300 mt-2 font-semibold">YOU ARE HERE</div>}
+              </div>
+              <div className="space-y-3">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white">8%</div>
+                  <div className="text-xs text-white/60">APR</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white">70%</div>
+                  <div className="text-xs text-white/60">Max LTV</div>
+                </div>
+                <div className="text-xs text-white/40 text-center mt-4">
+                  Better rates for established users
+                </div>
+              </div>
+            </div>
+
+            {/* Gold */}
+            <div className={`p-6 rounded-2xl border-2 ${tier === 'Gold' ? 'border-yellow-500 bg-yellow-500/10' : 'border-white/10 bg-white/5'}`}>
+              <div className="text-center mb-4">
+                <div className="text-2xl font-bold text-yellow-400 mb-1">Gold</div>
+                <div className="text-sm text-white/60">Score: 75-89</div>
+                {tier === 'Gold' && <div className="text-xs text-yellow-400 mt-2 font-semibold">YOU ARE HERE</div>}
+              </div>
+              <div className="space-y-3">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white">6%</div>
+                  <div className="text-xs text-white/60">APR</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white">80%</div>
+                  <div className="text-xs text-white/60">Max LTV</div>
+                </div>
+                <div className="text-xs text-white/40 text-center mt-4">
+                  Premium terms for trusted borrowers
+                </div>
+              </div>
+            </div>
+
+            {/* Platinum */}
+            <div className={`p-6 rounded-2xl border-2 ${tier === 'Platinum' ? 'border-purple-500 bg-purple-500/10' : 'border-white/10 bg-white/5'}`}>
+              <div className="text-center mb-4">
+                <div className="text-2xl font-bold text-purple-400 mb-1">Platinum</div>
+                <div className="text-sm text-white/60">Score: 90-100</div>
+                {tier === 'Platinum' && <div className="text-xs text-purple-400 mt-2 font-semibold">YOU ARE HERE</div>}
+              </div>
+              <div className="space-y-3">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white">4%</div>
+                  <div className="text-xs text-white/60">APR</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white">90%</div>
+                  <div className="text-xs text-white/60">Max LTV</div>
+                </div>
+                <div className="text-xs text-white/40 text-center mt-4">
+                  Elite rates for top-tier credit
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 text-center">
+            <p className="text-sm text-white/40">
+              All rates are calculated on-chain by ScoreOraclePhase3B based on your 5-factor credit assessment
+            </p>
+          </div>
+        </motion.div>
+
         {/* How It Works */}
         <motion.div
           className="mt-16"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
         >
           <h2 className="text-2xl font-bold text-white mb-8 text-center">How It Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
