@@ -15,21 +15,9 @@ import { ScoreHistoryChart } from '@/components/score/ScoreHistoryChart';
 import { CreditTimeline } from '@/components/credit/CreditTimeline';
 import { DiditWidget } from '@/components/kyc/DiditWidget';
 import { ExportCreditReport } from '@/components/credit/ExportCreditReport';
+import { useRealCreditScore } from '@/lib/hooks/useRealScore';
 import { getScoreHistory, isKYCVerified } from '@/lib/supabase';
 import { colors } from '@/lib/design-tokens';
-
-interface ScoreData {
-  address: string;
-  score: number;
-  tier: string;
-  baseScore: number;
-  breakdown: any;
-  sybilResistance: any;
-  crossChain: any;
-  calculatedAt: string;
-  cached: boolean;
-  timestamp: string;
-}
 
 /**
  * @title Modern Credit Profile Page
@@ -39,41 +27,19 @@ interface ScoreData {
 export default function ProfilePage() {
   const { address, isConnected } = useAccount();
 
-  const [scoreData, setScoreData] = useState<ScoreData | null>(null);
+  // REAL DATA: Credit score from blockchain
+  const { score, tier, breakdown, apr, isLoading, hasScore } = useRealCreditScore(address);
+
   const [scoreHistory, setScoreHistory] = useState<any[]>([]);
   const [kycVerified, setKycVerified] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (address && isConnected) {
-      fetchScore();
       fetchKYCStatus();
       fetchScoreHistory();
     }
   }, [address, isConnected]);
-
-  async function fetchScore() {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch(`/api/score/${address}`);
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch credit score');
-      }
-
-      const data = await response.json();
-      setScoreData(data);
-    } catch (err: any) {
-      console.error('Score fetch error:', err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   async function fetchKYCStatus() {
     try {
@@ -101,22 +67,9 @@ export default function ProfilePage() {
   async function handleRefresh() {
     try {
       setRefreshing(true);
-      setError(null);
-
-      const response = await fetch(`/api/score/${address}/refresh`, {
-        method: 'POST',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to refresh credit score');
-      }
-
-      const data = await response.json();
-      setScoreData(data);
       await fetchScoreHistory();
     } catch (err: any) {
       console.error('Score refresh error:', err);
-      setError(err.message);
     } finally {
       setRefreshing(false);
     }
@@ -150,7 +103,7 @@ export default function ProfilePage() {
   }
 
   // Loading
-  if (loading && !scoreData) {
+  if (isLoading) {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
@@ -165,40 +118,13 @@ export default function ProfilePage() {
             className="h-12 w-12 animate-spin mx-auto mb-4"
             style={{ color: colors.accent.purple }}
           />
-          <p className="text-white/60">Calculating your credit score...</p>
-          <p className="text-sm text-white/40 mt-2">
-            Analyzing on-chain behavior and DeFi history
-          </p>
+          <p className="text-white/60">Loading your credit score from blockchain...</p>
         </motion.div>
       </div>
     );
   }
 
-  // Error
-  if (error && !scoreData) {
-    return (
-      <div
-        className="min-h-screen flex items-center justify-center p-4"
-        style={{ background: colors.bg.primary }}
-      >
-        <div
-          className="max-w-md w-full p-8 rounded-2xl border text-center"
-          style={{
-            background: 'rgba(239, 68, 68, 0.1)',
-            borderColor: 'rgba(239, 68, 68, 0.3)',
-          }}
-        >
-          <p className="text-red-400 mb-4 font-semibold">Failed to load credit score</p>
-          <p className="text-sm text-white/60 mb-6">{error}</p>
-          <SmartButton onClick={fetchScore} variant="outline">
-            Try Again
-          </SmartButton>
-        </div>
-      </div>
-    );
-  }
-
-  if (!scoreData) return null;
+  if (!hasScore) return null;
 
   return (
     <div
@@ -250,10 +176,10 @@ export default function ProfilePage() {
 
             <ExportCreditReport
               scoreData={{
-                score: scoreData.score ?? 0,
-                tier: scoreData.tier ?? 'Bronze',
-                breakdown: scoreData.breakdown ?? {},
-                easAttestation: scoreData.sybilResistance?.easAttestation,
+                score: score,
+                tier: tier,
+                breakdown: breakdown,
+                easAttestation: undefined,
               }}
               kycVerified={kycVerified}
             />
@@ -270,8 +196,8 @@ export default function ProfilePage() {
             transition={{ delay: 0.1 }}
           >
             <CreditScoreCard
-              score={scoreData.score ?? 0}
-              tier={scoreData.tier ?? 'Bronze'}
+              score={score}
+              tier={tier}
               animated={true}
             />
           </motion.div>
@@ -283,8 +209,8 @@ export default function ProfilePage() {
             transition={{ delay: 0.2 }}
           >
             <TierProgressBar
-              currentScore={scoreData.score ?? 0}
-              currentTier={scoreData.tier ?? 'Bronze'}
+              currentScore={score}
+              currentTier={tier}
             />
           </motion.div>
         </div>
@@ -298,8 +224,8 @@ export default function ProfilePage() {
         >
           <AttestationBadge
             wallet={address || ''}
-            score={scoreData.score}
-            tier={scoreData.tier}
+            score={score}
+            tier={tier}
             onAttest={() => {
               console.log('[Profile] Attestation created');
             }}
@@ -314,8 +240,8 @@ export default function ProfilePage() {
           transition={{ delay: 0.4 }}
         >
           <ImprovementActions
-            currentScore={scoreData.score ?? 0}
-            tier={scoreData.tier ?? 'Bronze'}
+            currentScore={score}
+            tier={tier}
             kycVerified={kycVerified}
           />
         </motion.div>
@@ -344,14 +270,14 @@ export default function ProfilePage() {
             </TabsList>
 
             <TabsContent value="breakdown">
-              <FactorBreakdown breakdown={scoreData.breakdown ?? {}} />
+              <FactorBreakdown breakdown={breakdown} />
             </TabsContent>
 
             <TabsContent value="history">
               {scoreHistory.length > 0 ? (
                 <ScoreHistoryChart
                   data={scoreHistory}
-                  currentScore={scoreData.score ?? 0}
+                  currentScore={score}
                 />
               ) : (
                 <div
@@ -385,17 +311,15 @@ export default function ProfilePage() {
           </Tabs>
         </motion.div>
 
-        {/* Cache Notice */}
-        {scoreData.cached && (
-          <motion.div
-            className="mt-6 text-sm text-white/40 text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            Cached result • Updated {new Date(scoreData.calculatedAt).toLocaleString()}
-          </motion.div>
-        )}
+        {/* Blockchain Data Notice */}
+        <motion.div
+          className="mt-6 text-sm text-white/40 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          All data from ScoreOraclePhase3B on Arbitrum Sepolia • Updates every 30 seconds
+        </motion.div>
       </div>
     </div>
   );
