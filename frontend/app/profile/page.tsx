@@ -125,7 +125,7 @@ export default function ProfilePage() {
     );
   }
 
-  if (!hasScore) return null;
+  // Score loaded, render page
 
   return (
     <div
