@@ -29,8 +29,8 @@ const getLTVByTier = (tier: string) => {
 export function CreditScoreCardNew() {
   const { address } = useAccount();
 
-  // REAL DATA: Credit score from ScoreOraclePhase3B contract
-  const { score, tier, breakdown, apr, isLoading, hasScore } = useRealCreditScore(address);
+  // REAL DATA: Credit score from ScoreOracleMultiWallet contract (supports multi-wallet)
+  const { score, tier, breakdown, apr, isLoading, hasScore, isAggregate, walletCount } = useRealCreditScore(address);
 
   if (!address) {
     return (
@@ -77,7 +77,14 @@ export function CreditScoreCardNew() {
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>Your Credit Score</CardTitle>
-            <CardDescription>Complete 5-factor on-chain credit assessment (Phase 3B)</CardDescription>
+            <CardDescription>
+              Complete 5-factor on-chain credit assessment
+              {isAggregate && walletCount > 1 && (
+                <span className="text-violet-400 ml-2">
+                  • Aggregated across {walletCount} wallets
+                </span>
+              )}
+            </CardDescription>
           </div>
           <Badge className={getTierColor(tier)}>{tier}</Badge>
         </div>

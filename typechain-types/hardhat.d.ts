@@ -58,6 +58,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC721Errors__factory>;
     getContractFactory(
+      name: "IERC1363",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC1363__factory>;
+    getContractFactory(
       name: "IBeacon",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IBeacon__factory>;
@@ -98,9 +102,13 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.MerkleProof__factory>;
     getContractFactory(
-      name: "Math",
+      name: "IERC165",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Math__factory>;
+    ): Promise<Contracts.IERC165__factory>;
+    getContractFactory(
+      name: "SafeCast",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.SafeCast__factory>;
     getContractFactory(
       name: "Pausable",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -166,6 +174,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IReputationScorer__factory>;
     getContractFactory(
+      name: "FlashLoanArbitrage",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.FlashLoanArbitrage__factory>;
+    getContractFactory(
       name: "HealthFactorMonitor",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.HealthFactorMonitor__factory>;
@@ -186,9 +198,21 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.InsuranceFund__factory>;
     getContractFactory(
+      name: "AggregatorV3Interface",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.AggregatorV3Interface__factory>;
+    getContractFactory(
       name: "IAggregatorV3",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IAggregatorV3__factory>;
+    getContractFactory(
+      name: "IFlashLoanReceiver",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IFlashLoanReceiver__factory>;
+    getContractFactory(
+      name: "IFlashLoanSimpleReceiver",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IFlashLoanSimpleReceiver__factory>;
     getContractFactory(
       name: "IZKVerifier",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -222,9 +246,17 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ScoreAttestor__factory>;
     getContractFactory(
+      name: "ScoreOracleMultiWallet",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ScoreOracleMultiWallet__factory>;
+    getContractFactory(
       name: "ScoreOraclePhase3",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ScoreOraclePhase3__factory>;
+    getContractFactory(
+      name: "ScoreOraclePhase3B_V2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ScoreOraclePhase3B_V2__factory>;
     getContractFactory(
       name: "ScoreOraclePhase3B",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -245,6 +277,10 @@ declare module "hardhat/types/runtime" {
       name: "ScoreOraclePhase3BUpgradeable",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ScoreOraclePhase3BUpgradeable__factory>;
+    getContractFactory(
+      name: "UserRegistry",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.UserRegistry__factory>;
 
     getContractAt(
       name: "OwnableUpgradeable",
@@ -302,6 +338,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IERC721Errors>;
     getContractAt(
+      name: "IERC1363",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC1363>;
+    getContractAt(
       name: "IBeacon",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -352,10 +393,15 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.MerkleProof>;
     getContractAt(
-      name: "Math",
+      name: "IERC165",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
-    ): Promise<Contracts.Math>;
+    ): Promise<Contracts.IERC165>;
+    getContractAt(
+      name: "SafeCast",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.SafeCast>;
     getContractAt(
       name: "Pausable",
       address: string | ethers.Addressable,
@@ -437,6 +483,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IReputationScorer>;
     getContractAt(
+      name: "FlashLoanArbitrage",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.FlashLoanArbitrage>;
+    getContractAt(
       name: "HealthFactorMonitor",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -462,10 +513,25 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.InsuranceFund>;
     getContractAt(
+      name: "AggregatorV3Interface",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.AggregatorV3Interface>;
+    getContractAt(
       name: "IAggregatorV3",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.IAggregatorV3>;
+    getContractAt(
+      name: "IFlashLoanReceiver",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IFlashLoanReceiver>;
+    getContractAt(
+      name: "IFlashLoanSimpleReceiver",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IFlashLoanSimpleReceiver>;
     getContractAt(
       name: "IZKVerifier",
       address: string | ethers.Addressable,
@@ -507,10 +573,20 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ScoreAttestor>;
     getContractAt(
+      name: "ScoreOracleMultiWallet",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ScoreOracleMultiWallet>;
+    getContractAt(
       name: "ScoreOraclePhase3",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.ScoreOraclePhase3>;
+    getContractAt(
+      name: "ScoreOraclePhase3B_V2",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ScoreOraclePhase3B_V2>;
     getContractAt(
       name: "ScoreOraclePhase3B",
       address: string | ethers.Addressable,
@@ -536,6 +612,11 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.ScoreOraclePhase3BUpgradeable>;
+    getContractAt(
+      name: "UserRegistry",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.UserRegistry>;
 
     deployContract(
       name: "OwnableUpgradeable",
@@ -582,6 +663,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC721Errors>;
     deployContract(
+      name: "IERC1363",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC1363>;
+    deployContract(
       name: "IBeacon",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IBeacon>;
@@ -622,9 +707,13 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.MerkleProof>;
     deployContract(
-      name: "Math",
+      name: "IERC165",
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Math>;
+    ): Promise<Contracts.IERC165>;
+    deployContract(
+      name: "SafeCast",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.SafeCast>;
     deployContract(
       name: "Pausable",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -690,6 +779,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IReputationScorer>;
     deployContract(
+      name: "FlashLoanArbitrage",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.FlashLoanArbitrage>;
+    deployContract(
       name: "HealthFactorMonitor",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.HealthFactorMonitor>;
@@ -710,9 +803,21 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.InsuranceFund>;
     deployContract(
+      name: "AggregatorV3Interface",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.AggregatorV3Interface>;
+    deployContract(
       name: "IAggregatorV3",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IAggregatorV3>;
+    deployContract(
+      name: "IFlashLoanReceiver",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IFlashLoanReceiver>;
+    deployContract(
+      name: "IFlashLoanSimpleReceiver",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IFlashLoanSimpleReceiver>;
     deployContract(
       name: "IZKVerifier",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -746,9 +851,17 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ScoreAttestor>;
     deployContract(
+      name: "ScoreOracleMultiWallet",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ScoreOracleMultiWallet>;
+    deployContract(
       name: "ScoreOraclePhase3",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ScoreOraclePhase3>;
+    deployContract(
+      name: "ScoreOraclePhase3B_V2",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ScoreOraclePhase3B_V2>;
     deployContract(
       name: "ScoreOraclePhase3B",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -769,6 +882,10 @@ declare module "hardhat/types/runtime" {
       name: "ScoreOraclePhase3BUpgradeable",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ScoreOraclePhase3BUpgradeable>;
+    deployContract(
+      name: "UserRegistry",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.UserRegistry>;
 
     deployContract(
       name: "OwnableUpgradeable",
@@ -826,6 +943,11 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC721Errors>;
     deployContract(
+      name: "IERC1363",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC1363>;
+    deployContract(
       name: "IBeacon",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -876,10 +998,15 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.MerkleProof>;
     deployContract(
-      name: "Math",
+      name: "IERC165",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Math>;
+    ): Promise<Contracts.IERC165>;
+    deployContract(
+      name: "SafeCast",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.SafeCast>;
     deployContract(
       name: "Pausable",
       args: any[],
@@ -961,6 +1088,11 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IReputationScorer>;
     deployContract(
+      name: "FlashLoanArbitrage",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.FlashLoanArbitrage>;
+    deployContract(
       name: "HealthFactorMonitor",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -986,10 +1118,25 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.InsuranceFund>;
     deployContract(
+      name: "AggregatorV3Interface",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.AggregatorV3Interface>;
+    deployContract(
       name: "IAggregatorV3",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IAggregatorV3>;
+    deployContract(
+      name: "IFlashLoanReceiver",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IFlashLoanReceiver>;
+    deployContract(
+      name: "IFlashLoanSimpleReceiver",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IFlashLoanSimpleReceiver>;
     deployContract(
       name: "IZKVerifier",
       args: any[],
@@ -1031,10 +1178,20 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ScoreAttestor>;
     deployContract(
+      name: "ScoreOracleMultiWallet",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ScoreOracleMultiWallet>;
+    deployContract(
       name: "ScoreOraclePhase3",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ScoreOraclePhase3>;
+    deployContract(
+      name: "ScoreOraclePhase3B_V2",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ScoreOraclePhase3B_V2>;
     deployContract(
       name: "ScoreOraclePhase3B",
       args: any[],
@@ -1060,6 +1217,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ScoreOraclePhase3BUpgradeable>;
+    deployContract(
+      name: "UserRegistry",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.UserRegistry>;
 
     // default types
     getContractFactory(

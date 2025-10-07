@@ -1,6 +1,8 @@
 import { useReadContract } from 'wagmi';
 
-const SCORE_ORACLE = process.env.NEXT_PUBLIC_SCORE_ORACLE_PHASE3B as `0x${string}`;
+// Use multi-wallet oracle if available, fallback to Phase3B
+const SCORE_ORACLE = (process.env.NEXT_PUBLIC_SCORE_ORACLE_MULTI ||
+                     process.env.NEXT_PUBLIC_SCORE_ORACLE_PHASE3B) as `0x${string}`;
 
 const ORACLE_ABI = [
   {
@@ -16,6 +18,8 @@ const ORACLE_ABI = [
           { name: 's4_crossChain', type: 'uint8' },
           { name: 's5_governance', type: 'uint8' },
           { name: 's3_raw', type: 'int16' },
+          { name: 'isAggregate', type: 'bool' },
+          { name: 'walletCount', type: 'uint8' },
         ],
         name: '',
         type: 'tuple',
@@ -43,7 +47,8 @@ const ORACLE_ABI = [
 const TIER_NAMES = ['Bronze', 'Silver', 'Gold', 'Platinum'];
 
 /**
- * Hook to get REAL credit score from ScoreOraclePhase3B contract
+ * Hook to get REAL credit score from ScoreOracleMultiWallet contract
+ * Supports both single-wallet and multi-wallet aggregate scoring
  */
 export function useRealCreditScore(address?: string) {
   const { data: scoreData, isLoading } = useReadContract({
@@ -72,10 +77,12 @@ export function useRealCreditScore(address?: string) {
       },
       apr: 15,
       hasScore: false,
+      isAggregate: false,
+      walletCount: 0,
     };
   }
 
-  const [overall, s1, s2, s3, s4, s5, s3Raw] = scoreData;
+  const [overall, s1, s2, s3, s4, s5, s3Raw, isAggregate, walletCount] = scoreData;
   const tierIndex = overall >= 90 ? 3 : overall >= 75 ? 2 : overall >= 60 ? 1 : 0;
 
   // Calculate APR from basis points (400 bps = 4%)
@@ -95,5 +102,7 @@ export function useRealCreditScore(address?: string) {
     },
     apr: aprBps / 100, // Convert basis points to percentage
     hasScore: true,
+    isAggregate: Boolean(isAggregate),
+    walletCount: Number(walletCount),
   };
 }

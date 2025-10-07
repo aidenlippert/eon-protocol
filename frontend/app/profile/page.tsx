@@ -15,6 +15,7 @@ import { ScoreHistoryChart } from '@/components/score/ScoreHistoryChart';
 import { CreditTimeline } from '@/components/credit/CreditTimeline';
 import { DiditWidget } from '@/components/kyc/DiditWidget';
 import { ExportCreditReport } from '@/components/credit/ExportCreditReport';
+import { WalletLinkerCard } from '@/components/wallet/WalletLinkerCard';
 import { useRealCreditScore } from '@/lib/hooks/useRealScore';
 import { getScoreHistory, isKYCVerified } from '@/lib/supabase';
 import { colors } from '@/lib/design-tokens';
@@ -246,12 +247,22 @@ export default function ProfilePage() {
           />
         </motion.div>
 
-        {/* Credit History Timeline */}
+        {/* Multi-Wallet Management */}
         <motion.div
           className="mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
+        >
+          <WalletLinkerCard />
+        </motion.div>
+
+        {/* Credit History Timeline */}
+        <motion.div
+          className="mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
         >
           <CreditTimeline />
         </motion.div>
