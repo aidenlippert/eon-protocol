@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAccount } from 'wagmi';
 import { SupplyModal } from '@/components/modals/SupplyModal';
+import { useUserLoansWithDetails } from '@/lib/hooks/useRealLoans';
 
 // Asset configurations with real contract addresses
 const ASSETS = [
@@ -34,7 +35,9 @@ export default function MarketsPage() {
   const [showSupplyModal, setShowSupplyModal] = useState(false);
   const [showBorrowModal, setShowBorrowModal] = useState(false);
 
-  // TODO: Replace with real contract calls using useMarkets hooks
+  // REAL DATA: User's loans from blockchain
+  const { loans, count, isLoading } = useUserLoansWithDetails(address);
+
   const mockMarkets = [
     {
       ...ASSETS[0],
@@ -43,8 +46,6 @@ export default function MarketsPage() {
       supplyAPY: '3.2%',
       borrowAPY: '5.8%',
       utilization: '74.3%',
-      yourSupply: '$0',
-      yourBorrow: '$0',
     },
     {
       ...ASSETS[1],
@@ -53,8 +54,6 @@ export default function MarketsPage() {
       supplyAPY: '2.8%',
       borrowAPY: '4.2%',
       utilization: '65.6%',
-      yourSupply: '$0',
-      yourBorrow: '$0',
     },
   ];
 
@@ -71,7 +70,6 @@ export default function MarketsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-violet-950/20 to-black p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <motion.div className="mb-8" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30">
@@ -83,7 +81,6 @@ export default function MarketsPage() {
             </div>
           </div>
 
-          {/* Protocol Stats - TODO: Replace with real data */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <Card className="bg-white/5 border-white/10">
               <CardContent className="pt-6">
@@ -137,7 +134,6 @@ export default function MarketsPage() {
           </div>
         </motion.div>
 
-        {/* Markets Table */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <Card className="bg-white/5 border-white/10">
             <CardHeader>
@@ -145,7 +141,6 @@ export default function MarketsPage() {
               <CardDescription className="text-white/60">Select an asset to supply or borrow</CardDescription>
             </CardHeader>
             <CardContent>
-              {/* Desktop Table */}
               <div className="hidden md:block overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -211,7 +206,6 @@ export default function MarketsPage() {
                 </table>
               </div>
 
-              {/* Mobile Cards */}
               <div className="md:hidden space-y-4">
                 {mockMarkets.map((market, index) => (
                   <motion.div
@@ -258,30 +252,56 @@ export default function MarketsPage() {
           </Card>
         </motion.div>
 
-        {/* Your Positions */}
+        {/* Your Positions - REAL DATA */}
         {isConnected && (
           <motion.div className="mt-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
             <Card className="bg-white/5 border-white/10">
               <CardHeader>
-                <CardTitle className="text-white">Your Positions</CardTitle>
-                <CardDescription className="text-white/60">Assets you have supplied or borrowed</CardDescription>
+                <CardTitle className="text-white flex items-center justify-between">
+                  <span>Your Positions</span>
+                  {isLoading && <span className="text-sm text-white/60">Loading...</span>}
+                  {!isLoading && count > 0 && (
+                    <Badge className="bg-violet-500/20 text-violet-400 border-violet-500/30">{count} Active Loans</Badge>
+                  )}
+                </CardTitle>
+                <CardDescription className="text-white/60">
+                  {count > 0 ? 'Your active loans from the blockchain' : 'No active positions'}
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <Tabs defaultValue="supply">
+                <Tabs defaultValue="borrow">
                   <TabsList className="bg-white/5 border border-white/10">
-                    <TabsTrigger value="supply">Supplied</TabsTrigger>
-                    <TabsTrigger value="borrow">Borrowed</TabsTrigger>
+                    <TabsTrigger value="borrow">Borrowed ({count})</TabsTrigger>
+                    <TabsTrigger value="supply">Supplied (0)</TabsTrigger>
                   </TabsList>
+
+                  <TabsContent value="borrow" className="mt-4">
+                    {count > 0 ? (
+                      <div className="space-y-3">
+                        {loans.map((loanId) => (
+                          <div key={loanId} className="p-4 bg-white/5 rounded-lg border border-white/10">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <div className="text-white font-semibold">Loan #{loanId}</div>
+                                <div className="text-sm text-white/60">Active loan from CreditVaultV3</div>
+                              </div>
+                              <Button size="sm" variant="outline" className="border-white/20">
+                                View Details
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8 text-white/60">
+                        {isLoading ? 'Loading your loans...' : 'No active loans. Borrow assets to get started!'}
+                      </div>
+                    )}
+                  </TabsContent>
 
                   <TabsContent value="supply" className="mt-4">
                     <div className="text-center py-8 text-white/60">
-                      Connect your wallet and supply assets to see your positions here
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="borrow" className="mt-4">
-                    <div className="text-center py-8 text-white/60">
-                      Connect your wallet and borrow assets to see your positions here
+                      Supply functionality coming soon. Use the Supply buttons above to supply assets.
                     </div>
                   </TabsContent>
                 </Tabs>
@@ -291,17 +311,15 @@ export default function MarketsPage() {
         )}
       </div>
 
-      {/* Modals */}
       {selectedAsset && (
         <>
           <SupplyModal isOpen={showSupplyModal} onClose={() => setShowSupplyModal(false)} asset={selectedAsset} />
 
-          {/* TODO: Add BorrowModal */}
           {showBorrowModal && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowBorrowModal(false)}>
               <div className="bg-neutral-900 border border-white/10 rounded-2xl p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
                 <h3 className="text-2xl font-bold text-white mb-4">Borrow {selectedAsset.symbol}</h3>
-                <p className="text-white/60 mb-6">Borrow functionality coming soon with CreditVaultV3 integration</p>
+                <p className="text-white/60 mb-6">Use the /borrow page to create credit-scored loans with better rates!</p>
                 <Button onClick={() => setShowBorrowModal(false)} className="w-full bg-violet-600 hover:bg-violet-700">
                   Close
                 </Button>
