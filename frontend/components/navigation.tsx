@@ -11,7 +11,10 @@ export function Navigation() {
   const links = [
     { href: '/', label: 'Home' },
     { href: '/dashboard', label: 'Dashboard' },
+    { href: '/markets', label: 'Markets' },
     { href: '/borrow', label: 'Borrow' },
+    { href: '/stake', label: 'Stake' },
+    { href: '/governance', label: 'Governance' },
     { href: '/profile', label: 'Profile' },
     { href: '/analytics', label: 'Analytics' },
   ];
