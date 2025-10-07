@@ -81,16 +81,16 @@ export function LoanHistory() {
   const getHealthColor = (healthFactor: string) => {
     if (healthFactor === '∞') return 'text-green-400';
     const hf = parseFloat(healthFactor);
-    if (hf >= 2.0) return 'text-green-400';
-    if (hf >= 1.5) return 'text-yellow-400';
+    if (hf >= 1.2) return 'text-green-400'; // Matches MIN_HEALTH_FACTOR in CreditVaultV3
+    if (hf >= 1.1) return 'text-yellow-400';
     return 'text-red-400';
   };
 
   const getHealthStatus = (healthFactor: string) => {
     if (healthFactor === '∞') return 'Perfect';
     const hf = parseFloat(healthFactor);
-    if (hf >= 2.0) return 'Safe';
-    if (hf >= 1.5) return 'Warning';
+    if (hf >= 1.2) return 'Safe'; // Matches MIN_HEALTH_FACTOR in CreditVaultV3
+    if (hf >= 1.1) return 'Warning';
     return 'Danger!';
   };
 
@@ -177,12 +177,14 @@ export function LoanHistory() {
                       </div>
                     </div>
 
-                    {loan.healthFactor !== '∞' && parseFloat(loan.healthFactor) < 1.5 && (
+                    {loan.healthFactor !== '∞' && parseFloat(loan.healthFactor) < 1.2 && (
                       <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 flex items-start gap-2">
                         <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
                         <div className="text-sm text-red-400">
                           <div className="font-semibold">Liquidation Risk!</div>
-                          <div className="text-red-400/80">Repay now to avoid liquidation</div>
+                          <div className="text-red-400/80">
+                            Health factor below 1.2. Repay now or add collateral to avoid liquidation.
+                          </div>
                         </div>
                       </div>
                     )}
