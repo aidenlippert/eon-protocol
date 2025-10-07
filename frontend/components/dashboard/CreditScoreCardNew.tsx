@@ -1,24 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, TrendingUp } from "lucide-react";
-
-interface ScoreData {
-  score: number;
-  tier: string;
-  factors: {
-    s1_paymentHistory: number;
-    s2_utilization: number;
-    s3_accountAge: number;
-    s4_identityTrust: number;
-    s5_assetDiversity: number;
-    s6_deFiMix: number;
-    s7_activityControl: number;
-  };
-}
+import { useRealCreditScore } from "@/lib/hooks/useRealScore";
 
 const getTierColor = (tier: string) => {
   const colors = {
@@ -33,46 +19,18 @@ const getTierColor = (tier: string) => {
 const getLTVByTier = (tier: string) => {
   const ltv = {
     Bronze: "50%",
-    Silver: "60%",
-    Gold: "70%",
-    Platinum: "80%",
+    Silver: "70%",
+    Gold: "80%",
+    Platinum: "90%",
   };
   return ltv[tier as keyof typeof ltv] || "50%";
 };
 
-const getAPRByTier = (tier: string) => {
-  const apr = {
-    Bronze: "12%",
-    Silver: "10%",
-    Gold: "7%",
-    Platinum: "5%",
-  };
-  return apr[tier as keyof typeof apr] || "12%";
-};
-
 export function CreditScoreCardNew() {
   const { address } = useAccount();
-  const [scoreData, setScoreData] = useState<ScoreData | null>(null);
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!address) {
-      setScoreData(null);
-      return;
-    }
-
-    setLoading(true);
-    fetch(`/api/score/${address}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setScoreData(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("[CreditScoreCard] Error:", err);
-        setLoading(false);
-      });
-  }, [address]);
+  // REAL DATA: Credit score from ScoreOraclePhase3B contract
+  const { score, tier, breakdown, apr, isLoading, hasScore } = useRealCreditScore(address);
 
   if (!address) {
     return (
@@ -90,31 +48,28 @@ export function CreditScoreCardNew() {
     );
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Card className="bg-neutral-900/50 border-neutral-800">
         <CardContent className="py-12">
           <div className="flex items-center justify-center gap-3">
             <Loader2 className="w-6 h-6 animate-spin text-violet-400" />
-            <span className="text-neutral-400">Loading credit score...</span>
+            <span className="text-neutral-400">Loading credit score from blockchain...</span>
           </div>
         </CardContent>
       </Card>
     );
   }
 
-  if (!scoreData) {
+  if (!hasScore) {
     return (
       <Card className="bg-neutral-900/50 border-neutral-800">
         <CardContent className="py-12">
-          <div className="text-center text-red-400">Failed to load score</div>
+          <div className="text-center text-red-400">Failed to load score from ScoreOracle</div>
         </CardContent>
       </Card>
     );
   }
-
-  const { score, tier, factors } = scoreData;
-  const scorePercentage = (score / 1000) * 100;
 
   return (
     <Card className="bg-neutral-900/50 border-neutral-800">
@@ -122,7 +77,7 @@ export function CreditScoreCardNew() {
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>Your Credit Score</CardTitle>
-            <CardDescription>Complete 7-factor on-chain credit assessment</CardDescription>
+            <CardDescription>Complete 5-factor on-chain credit assessment (Phase 3B)</CardDescription>
           </div>
           <Badge className={getTierColor(tier)}>{tier}</Badge>
         </div>
@@ -133,59 +88,56 @@ export function CreditScoreCardNew() {
           <div className="text-7xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent mb-2">
             {score}
           </div>
-          <div className="text-sm text-neutral-400">out of 1000</div>
+          <div className="text-sm text-neutral-400">out of 100 (from blockchain)</div>
         </div>
 
         {/* APR & LTV */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="p-4 rounded-xl bg-white/5 border border-white/10">
             <div className="text-xs text-white/60 mb-1">APR Rate</div>
-            <div className="text-2xl font-bold text-white">{getAPRByTier(tier)}</div>
+            <div className="text-2xl font-bold text-white">{apr}%</div>
+            <div className="text-xs text-white/50 mt-1">from ScoreOracle</div>
           </div>
           <div className="p-4 rounded-xl bg-white/5 border border-white/10">
             <div className="text-xs text-white/60 mb-1">Max LTV</div>
             <div className="text-2xl font-bold text-white">{getLTVByTier(tier)}</div>
+            <div className="text-xs text-white/50 mt-1">based on tier</div>
           </div>
         </div>
 
-        {/* Score Breakdown */}
+        {/* Score Breakdown - REAL from ScoreOraclePhase3B */}
         <div className="space-y-3">
-          <div className="text-sm font-semibold text-white/80 mb-2">Score Breakdown</div>
+          <div className="text-sm font-semibold text-white/80 mb-2">Score Breakdown (Phase 3B)</div>
 
           <ScoreFactor
-            label="Payment History"
-            score={factors.s1_paymentHistory}
-            weight="30%"
+            label="S1: Repayment History"
+            score={breakdown.s1_repayment}
+            weight="40%"
+            description="Loan repayment track record"
           />
           <ScoreFactor
-            label="Credit Utilization"
-            score={factors.s2_utilization}
+            label="S2: Collateral Utilization"
+            score={breakdown.s2_collateral}
             weight="20%"
+            description="Collateral management efficiency"
           />
           <ScoreFactor
-            label="Account Age"
-            score={factors.s3_accountAge}
+            label="S3: Sybil Resistance"
+            score={breakdown.s3_sybil}
+            weight="20%"
+            description={`KYC + wallet age + staking (raw: ${breakdown.s3_raw})`}
+          />
+          <ScoreFactor
+            label="S4: Cross-Chain Reputation"
+            score={breakdown.s4_crossChain}
             weight="10%"
+            description="Multi-chain activity score"
           />
           <ScoreFactor
-            label="Identity Trust"
-            score={factors.s4_identityTrust}
-            weight="15%"
-          />
-          <ScoreFactor
-            label="Asset Diversity"
-            score={factors.s5_assetDiversity}
+            label="S5: Governance Participation"
+            score={breakdown.s5_governance}
             weight="10%"
-          />
-          <ScoreFactor
-            label="DeFi Mix"
-            score={factors.s6_deFiMix}
-            weight="10%"
-          />
-          <ScoreFactor
-            label="Activity Control"
-            score={factors.s7_activityControl}
-            weight="5%"
+            description="DAO voting and proposals"
           />
         </div>
 
@@ -196,7 +148,7 @@ export function CreditScoreCardNew() {
             <div className="text-sm text-violet-400">
               <div className="font-semibold mb-1">Quick Tip</div>
               <div className="text-violet-400/80">
-                Complete KYC verification to boost your score by +150 points instantly
+                Complete KYC verification to boost your Sybil Resistance score (S3) by +150 points
               </div>
             </div>
           </div>
@@ -210,12 +162,14 @@ function ScoreFactor({
   label,
   score,
   weight,
+  description,
 }: {
   label: string;
   score: number;
   weight: string;
+  description?: string;
 }) {
-  const percentage = Math.min((score / 100) * 100, 100);
+  const percentage = Math.min(score, 100);
 
   return (
     <div>
@@ -229,7 +183,10 @@ function ScoreFactor({
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <div className="text-xs text-white/50 mt-1">{score.toFixed(0)}/100</div>
+      <div className="flex justify-between items-center mt-1">
+        <div className="text-xs text-white/50">{score}/100</div>
+        {description && <div className="text-xs text-white/40">{description}</div>}
+      </div>
     </div>
   );
 }

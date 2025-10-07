@@ -1,31 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAccount } from 'wagmi';
 import { motion } from 'framer-motion';
-import { DollarSign, TrendingUp, Shield, Sparkles, ArrowRight } from 'lucide-react';
+import { DollarSign, TrendingUp, Shield, Sparkles, ArrowRight, Loader2 } from 'lucide-react';
 import { BorrowModal } from '@/components/modals/BorrowModal';
+import { useRealCreditScore } from '@/lib/hooks/useRealScore';
 import { colors } from '@/lib/design-tokens';
-
-interface ScoreData {
-  score: number;
-  tier: string;
-}
 
 export default function BorrowPage() {
   const { address, isConnected } = useAccount();
   const [showModal, setShowModal] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState(100);
-  const [scoreData, setScoreData] = useState<ScoreData | null>(null);
 
-  useEffect(() => {
-    if (address) {
-      fetch(`/api/score/${address}`)
-        .then((res) => res.json())
-        .then((data) => setScoreData(data))
-        .catch((err) => console.error('[Borrow] Score fetch error:', err));
-    }
-  }, [address]);
+  // REAL DATA: Credit score from ScoreOraclePhase3B
+  const { score, tier, apr, isLoading } = useRealCreditScore(address);
 
   if (!isConnected) {
     return (
@@ -50,7 +39,17 @@ export default function BorrowPage() {
     );
   }
 
-  const { score, tier } = scoreData || { score: 0, tier: 'Loading...' };
+  // Loading state for blockchain data
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin mx-auto mb-4 text-violet-400" />
+          <p className="text-white/60">Loading your credit score from blockchain...</p>
+        </div>
+      </div>
+    );
+  }
 
   const getTierColor = (tier: string) => {
     const colors = {
@@ -63,17 +62,11 @@ export default function BorrowPage() {
   };
 
   const getLTVByTier = (tier: string) => {
-    const ltv = { Bronze: 50, Silver: 60, Gold: 70, Platinum: 80 };
+    const ltv = { Bronze: 50, Silver: 70, Gold: 80, Platinum: 90 };
     return ltv[tier as keyof typeof ltv] || 50;
   };
 
-  const getAPRByTier = (tier: string) => {
-    const apr = { Bronze: 12, Silver: 10, Gold: 7, Platinum: 5 };
-    return apr[tier as keyof typeof apr] || 12;
-  };
-
   const ltv = getLTVByTier(tier);
-  const apr = getAPRByTier(tier);
 
   return (
     <div className="min-h-screen py-12 px-4">
@@ -132,12 +125,12 @@ export default function BorrowPage() {
             <div className="p-4 rounded-xl bg-white/5 border border-white/10">
               <div className="text-sm text-white/60 mb-1">Credit Score</div>
               <div className="text-3xl font-bold text-white">{score}</div>
-              <div className="text-xs text-white/50 mt-1">out of 1000</div>
+              <div className="text-xs text-white/50 mt-1">out of 100 (from blockchain)</div>
             </div>
             <div className="p-4 rounded-xl bg-white/5 border border-white/10">
               <div className="text-sm text-white/60 mb-1">Interest Rate</div>
               <div className="text-3xl font-bold text-green-400">{apr}%</div>
-              <div className="text-xs text-white/50 mt-1">APR</div>
+              <div className="text-xs text-white/50 mt-1">APR (from ScoreOracle)</div>
             </div>
             <div className="p-4 rounded-xl bg-white/5 border border-white/10">
               <div className="text-sm text-white/60 mb-1">Max LTV</div>
